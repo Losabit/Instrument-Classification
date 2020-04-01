@@ -1,0 +1,1214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{60D736B0-7F00-451A-B0B5-4A4B3B570184}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MusicCreatorConsole</RootNamespace>
+    <AssemblyName>MusicCreatorConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>MusicCreatorConsole.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.15.0.3\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.9.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioLibrary\AudioLibrary.csproj">
+      <Project>{9bb8d3a0-18b6-4797-b9db-56fc29a64955}</Project>
+      <Name>AudioLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare10.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare11.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare12.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare13.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare14.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare15.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare16.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare17.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare18.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare19.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare20.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare21.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare22.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare23.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare24.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare25.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare26.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare27.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare28.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare29.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare30.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare31.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare32.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare33.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare34.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare35.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare36.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare37.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare38.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare39.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare40.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare41.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare42.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare43.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare44.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare45.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare5.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare6.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare7.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare8.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\dataset\mixedGuitare9.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\cut\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\cut\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\cut\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\cut\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\cut\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie5.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\mono\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\mono\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\mono\red-hot-chili-peppers-coffee-shop-official-music-video1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\mono\red-hot-chili-peppers-coffee-shop-official-music-video2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\Lauryn-Hill-Doo-Wop-_That-Thing_-_Official-Video_ - Copie.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\musique\red-hot-chili-peppers-coffee-shop-official-music-video.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass10.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass11.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass12.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass13.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass14.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass15.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass16.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass17.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass18.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass19.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass20.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass21.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass22.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass23.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass24.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass25.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass26.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass27.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass28.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass29.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass30.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass31.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass32.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass33.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass34.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass35.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass36.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass37.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass38.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass39.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass40.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass41.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass42.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass43.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass44.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass45.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass46.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass47.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass48.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass49.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass5.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass50.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass51.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass52.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass53.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass54.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass55.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass56.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass57.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass58.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass59.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass6.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass60.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass61.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass62.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass63.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass64.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass7.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass8.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\basse\bass9.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon10.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon11.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon12.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon13.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon14.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon15.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon16.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon17.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon18.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon19.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon20.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon21.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon22.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon23.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon24.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon25.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon26.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon27.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon28.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon29.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon30.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon31.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon32.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon33.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon34.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon35.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon36.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon37.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon38.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon39.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon40.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon41.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon42.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon43.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon44.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon45.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon46.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon47.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon48.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon49.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon5.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon50.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon51.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon52.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon53.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon54.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon55.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon56.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon57.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon58.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon59.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon6.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon60.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon61.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon62.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon63.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon64.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon7.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon8.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\nylon\Nylon9.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel10.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel11.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel12.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel13.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel14.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel15.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel16.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel17.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel18.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel19.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel20.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel21.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel22.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel23.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel24.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel25.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel26.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel27.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel28.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel29.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel30.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel31.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel32.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel33.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel34.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel35.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel36.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel37.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel38.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel39.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel40.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel41.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel42.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel43.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel44.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel45.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel46.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel47.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel48.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel49.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel5.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel50.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel51.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel52.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel53.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel54.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel55.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel56.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel57.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel58.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel59.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel6.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel60.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel61.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel62.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel63.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel64.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel7.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel8.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\steel\steel9.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat10.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat11.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat12.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat13.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat14.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat15.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat16.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat17.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat18.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat19.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat20.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat21.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat22.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat23.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat24.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat25.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat26.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat27.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat28.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat29.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat3.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat30.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat31.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat32.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat33.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat34.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat35.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat36.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat37.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat38.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat39.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat4.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat40.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat41.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat42.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat43.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat44.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat45.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat46.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat47.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat48.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat49.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat5.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat50.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat51.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat52.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat53.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat54.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat55.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat56.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat57.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat58.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat59.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat6.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat60.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat61.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat62.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat63.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat64.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat7.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat8.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\guitare\strat\strat9.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a48.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a49.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a50.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a51.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a52.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a53.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a54.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a55.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a56.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a57.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a65.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a66.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a67.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a68.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a69.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a70.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a71.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a72.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a73.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a74.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a75.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a76.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a77.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a78.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a79.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a80.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a81.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a82.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a83.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a84.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a85.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a86.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a87.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a88.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a89.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\a90.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b49.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b50.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b52.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b53.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b54.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b56.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b57.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b66.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b67.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b68.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b69.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b71.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b72.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b73.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b74.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b76.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b79.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b80.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b81.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b83.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b84.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b86.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b87.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b89.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\notes\piano\b90.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\mixed.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\test.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\white.wav" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

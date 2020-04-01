@@ -1,0 +1,17 @@
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\SoundAnalyzer.exe.config
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\SoundAnalyzer.exe
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\SoundAnalyzer.pdb
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\AudioLibrary.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\MathNet.Numerics.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\NAudio.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\AudioLibrary.pdb
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\MathNet.Numerics.xml
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\bin\Release\NAudio.xml
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.csprojAssemblyReference.cache
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.Form1.resources
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.Properties.Resources.resources
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.csproj.GenerateResource.cache
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.csproj.CoreCompileInputs.cache
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.csproj.CopyComplete
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.exe
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\SoundAnalyzer\obj\Release\SoundAnalyzer.pdb

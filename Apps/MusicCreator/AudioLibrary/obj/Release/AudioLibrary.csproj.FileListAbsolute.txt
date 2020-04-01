@@ -1,0 +1,10 @@
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\bin\Release\AudioLibrary.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\bin\Release\AudioLibrary.pdb
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\bin\Release\MathNet.Numerics.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\bin\Release\NAudio.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\bin\Release\MathNet.Numerics.xml
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\bin\Release\NAudio.xml
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\obj\Release\AudioLibrary.csproj.CoreCompileInputs.cache
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\obj\Release\AudioLibrary.csproj.CopyComplete
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\obj\Release\AudioLibrary.dll
+C:\Users\quent\Desktop\Projet Annuel\Applis\MusicCreator\AudioLibrary\obj\Release\AudioLibrary.pdb
