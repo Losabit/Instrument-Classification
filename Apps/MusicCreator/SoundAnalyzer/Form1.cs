@@ -19,6 +19,7 @@ namespace SoundAnalyzer
             InitializeComponent();
         }
 
+        #region Analyse
         private void PlotWaveFile(WavFile wav, double start, double duree)
         {
             try
@@ -158,9 +159,8 @@ namespace SoundAnalyzer
                 MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
-        //Import Folder Recursevely ?
-        //Separate
         private void listFile_Click(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -185,16 +185,21 @@ namespace SoundAnalyzer
                     if (result != DialogResult.OK)
                         return;
                     DirectoryInfo d = new DirectoryInfo(folderBrowserDialog.SelectedPath);
-                    FileInfo[] filesMp3 = d.GetFiles("*.mp3");
-                    FileInfo[] filesWav = d.GetFiles("*.wav");
                     List<string> files = new List<string>();
-                    foreach (FileInfo fileMp3 in filesMp3)
+                    List<DirectoryInfo> directories = Common.GetDirectoryRecursively(d);
+
+                    for (int i = 0; i < directories.Count; i++)
                     {
-                        files.Add(fileMp3.FullName);
-                    }
-                    foreach (FileInfo fileWav in filesWav)
-                    {
-                        files.Add(fileWav.FullName);
+                        FileInfo[] filesMp3 = directories[i].GetFiles("*.mp3");
+                        FileInfo[] filesWav = directories[i].GetFiles("*.wav");
+                        foreach (FileInfo fileMp3 in filesMp3)
+                        {
+                            files.Add(fileMp3.FullName);
+                        }
+                        foreach (FileInfo fileWav in filesWav)
+                        {
+                            files.Add(fileWav.FullName);
+                        }
                     }
                     Import(files.ToArray());
                 });
@@ -287,6 +292,8 @@ namespace SoundAnalyzer
             }
         }
 
+        #region Info Tab
+
         private void tabPage6_Load(object sender, EventArgs e)
         {
             if (listFile.SelectedItems.Count == 1)
@@ -318,6 +325,18 @@ namespace SoundAnalyzer
             }
         }
 
+        #endregion
+
+        #region Cut Tab
+
+        private void buttonPath_Click(object sender, EventArgs e)
+        {
+            var openFileDialog = new FolderBrowserDialog();
+            var result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+                textBoxPath.Text = openFileDialog.SelectedPath;
+        }
+
         private void buttonCut_Click(object sender, EventArgs e)
         {
             try
@@ -331,11 +350,6 @@ namespace SoundAnalyzer
                 if (!double.TryParse(textBoxCutStart.Text.Replace(".", ","), out start) || !double.TryParse(textBoxCutEnd.Text.Replace(".", ","), out end) || !int.TryParse(textBoxCutMorceaux.Text, out morceaux))
                     throw new Exception("Start need double \nEnd need double \nMorceaux need int");
 
-                var folderBrowserDialog = new FolderBrowserDialog();
-                var result = folderBrowserDialog.ShowDialog();
-                if (result != DialogResult.OK)
-                    return;
-
                 for (int i = 0; i < listFile.SelectedItems.Count; i++)
                 {
                     FileImport file = (FileImport)listFile.SelectedItems[i];
@@ -345,7 +359,7 @@ namespace SoundAnalyzer
                     {
                         double startExtrait = start + ((end - start) / morceaux) * j;
                         double endExtrait = startExtrait + ((end - start) / morceaux);
-                        string path = folderBrowserDialog.SelectedPath + Path.DirectorySeparatorChar + file.File.Replace(".wav", "Cut" + startExtrait.ToString("0.0") + "_" + endExtrait.ToString("0.0") + ".wav");
+                        string path = textBoxPath.Text + Path.DirectorySeparatorChar + file.File.Replace(".wav", "Cut" + startExtrait.ToString("0.0") + "_" + endExtrait.ToString("0.0") + ".wav");
                         extraits[j].Create(path);
 
                         if (checkBoxCutImport.Checked)
@@ -366,6 +380,9 @@ namespace SoundAnalyzer
             }
         }
 
+        #endregion
+
+        #region Dataset Tab
         private void tabPage3_Load(object sender, EventArgs e)
         {
             comboBoxDatasetEtiquette.DataSource = Enum.GetValues(typeof(DatasetGenerator.Instrument));
@@ -393,5 +410,6 @@ namespace SoundAnalyzer
 
             DatasetGenerator dataset = new DatasetGenerator(instrument, paths);
         }
+        #endregion
     }
 }

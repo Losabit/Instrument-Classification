@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 
@@ -96,6 +97,20 @@ namespace AudioLibrary
                 paths[i] = path.Insert(path.LastIndexOf("."), (i + 1).ToString());
 
             return paths;
+        }
+
+        public static List<DirectoryInfo> GetDirectoryRecursively(DirectoryInfo source)
+        {
+            if (source == null)
+                return null;
+
+            List<DirectoryInfo> directories = new List<DirectoryInfo>();
+            directories.Add(source);
+            for(int i = 0; i < source.GetDirectories().Length; i++)
+            {
+               directories.AddRange(GetDirectoryRecursively(source.GetDirectories()[i]));
+            }
+            return directories;
         }
     }
 }
