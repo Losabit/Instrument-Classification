@@ -112,5 +112,20 @@ namespace AudioLibrary
             }
             return directories;
         }
+
+        public static bool TryParseTimeToDouble(string text, out double val)
+        {
+            if (!text.Contains(":"))
+                return double.TryParse(text, out val);
+
+            double minutes = 0;
+            double seconds = 0;
+            val = 0;
+            if (!double.TryParse(text.Substring(0, text.IndexOf(":")), out minutes) || !double.TryParse(text.Substring(text.IndexOf(":") + 1), out seconds))
+                return false;
+
+            val = minutes * 60 + seconds;
+            return true;
+        }
     }
 }

@@ -38,19 +38,20 @@ namespace AudioLibrary
             }
         }
 
-        public GeneratorMix(List<string> InDirectory)
+        public GeneratorMix(List<string> paths)
         {
             MinMix = 1;
             MaxMix = MinMix + 1;
+            Paths = paths;
         }
 
-        public GeneratorMix(List<string> InDirectory, string outDirectory, string outFileName)
+        public GeneratorMix(List<string> paths, string outDirectory, string outFileName)
         {
             MinMix = 1;
             MaxMix = MinMix + 1;
             OutDirectory = outDirectory;
             OutFileName = outFileName;
-            Paths = InDirectory;
+            Paths = paths;
         }
 
         public void GenerateMix(int numberOfRecord)
@@ -124,7 +125,7 @@ namespace AudioLibrary
             }
         }
 
-        public void ToCsv(string outpath, bool exist, bool writeLabel)
+        public void ToCsv(string outpath, bool exist)
         {
             using (var reader = new StreamReader(outpath))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))

@@ -9,6 +9,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.IO;
 using System.Collections.Generic;
 using SoundAnalyzer.Forms;
+using System.Linq;
 
 namespace SoundAnalyzer
 {
@@ -24,7 +25,7 @@ namespace SoundAnalyzer
         {
             try
             {
-                WavFile[] channels = wav.ToMono();
+                WavFile[] channels = wav.ToMono(false);
                 chart1.Series.Clear();
                 chart1.ChartAreas.Clear();
                 checkedListBoxFourierCanaux.Items.Clear();
@@ -39,9 +40,10 @@ namespace SoundAnalyzer
                     chart1.Series.Add(serie);
                     checkedListBoxFourierCanaux.Items.Add(serie.Name, i == 0 ? true : false);
 
+                    channels[i].ReadData(start, start + duree);
                     int startIndice = channels[i].GetIndice(start) / (channels[i].BitsPerSample / 8);
                     int length = (channels[i].GetIndice(duree) / (channels[i].BitsPerSample / 8));
-                    Complex[] complexs = Common.CutArray(channels[i].GetDecibelData(), startIndice, length);
+                    Complex[] complexs = channels[i].GetDecibelData();
                     for (int j = 1; j < complexs.Length; j++)
                         chart1.Series[i].Points.AddXY(Math.Round(channels[i].GetSecond((j + startIndice) * (channels[i].BitsPerSample / 8)), 5), complexs[j].Real);
                 }
@@ -161,6 +163,7 @@ namespace SoundAnalyzer
         }
         #endregion
 
+        #region Main
         private void listFile_Click(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -173,7 +176,7 @@ namespace SoundAnalyzer
                     openFileDialog.Multiselect = true;
                     var result = openFileDialog.ShowDialog();
                     if (result == DialogResult.OK)
-                        Import(openFileDialog.FileNames);
+                        Import(openFileDialog.FileNames.ToList());
                 });
                 m.MenuItems.Add(importItem);
 
@@ -201,7 +204,7 @@ namespace SoundAnalyzer
                             files.Add(fileWav.FullName);
                         }
                     }
-                    Import(files.ToArray());
+                    Import(files);
                 });
                 m.MenuItems.Add(importFolderItem);
 
@@ -259,17 +262,19 @@ namespace SoundAnalyzer
             }
         }
 
-        private void Import(string[] paths)
+        private void Import(List<string> paths)
         {
             try
             {
-                for (int i = 0; i < paths.Length; i++)
+                for (int i = 0; i < paths.Count; i++)
                 {
                     string file = paths[i].Substring(paths[i].LastIndexOf(Path.DirectorySeparatorChar) + 1);
                     if (!file.Contains(".wav"))
                     {
                         if (file.Contains(".mp3"))
                         {
+                            if (paths.Contains(paths[i].Replace(".mp3", ".wav")))
+                                continue;
                             Common.ConvertMp3ToWav(paths[i], paths[i].Replace(".mp3", ".wav"));
                         }
                         else
@@ -291,6 +296,8 @@ namespace SoundAnalyzer
                 MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
 
         #region Info Tab
 
@@ -329,6 +336,11 @@ namespace SoundAnalyzer
 
         #region Cut Tab
 
+        private void tabPage4_Load(object sender, EventArgs e)
+        {
+            labelCutHidden.Visible = false;
+        }
+
         private void buttonPath_Click(object sender, EventArgs e)
         {
             var openFileDialog = new FolderBrowserDialog();
@@ -337,28 +349,60 @@ namespace SoundAnalyzer
                 textBoxPath.Text = openFileDialog.SelectedPath;
         }
 
+        private void checkBoxCutUseTime_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxCutUseTime.Checked)
+                labelCutMorceaux.Text = "Durée d'un morceau : ";
+            else
+                labelCutMorceaux.Text = "Morceaux : ";
+        }
+
+        private void buttonClean_Click(object sender, EventArgs e)
+        {
+            textBoxCutStart.Text = string.Empty;
+            textBoxCutEnd.Text = string.Empty;
+            textBoxCutMorceaux.Text = string.Empty;
+            checkBoxCutImport.Checked = false;
+        }
+
         private void buttonCut_Click(object sender, EventArgs e)
         {
             try
             {
                 double start;
                 double end;
-                int morceaux;
+                int morceaux = 0;
+                double time = 1;
+
                 if (listFile.SelectedItems.Count == 0)
                     throw new Exception("No items selected");
 
-                if (!double.TryParse(textBoxCutStart.Text.Replace(".", ","), out start) || !double.TryParse(textBoxCutEnd.Text.Replace(".", ","), out end) || !int.TryParse(textBoxCutMorceaux.Text, out morceaux))
-                    throw new Exception("Start need double \nEnd need double \nMorceaux need int");
+                if (!Common.TryParseTimeToDouble(textBoxCutStart.Text.Replace(".", ","), out start) || !Common.TryParseTimeToDouble(textBoxCutEnd.Text.Replace(".", ","), out end))
+                    throw new Exception("Start need double \nEnd need double");
+
+                if (!checkBoxCutUseTime.Checked && !int.TryParse(textBoxCutMorceaux.Text, out morceaux))
+                    throw new Exception("Morceaux need int");
+
+                if (checkBoxCutUseTime.Checked && !double.TryParse(textBoxCutMorceaux.Text.Replace(".", ","), out time))
+                    throw new Exception("Duree need double");
+
 
                 for (int i = 0; i < listFile.SelectedItems.Count; i++)
                 {
+
                     FileImport file = (FileImport)listFile.SelectedItems[i];
                     WavFile wav = WavFile.Read(file.Path);
-                    WavFile[] extraits = wav.Cut(start, end, morceaux);
+                    double endLocal = end > wav.Seconds ? wav.Seconds - wav.Seconds % 2 : end;
+                    if (checkBoxCutUseTime.Checked)
+                    {
+                        morceaux = (int)(endLocal / time);
+                    }
+
+                    WavFile[] extraits = wav.Cut(start, endLocal, morceaux);
                     for (int j = 0; j < extraits.Length; j++)
                     {
-                        double startExtrait = start + ((end - start) / morceaux) * j;
-                        double endExtrait = startExtrait + ((end - start) / morceaux);
+                        double startExtrait = start + ((endLocal - start) / morceaux) * j;
+                        double endExtrait = startExtrait + ((endLocal - start) / morceaux);
                         string path = textBoxPath.Text + Path.DirectorySeparatorChar + file.File.Replace(".wav", "Cut" + startExtrait.ToString("0.0") + "_" + endExtrait.ToString("0.0") + ".wav");
                         extraits[j].Create(path);
 
@@ -371,7 +415,11 @@ namespace SoundAnalyzer
                             });
                         }
                     }
+                    labelCutHidden.Text = file.File + " a été correctement importé";
+                    if (!labelCutHidden.Visible)
+                        labelCutHidden.Visible = true;
                 }
+
 
             }
             catch (Exception exception)
@@ -388,27 +436,74 @@ namespace SoundAnalyzer
             comboBoxDatasetEtiquette.DataSource = Enum.GetValues(typeof(DatasetGenerator.Instrument));
         }
 
-        private void buttonClean_Click(object sender, EventArgs e)
+        private void buttonDatasetPath_Click(object sender, EventArgs e)
         {
-            textBoxCutStart.Text = string.Empty;
-            textBoxCutEnd.Text = string.Empty;
-            textBoxCutMorceaux.Text = string.Empty;
-            checkBoxCutImport.Checked = false;
+            var openFileDialog = new FolderBrowserDialog();
+            var result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+                textBoxDatasetDirectory.Text = openFileDialog.SelectedPath;
         }
 
         private void buttonDataset_Click(object sender, EventArgs e)
         {
-            DatasetGenerator.Instrument instrument;
-            if (!Enum.TryParse(comboBoxDatasetEtiquette.SelectedValue.ToString(), out instrument) || listFile.SelectedItems.Count == 0)
-                return;
-
-            List<string> paths = new List<string>();
-            for (int i = 0; i < listFile.SelectedItems.Count; i++)
+            try
             {
-                paths.Add(((FileImport)listFile.SelectedItems[i]).Path);
-            }
+                DatasetGenerator.Instrument instrument;
+                if (!Enum.TryParse(comboBoxDatasetEtiquette.SelectedValue.ToString(), out instrument) || listFile.SelectedItems.Count == 0)
+                    return;
 
-            DatasetGenerator dataset = new DatasetGenerator(instrument, paths);
+                List<string> paths = new List<string>();
+                for (int i = 0; i < listFile.SelectedItems.Count; i++)
+                {
+                    paths.Add(((FileImport)listFile.SelectedItems[i]).Path);
+                }
+
+                DatasetGenerator dataset = new DatasetGenerator(instrument, paths);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        #region Mix
+        private void buttonMix_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int morceaux = 0;
+                int minMix = 0;
+                int maxMix = 0;
+                string directory = textBoxMixDirectory.Text;
+                string file = textBoxMixFile.Text;
+
+                if (!int.TryParse(textBoxMixMorceaux.Text, out morceaux) || !int.TryParse(textBoxMixMin.Text, out minMix) || !int.TryParse(textBoxMixMax.Text, out maxMix))
+                    throw new Exception("Mauvaise valuer rentrer dans l'un des champs (elles doivent être entières)");
+
+                if (listFile.SelectedItems.Count < 2)
+                    throw new Exception("Vous devez choisir au moins 2 fichiers");
+
+                List<string> paths = new List<string>();
+                for (int i = 0; i < listFile.SelectedItems.Count; i++)
+                {
+                    paths.Add(((FileImport)listFile.SelectedItems[i]).Path);
+                }
+                GeneratorMix mix = new GeneratorMix(paths, directory, file);
+                mix.GenerateMix(morceaux);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void buttonMixDirectory_Click(object sender, EventArgs e)
+        {
+            var openFileDialog = new FolderBrowserDialog();
+            var result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+                textBoxMixDirectory.Text = openFileDialog.SelectedPath;
         }
         #endregion
     }

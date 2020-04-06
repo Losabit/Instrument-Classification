@@ -21,14 +21,15 @@ namespace AudioLibrary
         public Int16 BytePerBloc { get { return (short)(Canaux * BitsPerSample / 8); } }
         public Int32 BytePerSec { get { return Frequence * BytePerBloc; } }
         public byte[] Data = null;
+        public string Path = string.Empty;
         public double Seconds
         {
             get
             {
                 if (Data == null)
-                    return 0;
+                    return (double)DataSize / (double)BytePerSec;
                 else
-                    return ((double)Data.Length)/ ((double)BytePerSec);
+                    return ((double)Data.Length) / ((double)BytePerSec);
             }
         }
 
@@ -68,6 +69,7 @@ namespace AudioLibrary
             if (data == null)
                 throw new Exception("Data can't be null");
 
+            Path = path;
             using (BinaryWriter br = new BinaryWriter(File.Create(path, 1024 * 1024)))
             {
                 br.Write(Encoding.ASCII.GetBytes(TypeBloc));
@@ -123,7 +125,26 @@ namespace AudioLibrary
             wavFile.BlocSize = blocSize;
             if (withData)
                 wavFile.Data = Common.CutArray<byte>(content, wavFile.HeaderSize, content.Length - wavFile.HeaderSize);
+            wavFile.Path = path;
             return wavFile;
+        }
+
+        public void ReadData(double start, double end)
+        {
+            if (string.IsNullOrEmpty(Path))
+                return;
+            using (FileStream file = File.OpenRead(Path))
+            {
+                byte[] data = new byte[GetIndice(end) - GetIndice(start)];
+                file.Seek(GetIndice(start), SeekOrigin.Begin);
+                using (BinaryReader reader = new BinaryReader(file))
+                {
+                    Data = reader.ReadBytes(data.Length);
+                }
+              //  file.Read(data, 2, data.Length);
+                file.Close();
+                
+            }
         }
 
         public WavFile Clone(bool withData = true)
@@ -173,28 +194,34 @@ namespace AudioLibrary
             return complexs;
         }
 
-        public WavFile[] ToMono()
+        public WavFile[] ToMono(bool withData = true)
         {
             if (Data == null)
                 throw new Exception("Data of WavFile is null");
 
             WavFile[] result = new WavFile[Canaux];
+
             for (int i = 0; i < Canaux; i++)
             {
                 result[i] = Clone(false);
                 result[i].Canaux = 1;
-                byte[] data = new byte[(Data.Length / Canaux) + 1];
-                int dataSize = 0;
+                result[i].Path = Path;
 
-                for (int j = i * (BitsPerSample / 8); j < Data.Length; j += BytePerBloc)
+                if (withData)
                 {
-                    for (int k = 0; k < BitsPerSample / 8; k++)
+                    byte[] data = new byte[(Data.Length / Canaux) + 1];
+                    int dataSize = 0;
+
+                    for (int j = i * (BitsPerSample / 8); j < Data.Length; j += BytePerBloc)
                     {
-                        data[dataSize] = Data[j + k];
-                        dataSize++;
+                        for (int k = 0; k < BitsPerSample / 8; k++)
+                        {
+                            data[dataSize] = Data[j + k];
+                            dataSize++;
+                        }
                     }
+                    result[i].Data = data;
                 }
-                result[i].Data = data;
             }
             return result;
         }
@@ -203,6 +230,8 @@ namespace AudioLibrary
         {
             if (end > Seconds)
                 throw new Exception("Wav file can't be cut because the cuttime is larger than the file");
+            if (Data == null)
+                throw new Exception("Data is null");
 
             WavFile[] waves = new WavFile[numberOfResult];
             double second = (end - start) / numberOfResult;

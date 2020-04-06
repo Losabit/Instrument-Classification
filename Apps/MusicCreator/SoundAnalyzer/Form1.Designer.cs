@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea12 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -43,6 +43,9 @@
             this.listFile = new System.Windows.Forms.ListBox();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.buttonDatasetDirectory = new System.Windows.Forms.Button();
+            this.textBoxDatasetDirectory = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.comboBoxDatasetStockage = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxDatasetFourierTransform = new System.Windows.Forms.CheckBox();
@@ -52,6 +55,9 @@
             this.comboBoxDatasetEtiquette = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.checkBoxCutUseTime = new System.Windows.Forms.CheckBox();
+            this.labelCutHidden = new System.Windows.Forms.Label();
+            this.buttonPath = new System.Windows.Forms.Button();
             this.textBoxPath = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.buttonClean = new System.Windows.Forms.Button();
@@ -64,8 +70,17 @@
             this.textBoxCutStart = new System.Windows.Forms.TextBox();
             this.buttonCut = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.buttonMixDirectory = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBoxMixFile = new System.Windows.Forms.TextBox();
+            this.textBoxMixDirectory = new System.Windows.Forms.TextBox();
+            this.textBoxMixMax = new System.Windows.Forms.TextBox();
+            this.textBoxMixMin = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.buttonMix = new System.Windows.Forms.Button();
+            this.textBoxMixMorceaux = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.labelValueDuree = new System.Windows.Forms.Label();
@@ -93,7 +108,6 @@
             this.textBoxPlotStart = new System.Windows.Forms.TextBox();
             this.buttonInverseFourrier = new System.Windows.Forms.Button();
             this.buttonFourrier = new System.Windows.Forms.Button();
-            this.buttonPath = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -123,31 +137,31 @@
             // 
             // chart1
             // 
-            chartArea10.Name = "ChartArea1";
-            chartArea11.Name = "ChartArea2";
-            chartArea12.Name = "ChartArea3";
-            this.chart1.ChartAreas.Add(chartArea10);
-            this.chart1.ChartAreas.Add(chartArea11);
-            this.chart1.ChartAreas.Add(chartArea12);
+            chartArea7.Name = "ChartArea1";
+            chartArea8.Name = "ChartArea2";
+            chartArea9.Name = "ChartArea3";
+            this.chart1.ChartAreas.Add(chartArea7);
+            this.chart1.ChartAreas.Add(chartArea8);
+            this.chart1.ChartAreas.Add(chartArea9);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend4.Name = "Legend1";
-            this.chart1.Legends.Add(legend4);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series10.ChartArea = "ChartArea1";
-            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series10.Legend = "Legend1";
-            series10.Name = "Channel 1";
-            series11.ChartArea = "ChartArea2";
-            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series11.Legend = "Legend1";
-            series11.Name = "Channel 2";
-            series12.ChartArea = "ChartArea3";
-            series12.Legend = "Legend1";
-            series12.Name = "FFT";
-            this.chart1.Series.Add(series10);
-            this.chart1.Series.Add(series11);
-            this.chart1.Series.Add(series12);
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series7.Legend = "Legend1";
+            series7.Name = "Channel 1";
+            series8.ChartArea = "ChartArea2";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series8.Legend = "Legend1";
+            series8.Name = "Channel 2";
+            series9.ChartArea = "ChartArea3";
+            series9.Legend = "Legend1";
+            series9.Name = "FFT";
+            this.chart1.Series.Add(series7);
+            this.chart1.Series.Add(series8);
+            this.chart1.Series.Add(series9);
             this.chart1.Size = new System.Drawing.Size(1047, 674);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
@@ -219,6 +233,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.buttonDatasetDirectory);
+            this.tabPage3.Controls.Add(this.textBoxDatasetDirectory);
+            this.tabPage3.Controls.Add(this.label12);
             this.tabPage3.Controls.Add(this.comboBoxDatasetStockage);
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.checkBoxDatasetFourierTransform);
@@ -234,6 +251,33 @@
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Dataset";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // buttonDatasetDirectory
+            // 
+            this.buttonDatasetDirectory.Location = new System.Drawing.Point(495, 251);
+            this.buttonDatasetDirectory.Name = "buttonDatasetDirectory";
+            this.buttonDatasetDirectory.Size = new System.Drawing.Size(31, 22);
+            this.buttonDatasetDirectory.TabIndex = 10;
+            this.buttonDatasetDirectory.Text = "...";
+            this.buttonDatasetDirectory.UseVisualStyleBackColor = true;
+            this.buttonDatasetDirectory.Click += new System.EventHandler(this.buttonDatasetPath_Click);
+            // 
+            // textBoxDatasetDirectory
+            // 
+            this.textBoxDatasetDirectory.Location = new System.Drawing.Point(234, 251);
+            this.textBoxDatasetDirectory.Name = "textBoxDatasetDirectory";
+            this.textBoxDatasetDirectory.Size = new System.Drawing.Size(255, 22);
+            this.textBoxDatasetDirectory.TabIndex = 9;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(81, 248);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(147, 25);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "Nom du fichier :";
             // 
             // comboBoxDatasetStockage
             // 
@@ -259,7 +303,7 @@
             // checkBoxDatasetFourierTransform
             // 
             this.checkBoxDatasetFourierTransform.AutoSize = true;
-            this.checkBoxDatasetFourierTransform.Location = new System.Drawing.Point(86, 315);
+            this.checkBoxDatasetFourierTransform.Location = new System.Drawing.Point(86, 369);
             this.checkBoxDatasetFourierTransform.Name = "checkBoxDatasetFourierTransform";
             this.checkBoxDatasetFourierTransform.Size = new System.Drawing.Size(173, 21);
             this.checkBoxDatasetFourierTransform.TabIndex = 5;
@@ -278,7 +322,7 @@
             // 
             // textBoxDatasetFileName
             // 
-            this.textBoxDatasetFileName.Location = new System.Drawing.Point(248, 252);
+            this.textBoxDatasetFileName.Location = new System.Drawing.Point(248, 314);
             this.textBoxDatasetFileName.Name = "textBoxDatasetFileName";
             this.textBoxDatasetFileName.Size = new System.Drawing.Size(144, 22);
             this.textBoxDatasetFileName.TabIndex = 3;
@@ -287,7 +331,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(81, 248);
+            this.label5.Location = new System.Drawing.Point(81, 310);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(147, 25);
             this.label5.TabIndex = 2;
@@ -314,6 +358,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.checkBoxCutUseTime);
+            this.tabPage4.Controls.Add(this.labelCutHidden);
             this.tabPage4.Controls.Add(this.buttonPath);
             this.tabPage4.Controls.Add(this.textBoxPath);
             this.tabPage4.Controls.Add(this.label7);
@@ -333,6 +379,39 @@
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Cut";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCutUseTime
+            // 
+            this.checkBoxCutUseTime.AutoSize = true;
+            this.checkBoxCutUseTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxCutUseTime.Location = new System.Drawing.Point(488, 306);
+            this.checkBoxCutUseTime.Name = "checkBoxCutUseTime";
+            this.checkBoxCutUseTime.Size = new System.Drawing.Size(185, 29);
+            this.checkBoxCutUseTime.TabIndex = 13;
+            this.checkBoxCutUseTime.Text = "Utiliser une durée";
+            this.checkBoxCutUseTime.UseVisualStyleBackColor = true;
+            this.checkBoxCutUseTime.CheckedChanged += new System.EventHandler(this.checkBoxCutUseTime_CheckedChanged);
+            // 
+            // labelCutHidden
+            // 
+            this.labelCutHidden.AutoSize = true;
+            this.labelCutHidden.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCutHidden.Location = new System.Drawing.Point(73, 589);
+            this.labelCutHidden.Name = "labelCutHidden";
+            this.labelCutHidden.Size = new System.Drawing.Size(130, 20);
+            this.labelCutHidden.TabIndex = 12;
+            this.labelCutHidden.Text = "Message Caché";
+            this.labelCutHidden.Visible = false;
+            // 
+            // buttonPath
+            // 
+            this.buttonPath.Location = new System.Drawing.Point(643, 381);
+            this.buttonPath.Name = "buttonPath";
+            this.buttonPath.Size = new System.Drawing.Size(41, 23);
+            this.buttonPath.TabIndex = 11;
+            this.buttonPath.Text = "...";
+            this.buttonPath.UseVisualStyleBackColor = true;
+            this.buttonPath.Click += new System.EventHandler(this.buttonPath_Click);
             // 
             // textBoxPath
             // 
@@ -363,7 +442,7 @@
             // 
             // textBoxCutMorceaux
             // 
-            this.textBoxCutMorceaux.Location = new System.Drawing.Point(213, 311);
+            this.textBoxCutMorceaux.Location = new System.Drawing.Point(305, 311);
             this.textBoxCutMorceaux.Name = "textBoxCutMorceaux";
             this.textBoxCutMorceaux.Size = new System.Drawing.Size(100, 22);
             this.textBoxCutMorceaux.TabIndex = 7;
@@ -435,8 +514,17 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.button2);
-            this.tabPage5.Controls.Add(this.textBox1);
+            this.tabPage5.Controls.Add(this.buttonMixDirectory);
+            this.tabPage5.Controls.Add(this.label11);
+            this.tabPage5.Controls.Add(this.textBoxMixFile);
+            this.tabPage5.Controls.Add(this.textBoxMixDirectory);
+            this.tabPage5.Controls.Add(this.textBoxMixMax);
+            this.tabPage5.Controls.Add(this.textBoxMixMin);
+            this.tabPage5.Controls.Add(this.label10);
+            this.tabPage5.Controls.Add(this.label9);
+            this.tabPage5.Controls.Add(this.label8);
+            this.tabPage5.Controls.Add(this.buttonMix);
+            this.tabPage5.Controls.Add(this.textBoxMixMorceaux);
             this.tabPage5.Controls.Add(this.label4);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
@@ -446,30 +534,110 @@
             this.tabPage5.Text = "Mix";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // buttonMixDirectory
             // 
-            this.button2.Location = new System.Drawing.Point(279, 457);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(125, 68);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonMixDirectory.Location = new System.Drawing.Point(394, 279);
+            this.buttonMixDirectory.Name = "buttonMixDirectory";
+            this.buttonMixDirectory.Size = new System.Drawing.Size(41, 22);
+            this.buttonMixDirectory.TabIndex = 11;
+            this.buttonMixDirectory.Text = "...";
+            this.buttonMixDirectory.UseVisualStyleBackColor = true;
+            this.buttonMixDirectory.Click += new System.EventHandler(this.buttonMixDirectory_Click);
             // 
-            // textBox1
+            // label11
             // 
-            this.textBox1.Location = new System.Drawing.Point(279, 78);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 22);
-            this.textBox1.TabIndex = 1;
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(39, 341);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(143, 24);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "Nom du fichier :";
+            // 
+            // textBoxMixFile
+            // 
+            this.textBoxMixFile.Location = new System.Drawing.Point(212, 343);
+            this.textBoxMixFile.Name = "textBoxMixFile";
+            this.textBoxMixFile.Size = new System.Drawing.Size(148, 22);
+            this.textBoxMixFile.TabIndex = 9;
+            // 
+            // textBoxMixDirectory
+            // 
+            this.textBoxMixDirectory.Location = new System.Drawing.Point(230, 279);
+            this.textBoxMixDirectory.Name = "textBoxMixDirectory";
+            this.textBoxMixDirectory.Size = new System.Drawing.Size(148, 22);
+            this.textBoxMixDirectory.TabIndex = 8;
+            // 
+            // textBoxMixMax
+            // 
+            this.textBoxMixMax.Location = new System.Drawing.Point(251, 213);
+            this.textBoxMixMax.Name = "textBoxMixMax";
+            this.textBoxMixMax.Size = new System.Drawing.Size(148, 22);
+            this.textBoxMixMax.TabIndex = 7;
+            // 
+            // textBoxMixMin
+            // 
+            this.textBoxMixMin.Location = new System.Drawing.Point(243, 148);
+            this.textBoxMixMin.Name = "textBoxMixMin";
+            this.textBoxMixMin.Size = new System.Drawing.Size(148, 22);
+            this.textBoxMixMin.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(39, 277);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(185, 24);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "Répertoire de sortie :";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(39, 211);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(203, 24);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "Maximum sons mixés :";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(39, 146);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(198, 24);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Minimum sons mixés :";
+            // 
+            // buttonMix
+            // 
+            this.buttonMix.Location = new System.Drawing.Point(148, 434);
+            this.buttonMix.Name = "buttonMix";
+            this.buttonMix.Size = new System.Drawing.Size(125, 68);
+            this.buttonMix.TabIndex = 2;
+            this.buttonMix.Text = "Mixer";
+            this.buttonMix.UseVisualStyleBackColor = true;
+            this.buttonMix.Click += new System.EventHandler(this.buttonMix_Click);
+            // 
+            // textBoxMixMorceaux
+            // 
+            this.textBoxMixMorceaux.Location = new System.Drawing.Point(251, 80);
+            this.textBoxMixMorceaux.Name = "textBoxMixMorceaux";
+            this.textBoxMixMorceaux.Size = new System.Drawing.Size(123, 22);
+            this.textBoxMixMorceaux.TabIndex = 1;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(121, 84);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(39, 78);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(46, 17);
+            this.label4.Size = new System.Drawing.Size(206, 24);
             this.label4.TabIndex = 0;
-            this.label4.Text = "label4";
+            this.label4.Text = "Nombre de morceaux :";
             // 
             // tabPage6
             // 
@@ -739,16 +907,6 @@
             this.buttonFourrier.Text = "Make Fourier";
             this.buttonFourrier.UseVisualStyleBackColor = true;
             // 
-            // buttonPath
-            // 
-            this.buttonPath.Location = new System.Drawing.Point(643, 381);
-            this.buttonPath.Name = "buttonPath";
-            this.buttonPath.Size = new System.Drawing.Size(41, 23);
-            this.buttonPath.TabIndex = 11;
-            this.buttonPath.Text = "...";
-            this.buttonPath.UseVisualStyleBackColor = true;
-            this.buttonPath.Click += new System.EventHandler(this.buttonPath_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -831,8 +989,8 @@
         private System.Windows.Forms.TextBox textBoxFourierStart;
         private System.Windows.Forms.Label labelFourierStart;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button buttonMix;
+        private System.Windows.Forms.TextBox textBoxMixMorceaux;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBoxDatasetEtiquette;
         private System.Windows.Forms.CheckBox checkBoxDatasetFourierTransform;
@@ -844,6 +1002,20 @@
         private System.Windows.Forms.TextBox textBoxPath;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button buttonPath;
+        private System.Windows.Forms.Label labelCutHidden;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button buttonMixDirectory;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBoxMixFile;
+        private System.Windows.Forms.TextBox textBoxMixDirectory;
+        private System.Windows.Forms.TextBox textBoxMixMax;
+        private System.Windows.Forms.TextBox textBoxMixMin;
+        private System.Windows.Forms.CheckBox checkBoxCutUseTime;
+        private System.Windows.Forms.Button buttonDatasetDirectory;
+        private System.Windows.Forms.TextBox textBoxDatasetDirectory;
+        private System.Windows.Forms.Label label12;
     }
 }
 
