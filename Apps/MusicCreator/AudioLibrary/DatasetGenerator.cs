@@ -13,30 +13,8 @@ namespace AudioLibrary
         public List<string> Paths = new List<string>();
         public string OutDirectory = string.Empty;
         public string OutFileName = string.Empty;
-
-        private int minMix;
-        public int MinMix
-        {
-            get { return minMix; }
-            set
-            {
-                if (value > maxMix || value < 0)
-                    return;
-                minMix = value;
-            }
-        }
-
-        private int maxMix;
-        public int MaxMix
-        {
-            get { return maxMix; }
-            set
-            {
-                if (value < minMix)
-                    return;
-                maxMix = value;
-            }
-        }
+        public int MinMix;
+        public int MaxMix; 
 
         public GeneratorMix(List<string> paths)
         {
@@ -56,11 +34,15 @@ namespace AudioLibrary
 
         public void GenerateMix(int numberOfRecord)
         {
+            if (MinMix > MaxMix || MinMix <= 0 || MaxMix > Paths.Count)
+                throw new Exception("Mauvaises valeurs pour minMix et maxMix");
+
             List<FileInfo> files = new List<FileInfo>();
             for (int i = 0; i < Paths.Count; i++)
                 files.Add(new FileInfo(Paths[i]));
 
             Random rand = new Random();
+            List<int> usedIndices = new List<int>();
             for (int i = 0; i < numberOfRecord; i++)
             {
                 var mixer = new WaveMixerStream32 { AutoStop = true };
@@ -68,9 +50,16 @@ namespace AudioLibrary
 
                 for (int j = 0; j < stopMix; j++)
                 {
-                    int indiceFile = rand.Next(0, Paths.Count);
+                    int indiceFile = 0;
+                    do
+                    {
+                       indiceFile = rand.Next(0, Paths.Count);
+                    } while (usedIndices.Contains(indiceFile));
+
+                    usedIndices.Add(indiceFile);
                     mixer.AddInputStream(new WaveChannel32(new WaveFileReader(Paths[indiceFile])));
                 }
+                usedIndices.Clear();
                 WaveFileWriter.CreateWaveFile(GetPath(i + 1), new Wave32To16Stream(mixer));
             }
         }

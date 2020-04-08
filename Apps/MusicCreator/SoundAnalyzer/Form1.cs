@@ -58,6 +58,11 @@ namespace SoundAnalyzer
         {
             try
             {
+                int minFrequence = 0;
+                int maxFrequence = wav.Frequence;
+                if (!int.TryParse(textBoxFFTMinFreq.Text, out minFrequence) || !int.TryParse(textBoxFFTMaxFreq.Text, out maxFrequence))
+                    throw new Exception("mauvais format pour la plage de frequence (int requis)");
+
                 Series serie = new Series(name);
                 serie.ChartType = SeriesChartType.FastLine;
                 //chart1.ChartAreas[2].AxisX.MinorTickMark.Enabled = true;
@@ -66,16 +71,17 @@ namespace SoundAnalyzer
                 serie.ChartArea = "Chart" + serie.Name;
                 chart1.Series.Add(serie);
 
+                wav.ReadData(start, start + duree);
                 int startIndice = wav.GetIndice(start) / (wav.BitsPerSample / 8);
                 int length = (wav.GetIndice(duree) / (wav.BitsPerSample / 8));
-                Complex[] complexs = Common.CutArray(wav.GetDecibelData(), startIndice, length);
+                Complex[] complexs = wav.GetDecibelData();
 
                 Fourier.Forward(complexs, FourierOptions.Default);
                 var scale = Fourier.FrequencyScale(complexs.Length, wav.Frequence);
                 for (int i = 0; i < complexs.Length; i++)
                 {
-                    if (scale[i] > 0)
-                        chart1.Series[chart1.Series.Count - 1].Points.AddXY(scale[i], complexs[i].Magnitude);
+                    if (scale[i] >= minFrequence && scale[i] <= maxFrequence)
+                        chart1.Series[chart1.Series.Count - 1].Points.AddXY(scale[i] + 0.25, complexs[i].Magnitude);
                 }
             }
             catch (Exception e)
@@ -137,7 +143,7 @@ namespace SoundAnalyzer
                         if (!double.TryParse(textBoxFourierStart.Text.Replace(".", ","), out startFourier) || !double.TryParse(textBoxFourierDuree.Text.Replace(".", ","), out dureeFourier))
                             throw new Exception("Bad value for start or duree of Fourier");
 
-                        WavFile[] channels = wav.ToMono();
+                        WavFile[] channels = wav.ToMono(false);
                         for (int i = channels.Length; i < chart1.Series.Count; i++)
                         {
                             chart1.Series.RemoveAt(i);
@@ -476,7 +482,7 @@ namespace SoundAnalyzer
                 int minMix = 0;
                 int maxMix = 0;
                 string directory = textBoxMixDirectory.Text;
-                string file = textBoxMixFile.Text;
+                string file = textBoxMixFile.Text.Replace(".wav","") + ".wav";
 
                 if (!int.TryParse(textBoxMixMorceaux.Text, out morceaux) || !int.TryParse(textBoxMixMin.Text, out minMix) || !int.TryParse(textBoxMixMax.Text, out maxMix))
                     throw new Exception("Mauvaise valuer rentrer dans l'un des champs (elles doivent être entières)");
@@ -490,6 +496,8 @@ namespace SoundAnalyzer
                     paths.Add(((FileImport)listFile.SelectedItems[i]).Path);
                 }
                 GeneratorMix mix = new GeneratorMix(paths, directory, file);
+                mix.MaxMix = maxMix;
+                mix.MinMix = minMix;
                 mix.GenerateMix(morceaux);
             }
             catch (Exception exception)

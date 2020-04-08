@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -95,6 +95,8 @@
             this.labelName = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.textBoxFFTMinFreq = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.checkedListBoxFourierCanaux = new System.Windows.Forms.CheckedListBox();
             this.textBoxFourierDuree = new System.Windows.Forms.TextBox();
@@ -108,6 +110,8 @@
             this.textBoxPlotStart = new System.Windows.Forms.TextBox();
             this.buttonInverseFourrier = new System.Windows.Forms.Button();
             this.buttonFourrier = new System.Windows.Forms.Button();
+            this.textBoxFFTMaxFreq = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -137,31 +141,31 @@
             // 
             // chart1
             // 
-            chartArea7.Name = "ChartArea1";
-            chartArea8.Name = "ChartArea2";
-            chartArea9.Name = "ChartArea3";
-            this.chart1.ChartAreas.Add(chartArea7);
-            this.chart1.ChartAreas.Add(chartArea8);
-            this.chart1.ChartAreas.Add(chartArea9);
+            chartArea4.Name = "ChartArea1";
+            chartArea5.Name = "ChartArea2";
+            chartArea6.Name = "ChartArea3";
+            this.chart1.ChartAreas.Add(chartArea4);
+            this.chart1.ChartAreas.Add(chartArea5);
+            this.chart1.ChartAreas.Add(chartArea6);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series7.ChartArea = "ChartArea1";
-            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series7.Legend = "Legend1";
-            series7.Name = "Channel 1";
-            series8.ChartArea = "ChartArea2";
-            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series8.Legend = "Legend1";
-            series8.Name = "Channel 2";
-            series9.ChartArea = "ChartArea3";
-            series9.Legend = "Legend1";
-            series9.Name = "FFT";
-            this.chart1.Series.Add(series7);
-            this.chart1.Series.Add(series8);
-            this.chart1.Series.Add(series9);
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series4.Legend = "Legend1";
+            series4.Name = "Channel 1";
+            series5.ChartArea = "ChartArea2";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series5.Legend = "Legend1";
+            series5.Name = "Channel 2";
+            series6.ChartArea = "ChartArea3";
+            series6.Legend = "Legend1";
+            series6.Name = "FFT";
+            this.chart1.Series.Add(series4);
+            this.chart1.Series.Add(series5);
+            this.chart1.Series.Add(series6);
             this.chart1.Size = new System.Drawing.Size(1047, 674);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
@@ -778,6 +782,10 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.textBoxFFTMaxFreq);
+            this.splitContainer2.Panel2.Controls.Add(this.label14);
+            this.splitContainer2.Panel2.Controls.Add(this.textBoxFFTMinFreq);
+            this.splitContainer2.Panel2.Controls.Add(this.label13);
             this.splitContainer2.Panel2.Controls.Add(this.label2);
             this.splitContainer2.Panel2.Controls.Add(this.checkedListBoxFourierCanaux);
             this.splitContainer2.Panel2.Controls.Add(this.textBoxFourierDuree);
@@ -795,10 +803,27 @@
             this.splitContainer2.SplitterDistance = 1047;
             this.splitContainer2.TabIndex = 5;
             // 
+            // textBoxFFTMinFreq
+            // 
+            this.textBoxFFTMinFreq.Location = new System.Drawing.Point(181, 319);
+            this.textBoxFFTMinFreq.Name = "textBoxFFTMinFreq";
+            this.textBoxFFTMinFreq.Size = new System.Drawing.Size(124, 22);
+            this.textBoxFFTMinFreq.TabIndex = 14;
+            this.textBoxFFTMinFreq.Text = "0";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(32, 319);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(143, 17);
+            this.label13.TabIndex = 13;
+            this.label13.Text = "Fréquence minimum :";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(41, 312);
+            this.label2.Location = new System.Drawing.Point(41, 409);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 17);
             this.label2.TabIndex = 12;
@@ -807,7 +832,7 @@
             // checkedListBoxFourierCanaux
             // 
             this.checkedListBoxFourierCanaux.FormattingEnabled = true;
-            this.checkedListBoxFourierCanaux.Location = new System.Drawing.Point(134, 312);
+            this.checkedListBoxFourierCanaux.Location = new System.Drawing.Point(134, 409);
             this.checkedListBoxFourierCanaux.Name = "checkedListBoxFourierCanaux";
             this.checkedListBoxFourierCanaux.Size = new System.Drawing.Size(120, 89);
             this.checkedListBoxFourierCanaux.TabIndex = 11;
@@ -891,7 +916,7 @@
             // 
             // buttonInverseFourrier
             // 
-            this.buttonInverseFourrier.Location = new System.Drawing.Point(209, 458);
+            this.buttonInverseFourrier.Location = new System.Drawing.Point(217, 534);
             this.buttonInverseFourrier.Name = "buttonInverseFourrier";
             this.buttonInverseFourrier.Size = new System.Drawing.Size(142, 72);
             this.buttonInverseFourrier.TabIndex = 1;
@@ -900,12 +925,29 @@
             // 
             // buttonFourrier
             // 
-            this.buttonFourrier.Location = new System.Drawing.Point(35, 458);
+            this.buttonFourrier.Location = new System.Drawing.Point(43, 534);
             this.buttonFourrier.Name = "buttonFourrier";
             this.buttonFourrier.Size = new System.Drawing.Size(142, 72);
             this.buttonFourrier.TabIndex = 0;
             this.buttonFourrier.Text = "Make Fourier";
             this.buttonFourrier.UseVisualStyleBackColor = true;
+            // 
+            // textBoxFFTMaxFreq
+            // 
+            this.textBoxFFTMaxFreq.Location = new System.Drawing.Point(181, 361);
+            this.textBoxFFTMaxFreq.Name = "textBoxFFTMaxFreq";
+            this.textBoxFFTMaxFreq.Size = new System.Drawing.Size(124, 22);
+            this.textBoxFFTMaxFreq.TabIndex = 16;
+            this.textBoxFFTMaxFreq.Text = "44100";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(32, 361);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(146, 17);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Fréquence maximum :";
             // 
             // Form1
             // 
@@ -1016,6 +1058,10 @@
         private System.Windows.Forms.Button buttonDatasetDirectory;
         private System.Windows.Forms.TextBox textBoxDatasetDirectory;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox textBoxFFTMinFreq;
+        private System.Windows.Forms.TextBox textBoxFFTMaxFreq;
+        private System.Windows.Forms.Label label14;
     }
 }
 
