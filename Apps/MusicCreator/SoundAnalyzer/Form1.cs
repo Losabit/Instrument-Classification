@@ -54,7 +54,7 @@ namespace SoundAnalyzer
             }
         }
 
-        private void PlotFourierTransform(WavFile wav, string name, double start, double duree)
+        private void PlotFourierTransform(WavFile wav, int channelIndice, double start, double duree)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace SoundAnalyzer
                 if (!int.TryParse(textBoxFFTMinFreq.Text, out minFrequence) || !int.TryParse(textBoxFFTMaxFreq.Text, out maxFrequence))
                     throw new Exception("mauvais format pour la plage de frequence (int requis)");
 
-                Series serie = new Series(name);
+                Series serie = new Series("FFT " + channelIndice);
                 serie.ChartType = SeriesChartType.FastLine;
                 //chart1.ChartAreas[2].AxisX.MinorTickMark.Enabled = true;
                 ChartArea chartArea = new ChartArea("Chart" + serie.Name);
@@ -83,6 +83,10 @@ namespace SoundAnalyzer
                     if (scale[i] >= minFrequence && scale[i] <= maxFrequence)
                         chart1.Series[chart1.Series.Count - 1].Points.AddXY(scale[i] + 0.25, complexs[i].Magnitude);
                 }
+                if (checkBoxFourierInverse.Checked)
+                {
+                    PlotInverseFourier(wav, complexs, channelIndice, startIndice);
+                }
             }
             catch (Exception e)
             {
@@ -90,11 +94,18 @@ namespace SoundAnalyzer
             }
         }
 
-        private void PlotInverseFourier(WavFile wav)
+        private void PlotInverseFourier(WavFile wav, Complex[] complexs, int channelIndice, int start)
         {
-            //Fourier.Inverse(complexs);
-            //for (int i = 0; i < complexs.Length; i++)
-            //    chart1.Series[1].Points.AddXY(Math.Round(channel1.GetSecond((i + start) * (channel1.BitsPerSample / 8)), 5), complexs[i].Real);
+            Series serie = new Series("FFT Inverse " + channelIndice);
+            serie.ChartType = SeriesChartType.FastLine;
+            ChartArea chartArea = new ChartArea("Chart" + serie.Name);
+            chart1.ChartAreas.Add(chartArea);
+            serie.ChartArea = "Chart" + serie.Name;
+            chart1.Series.Add(serie);
+            Fourier.Inverse(complexs);
+            for (int i = 0; i < complexs.Length; i++)
+                chart1.Series[chart1.Series.Count - 1].Points.AddXY(Math.Round(wav.GetSecond((i + start) * (wav.BitsPerSample / 8)), 5), complexs[i].Real);
+
         }
 
         private int GetPic(Complex[] complexs)
@@ -147,12 +158,16 @@ namespace SoundAnalyzer
                         for (int i = channels.Length; i < chart1.Series.Count; i++)
                         {
                             chart1.Series.RemoveAt(i);
+                            i--;
+                        }
+                        for (int i = channels.Length; i < chart1.ChartAreas.Count; i++)
+                        {
                             chart1.ChartAreas.RemoveAt(i);
                             i--;
                         }
                         for (int i = 0; i < checkedListBoxFourierCanaux.CheckedIndices.Count; i++)
                         {
-                            PlotFourierTransform(channels[checkedListBoxFourierCanaux.CheckedIndices[i]], "FFT" + (checkedListBoxFourierCanaux.CheckedIndices[i] + 1), startFourier, dureeFourier);
+                            PlotFourierTransform(channels[checkedListBoxFourierCanaux.CheckedIndices[i]], checkedListBoxFourierCanaux.CheckedIndices[i] + 1, startFourier, dureeFourier);
                         }
                     }
                     catch (Exception e)
@@ -234,6 +249,14 @@ namespace SoundAnalyzer
                         formPopup.Show(this);
                     });
                     m.MenuItems.Add(splitItem);
+
+                    MenuItem FrequencyItem = new MenuItem("Change Frequency");
+                    FrequencyItem.Click += new EventHandler(delegate (object senderChild, EventArgs eventargs)
+                    {
+                        var formFreqPopup = new FrequencyForm(listFile);
+                        formFreqPopup.Show(this);
+                    });
+                    m.MenuItems.Add(FrequencyItem);
 
                     if (listFile.SelectedItems.Count == 1)
                     {
@@ -482,7 +505,7 @@ namespace SoundAnalyzer
                 int minMix = 0;
                 int maxMix = 0;
                 string directory = textBoxMixDirectory.Text;
-                string file = textBoxMixFile.Text.Replace(".wav","") + ".wav";
+                string file = textBoxMixFile.Text.Replace(".wav", "") + ".wav";
 
                 if (!int.TryParse(textBoxMixMorceaux.Text, out morceaux) || !int.TryParse(textBoxMixMin.Text, out minMix) || !int.TryParse(textBoxMixMax.Text, out maxMix))
                     throw new Exception("Mauvaise valuer rentrer dans l'un des champs (elles doivent être entières)");
