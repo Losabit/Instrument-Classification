@@ -9,5 +9,9 @@ path = "src/classification.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "rosenblatt"
+path = "src/classification.rs"
+
 [dependencies]
 rand = "0.7.3"
