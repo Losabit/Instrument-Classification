@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+#if !MONO
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
@@ -35,8 +36,9 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+#endif
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -141,6 +143,7 @@
             // 
             // chart1
             // 
+#if !MONO
             chartArea1.Name = "ChartArea1";
             chartArea2.Name = "ChartArea2";
             chartArea3.Name = "ChartArea3";
@@ -169,6 +172,7 @@
             this.chart1.Size = new System.Drawing.Size(1047, 674);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
+#endif
             // 
             // tabControl1
             // 

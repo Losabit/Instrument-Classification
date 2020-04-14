@@ -20,6 +20,8 @@ namespace SoundAnalyzer
             InitializeComponent();
         }
 
+
+#if !MONO
         #region Analyse
         private void PlotWaveFile(WavFile wav, double start, double duree)
         {
@@ -182,8 +184,8 @@ namespace SoundAnalyzer
                 MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        #endregion
-
+#endregion
+#endif
         #region Main
         private void listFile_Click(object sender, MouseEventArgs e)
         {

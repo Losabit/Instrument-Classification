@@ -1,5 +1,4 @@
-﻿using CsvHelper;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -116,11 +115,11 @@ namespace AudioLibrary
 
         public void ToCsv(string outpath, bool exist)
         {
-            using (var reader = new StreamReader(outpath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                var records = csv.GetRecords<Labels>();
-            }
+            //using (var reader = new StreamReader(outpath))
+            //using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            //{
+            //    var records = csv.GetRecords<Labels>();
+            //}
         }
     }
 }
