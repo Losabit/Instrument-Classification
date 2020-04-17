@@ -28,16 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-#if !MONO
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-#endif
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -52,8 +50,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxDatasetFourierTransform = new System.Windows.Forms.CheckBox();
             this.buttonDataset = new System.Windows.Forms.Button();
-            this.textBoxDatasetFileName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.comboBoxDatasetEtiquette = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -97,6 +93,9 @@
             this.labelName = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.checkBoxFourierInverse = new System.Windows.Forms.CheckBox();
+            this.textBoxFFTMaxFreq = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.textBoxFFTMinFreq = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -111,9 +110,7 @@
             this.labelStart = new System.Windows.Forms.Label();
             this.textBoxPlotStart = new System.Windows.Forms.TextBox();
             this.buttonFourrier = new System.Windows.Forms.Button();
-            this.textBoxFFTMaxFreq = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.checkBoxFourierInverse = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -133,6 +130,37 @@
             this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
+            // chart1
+            // 
+            chartArea7.Name = "ChartArea1";
+            chartArea8.Name = "ChartArea2";
+            chartArea9.Name = "ChartArea3";
+            this.chart1.ChartAreas.Add(chartArea7);
+            this.chart1.ChartAreas.Add(chartArea8);
+            this.chart1.ChartAreas.Add(chartArea9);
+            this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
+            this.chart1.Location = new System.Drawing.Point(0, 0);
+            this.chart1.Name = "chart1";
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series7.Legend = "Legend1";
+            series7.Name = "Channel 1";
+            series8.ChartArea = "ChartArea2";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            series8.Legend = "Legend1";
+            series8.Name = "Channel 2";
+            series9.ChartArea = "ChartArea3";
+            series9.Legend = "Legend1";
+            series9.Name = "FFT";
+            this.chart1.Series.Add(series7);
+            this.chart1.Series.Add(series8);
+            this.chart1.Series.Add(series9);
+            this.chart1.Size = new System.Drawing.Size(1047, 674);
+            this.chart1.TabIndex = 4;
+            this.chart1.Text = "chart1";
+            // 
             // checkedListBox1
             // 
             this.checkedListBox1.FormattingEnabled = true;
@@ -140,39 +168,6 @@
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(8, 4);
             this.checkedListBox1.TabIndex = 0;
-            // 
-            // chart1
-            // 
-#if !MONO
-            chartArea1.Name = "ChartArea1";
-            chartArea2.Name = "ChartArea2";
-            chartArea3.Name = "ChartArea3";
-            this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.ChartAreas.Add(chartArea2);
-            this.chart1.ChartAreas.Add(chartArea3);
-            this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(0, 0);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series1.Legend = "Legend1";
-            series1.Name = "Channel 1";
-            series2.ChartArea = "ChartArea2";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            series2.Legend = "Legend1";
-            series2.Name = "Channel 2";
-            series3.ChartArea = "ChartArea3";
-            series3.Legend = "Legend1";
-            series3.Name = "FFT";
-            this.chart1.Series.Add(series1);
-            this.chart1.Series.Add(series2);
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(1047, 674);
-            this.chart1.TabIndex = 4;
-            this.chart1.Text = "chart1";
-#endif
             // 
             // tabControl1
             // 
@@ -241,6 +236,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.checkBox1);
             this.tabPage3.Controls.Add(this.buttonDatasetDirectory);
             this.tabPage3.Controls.Add(this.textBoxDatasetDirectory);
             this.tabPage3.Controls.Add(this.label12);
@@ -248,8 +244,6 @@
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.checkBoxDatasetFourierTransform);
             this.tabPage3.Controls.Add(this.buttonDataset);
-            this.tabPage3.Controls.Add(this.textBoxDatasetFileName);
-            this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.comboBoxDatasetEtiquette);
             this.tabPage3.Controls.Add(this.label1);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
@@ -262,7 +256,7 @@
             // 
             // buttonDatasetDirectory
             // 
-            this.buttonDatasetDirectory.Location = new System.Drawing.Point(495, 251);
+            this.buttonDatasetDirectory.Location = new System.Drawing.Point(539, 248);
             this.buttonDatasetDirectory.Name = "buttonDatasetDirectory";
             this.buttonDatasetDirectory.Size = new System.Drawing.Size(31, 22);
             this.buttonDatasetDirectory.TabIndex = 10;
@@ -272,7 +266,7 @@
             // 
             // textBoxDatasetDirectory
             // 
-            this.textBoxDatasetDirectory.Location = new System.Drawing.Point(234, 251);
+            this.textBoxDatasetDirectory.Location = new System.Drawing.Point(278, 248);
             this.textBoxDatasetDirectory.Name = "textBoxDatasetDirectory";
             this.textBoxDatasetDirectory.Size = new System.Drawing.Size(255, 22);
             this.textBoxDatasetDirectory.TabIndex = 9;
@@ -283,16 +277,13 @@
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(81, 248);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(147, 25);
+            this.label12.Size = new System.Drawing.Size(191, 25);
             this.label12.TabIndex = 8;
-            this.label12.Text = "Nom du fichier :";
+            this.label12.Text = "Répertoire de sortie :";
             // 
             // comboBoxDatasetStockage
             // 
             this.comboBoxDatasetStockage.FormattingEnabled = true;
-            this.comboBoxDatasetStockage.Items.AddRange(new object[] {
-            "Dossier",
-            "Csv"});
             this.comboBoxDatasetStockage.Location = new System.Drawing.Point(275, 188);
             this.comboBoxDatasetStockage.Name = "comboBoxDatasetStockage";
             this.comboBoxDatasetStockage.Size = new System.Drawing.Size(121, 24);
@@ -311,7 +302,7 @@
             // checkBoxDatasetFourierTransform
             // 
             this.checkBoxDatasetFourierTransform.AutoSize = true;
-            this.checkBoxDatasetFourierTransform.Location = new System.Drawing.Point(86, 369);
+            this.checkBoxDatasetFourierTransform.Location = new System.Drawing.Point(86, 309);
             this.checkBoxDatasetFourierTransform.Name = "checkBoxDatasetFourierTransform";
             this.checkBoxDatasetFourierTransform.Size = new System.Drawing.Size(173, 21);
             this.checkBoxDatasetFourierTransform.TabIndex = 5;
@@ -320,30 +311,13 @@
             // 
             // buttonDataset
             // 
-            this.buttonDataset.Location = new System.Drawing.Point(204, 448);
+            this.buttonDataset.Location = new System.Drawing.Point(222, 393);
             this.buttonDataset.Name = "buttonDataset";
             this.buttonDataset.Size = new System.Drawing.Size(188, 94);
             this.buttonDataset.TabIndex = 4;
             this.buttonDataset.Text = "Generer";
             this.buttonDataset.UseVisualStyleBackColor = true;
             this.buttonDataset.Click += new System.EventHandler(this.buttonDataset_Click);
-            // 
-            // textBoxDatasetFileName
-            // 
-            this.textBoxDatasetFileName.Location = new System.Drawing.Point(248, 314);
-            this.textBoxDatasetFileName.Name = "textBoxDatasetFileName";
-            this.textBoxDatasetFileName.Size = new System.Drawing.Size(144, 22);
-            this.textBoxDatasetFileName.TabIndex = 3;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(81, 310);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(147, 25);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "Nom du fichier :";
             // 
             // comboBoxDatasetEtiquette
             // 
@@ -807,6 +781,33 @@
             this.splitContainer2.SplitterDistance = 1047;
             this.splitContainer2.TabIndex = 5;
             // 
+            // checkBoxFourierInverse
+            // 
+            this.checkBoxFourierInverse.AutoSize = true;
+            this.checkBoxFourierInverse.Location = new System.Drawing.Point(35, 523);
+            this.checkBoxFourierInverse.Name = "checkBoxFourierInverse";
+            this.checkBoxFourierInverse.Size = new System.Drawing.Size(285, 21);
+            this.checkBoxFourierInverse.TabIndex = 17;
+            this.checkBoxFourierInverse.Text = "Reconstruire le signal à partir de Fourier";
+            this.checkBoxFourierInverse.UseVisualStyleBackColor = true;
+            // 
+            // textBoxFFTMaxFreq
+            // 
+            this.textBoxFFTMaxFreq.Location = new System.Drawing.Point(181, 361);
+            this.textBoxFFTMaxFreq.Name = "textBoxFFTMaxFreq";
+            this.textBoxFFTMaxFreq.Size = new System.Drawing.Size(124, 22);
+            this.textBoxFFTMaxFreq.TabIndex = 16;
+            this.textBoxFFTMaxFreq.Text = "44100";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(32, 361);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(146, 17);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Fréquence maximum :";
+            // 
             // textBoxFFTMinFreq
             // 
             this.textBoxFFTMinFreq.Location = new System.Drawing.Point(181, 319);
@@ -927,32 +928,15 @@
             this.buttonFourrier.Text = "Make Fourier";
             this.buttonFourrier.UseVisualStyleBackColor = true;
             // 
-            // textBoxFFTMaxFreq
+            // checkBox1
             // 
-            this.textBoxFFTMaxFreq.Location = new System.Drawing.Point(181, 361);
-            this.textBoxFFTMaxFreq.Name = "textBoxFFTMaxFreq";
-            this.textBoxFFTMaxFreq.Size = new System.Drawing.Size(124, 22);
-            this.textBoxFFTMaxFreq.TabIndex = 16;
-            this.textBoxFFTMaxFreq.Text = "44100";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(32, 361);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(146, 17);
-            this.label14.TabIndex = 15;
-            this.label14.Text = "Fréquence maximum :";
-            // 
-            // checkBoxFourierInverse
-            // 
-            this.checkBoxFourierInverse.AutoSize = true;
-            this.checkBoxFourierInverse.Location = new System.Drawing.Point(35, 523);
-            this.checkBoxFourierInverse.Name = "checkBoxFourierInverse";
-            this.checkBoxFourierInverse.Size = new System.Drawing.Size(285, 21);
-            this.checkBoxFourierInverse.TabIndex = 17;
-            this.checkBoxFourierInverse.Text = "Reconstruire le signal à partir de Fourier";
-            this.checkBoxFourierInverse.UseVisualStyleBackColor = true;
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(86, 352);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(132, 21);
+            this.checkBox1.TabIndex = 11;
+            this.checkBox1.Text = "To Spectrogram";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1041,8 +1025,6 @@
         private System.Windows.Forms.ComboBox comboBoxDatasetEtiquette;
         private System.Windows.Forms.CheckBox checkBoxDatasetFourierTransform;
         private System.Windows.Forms.Button buttonDataset;
-        private System.Windows.Forms.TextBox textBoxDatasetFileName;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBoxDatasetStockage;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxPath;
@@ -1067,6 +1049,7 @@
         private System.Windows.Forms.TextBox textBoxFFTMaxFreq;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox checkBoxFourierInverse;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

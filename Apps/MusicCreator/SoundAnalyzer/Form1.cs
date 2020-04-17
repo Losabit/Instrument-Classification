@@ -465,6 +465,7 @@ namespace SoundAnalyzer
         private void tabPage3_Load(object sender, EventArgs e)
         {
             comboBoxDatasetEtiquette.DataSource = Enum.GetValues(typeof(DatasetGenerator.Instrument));
+            comboBoxDatasetStockage.DataSource = Enum.GetValues(typeof(DatasetGenerator.StockageMode));
         }
 
         private void buttonDatasetPath_Click(object sender, EventArgs e)
@@ -480,8 +481,13 @@ namespace SoundAnalyzer
             try
             {
                 DatasetGenerator.Instrument instrument;
+                DatasetGenerator.StockageMode stockageMode;
+
                 if (!Enum.TryParse(comboBoxDatasetEtiquette.SelectedValue.ToString(), out instrument) || listFile.SelectedItems.Count == 0)
-                    return;
+                    throw new Exception("Etiquette non trouvée ou fichiers non selectionnés");
+
+                if (!Enum.TryParse(comboBoxDatasetStockage.SelectedValue.ToString(), out stockageMode) || string.IsNullOrEmpty(textBoxDatasetDirectory.Text))
+                    throw new Exception("Mode de stockage ou fichier de sortie non selectionnés");
 
                 List<string> paths = new List<string>();
                 for (int i = 0; i < listFile.SelectedItems.Count; i++)
@@ -490,6 +496,7 @@ namespace SoundAnalyzer
                 }
 
                 DatasetGenerator dataset = new DatasetGenerator(instrument, paths);
+                dataset.Create(stockageMode, textBoxDatasetDirectory.Text);
             }
             catch (Exception exception)
             {

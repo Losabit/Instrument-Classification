@@ -1,8 +1,10 @@
-﻿using NAudio.Wave;
+﻿using CsvHelper;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Numerics;
 
 namespace AudioLibrary
 {
@@ -78,10 +80,15 @@ namespace AudioLibrary
 
     public class DatasetGenerator
     {
-        public class Labels
+        public class LabelsWav
         {
-            public string Path { get; set; }
-            public string Label { get; set; }
+            public string Valeur { get; set; }
+        }
+
+        public class LabelsFFT
+        {
+            public string Valeur { get; set; }
+            public string Frequence { get; set; }
         }
 
         public enum Instrument
@@ -91,8 +98,15 @@ namespace AudioLibrary
             Saxophone
         }
 
+        public enum StockageMode
+        {
+            Directory,
+            CSV
+        }
+
         public List<string> Paths;
         public Instrument instrument;
+        
 
         public DatasetGenerator(Instrument instrument, List<string> paths)
         {
@@ -105,21 +119,42 @@ namespace AudioLibrary
             return false;
         }
 
-        public void ToDirectory(string directoryPath, string fileName)
+        public void Create(StockageMode stockageMode, string outpath)
+        {
+            if (stockageMode == StockageMode.Directory)
+                ToDirectory(outpath);
+            else if (stockageMode == StockageMode.CSV)
+                ToCsv(outpath);
+        }
+
+        private void ToDirectory(string outpath)
         {
             for(int i = 0; i < Paths.Count; i++)
             {
-                File.Copy(Paths[i], directoryPath + Path.DirectorySeparatorChar + fileName.Replace(".wav", "") + (i + 1) + ".wav");
+                File.Copy(Paths[i], outpath + Path.DirectorySeparatorChar + Enum.GetName(typeof(Instrument), instrument).Replace(".wav", "") + (i + 1) + ".wav");
             }
         }
 
-        public void ToCsv(string outpath, bool exist)
+        private void ToCsv(string outpath)
         {
-            //using (var reader = new StreamReader(outpath))
-            //using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            //{
-            //    var records = csv.GetRecords<Labels>();
-            //}
+            for (int i = 0; i < Paths.Count; i++)
+            {
+                WavFile wav = WavFile.Read(Paths[i]);
+                Complex[] complexs = wav.GetComplexData();
+                string path = outpath + Path.DirectorySeparatorChar + Enum.GetName(typeof(Instrument), instrument) + (i + 1).ToString() + ".csv";
+                FileStream fs = File.Create(path);
+                fs.Close();
+                using(var csv = new CsvWriter(new StreamWriter(path), CultureInfo.InvariantCulture))
+                {
+                    csv.WriteHeader(typeof(LabelsWav));
+                    csv.NextRecord();
+                    for (int j = 0; j < complexs.Length; j++)
+                    {
+                        csv.WriteField(complexs[j].Real.ToString());
+                        csv.NextRecord();
+                    }
+                }
+            }
         }
     }
 }

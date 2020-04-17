@@ -239,3 +239,5 @@ C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator
 C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\SoundAnalyzer\obj\Debug\SoundAnalyzer.exe
 C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\SoundAnalyzer\obj\Debug\SoundAnalyzer.pdb
 C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\SoundAnalyzer\obj\Debug\SoundAnalyzer.Forms.FrequencyForm.resources
+C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\SoundAnalyzer\bin\Debug\CsvHelper.dll
+C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\SoundAnalyzer\bin\Debug\CsvHelper.xml

@@ -221,3 +221,6 @@ C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator
 C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\AudioLibrary\obj\Debug\AudioLibrary.csproj.CopyComplete
 C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\AudioLibrary\obj\Debug\AudioLibrary.dll
 C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\AudioLibrary\obj\Debug\AudioLibrary.pdb
+C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\AudioLibrary\obj\Debug\AudioLibrary.csprojAssemblyReference.cache
+C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\AudioLibrary\bin\Debug\CsvHelper.dll
+C:\Users\quent\Desktop\Projet Annuel\Instrument-Classification\Apps\MusicCreator\AudioLibrary\bin\Debug\CsvHelper.xml
