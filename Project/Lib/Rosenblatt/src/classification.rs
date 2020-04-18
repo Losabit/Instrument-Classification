@@ -1,5 +1,15 @@
 extern crate rand;
+extern crate ndarray;
 use rand::Rng;
+
+fn generate_rand_f32vector(size: i16, start: f32, end: f32) -> Vec<f32>{
+    let mut vector: Vec<f32> = vec![];
+    let mut rng = rand::thread_rng();
+    for _it in 0..size{
+        vector.push(rng.gen_range(start, end));
+    }
+    return vector;
+}
 
 fn predict_linear_classification(w:&Vec<f32>, xk:&Vec<f32>)-> i8{
     let mut sum = w[0];
@@ -21,12 +31,26 @@ fn train_rosenblatt(w:&mut Vec<f32>, x:&Vec<Vec<f32>>, y:&Vec<i8>, nb_iter:i32, 
 }
 
 fn main(){
-    let mut w = vec![0.9, 0.8, 0.36];
+    //classification
+    let mut w = generate_rand_f32vector(3, 0.0, 1.0);
     let x = vec![vec![0.2, 0.4], vec![0.73, 0.94]];
     let y = vec![-1,1];
     
     println!("{:?}",w);
     train_rosenblatt(&mut w, &x, &y, 15, 0.1);
     println!("{:?}",w);
+
+    //regression
+    /*
+    let mut x: Vec<f32> = vec![];
+    let mut y: Vec<f32> = vec![];
+    let mut rng = rand::thread_rng();
+    for i in 0..20{
+        x.push(i as f32);
+        y.push(1.5 * (i as f32) + 0.75 + ((rng.gen_range(0.0,1.0) - 0.35) * 2.0));
+    }
+    println!("{:?}",x);
+    println!("{:?}",y);
+*/
 }
 

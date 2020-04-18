@@ -12,3 +12,4 @@ path = "src/classification.rs"
 
 [dependencies]
 rand = "0.7.3"
+ndarray = "0.13.0"
