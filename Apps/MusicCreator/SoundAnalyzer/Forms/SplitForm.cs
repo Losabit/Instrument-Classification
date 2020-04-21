@@ -41,18 +41,24 @@ namespace SoundAnalyzer.Forms
                     continue;
 
                 WavFile[] channels = wav.ToMono();
-                for(int j = 0; j < channels.Length; j++)
+                for (int j = 0; j < nbCanaux; j++)
                 {
                     string path = folderBrowserDialog.SelectedPath + Path.DirectorySeparatorChar + ((FileImport)listBox.SelectedItems[i]).File;
-                    channels[j].Create(path.Replace(".wav", "_" + j + ".wav"));
+                    if (File.Exists(path.Replace(".wav", "_" + j + ".wav")))
+                    {
+                        Random rand = new Random();
+                        channels[j].Create(path.Replace(".wav", "_" + (j + rand.Next(100)).ToString() + ".wav"));
+                    }
+                    else
+                        channels[j].Create(path.Replace(".wav", "_" + j + ".wav"));
 
-                    if(j < nbCanaux)
+                    if (j < nbCanaux)
                     {
                         listBox.Items.Add(new FileImport
                         {
                             Path = path.Replace(".wav", "_" + j + ".wav"),
                             File = path.Replace(".wav", "_" + j + ".wav").Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1)
-                    });
+                        });
                     }
                 }
             }

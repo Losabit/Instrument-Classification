@@ -216,6 +216,9 @@ namespace AudioLibrary
                     {
                         for (int k = 0; k < BitsPerSample / 8; k++)
                         {
+                            if (dataSize >= data.Length || j + k >= Data.Length)
+                                continue; 
+
                             data[dataSize] = Data[j + k];
                             dataSize++;
                         }
