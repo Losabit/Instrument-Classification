@@ -4,7 +4,7 @@ use rand::Rng;
 //use nalgebra::DMatrix;
 
 #[no_mangle]
-pub extern fn generate_rand_f32vector(size: i16, start: f32, end: f32) -> Vec<f32>{
+pub extern fn init_linear_model(size: i16, start: f32, end: f32) -> Vec<f32>{
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
     for _it in 0..size{
