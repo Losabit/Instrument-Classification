@@ -8,8 +8,9 @@ edition = "2018"
 
 [[bin]]
 name = "rosenblatt"
-path = "src/classification.rs"
+path = "src/stats.rs"
 
 [dependencies]
 rand = "0.7.3"
 nalgebra = "0.21.0"
+gnuplot = "0.0.34"
