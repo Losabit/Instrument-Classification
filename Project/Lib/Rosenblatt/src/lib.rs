@@ -25,7 +25,8 @@ pub extern fn predict_linear_model_classification(w:&Vec<f32>, xk:&Vec<f32>)-> i
 #[no_mangle]
 pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>>, y:&Vec<i8>, nb_iter:i32, alpha:f32) {
     for _it in 0..nb_iter {
-        let k = 0;
+        let mut rng = rand::thread_rng();
+        let k = rng.gen_range(0, X[0].len());
         let gxk = predict_linear_model_classification(w,&x[k]);
         for i in 0..x[1].len() {
             w[i + 1] += alpha * (y[k] - gxk as i8) as f32 * x[k][i];
