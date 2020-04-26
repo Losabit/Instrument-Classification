@@ -7,7 +7,7 @@ use nalgebra::DMatrix;
 
 fn main(){
     //classification
-    let mut w = lib::generate_rand_f32vector(3, 0.0, 1.0);
+    let mut w = lib::init_linear_model(3, 0.0, 1.0);
     let x = vec![vec![0.2, 0.4], vec![0.73, 0.94]];
     let y = vec![-1,1];
     
