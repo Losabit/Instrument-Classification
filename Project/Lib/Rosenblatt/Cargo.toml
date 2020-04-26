@@ -8,7 +8,11 @@ edition = "2018"
 
 [[bin]]
 name = "rosenblatt"
-path = "src/stats.rs"
+path = "src/main.rs"
+
+[lib]
+name = "supervisingml"
+crate-type = ["cdylib"]
 
 [dependencies]
 rand = "0.7.3"
