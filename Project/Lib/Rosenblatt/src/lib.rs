@@ -2,6 +2,8 @@ extern crate rand;
 extern crate nalgebra;
 use rand::Rng;
 use nalgebra::DMatrix;
+use std::intrinsics::powf32;
+use self::nalgebra::Vector;
 
 #[no_mangle]
 pub extern fn init_linear_model(size: i16, start: f32, end: f32) -> Vec<f32>{
@@ -49,5 +51,41 @@ pub extern fn train_linear_model_regression(x: Vec<f32>, y: Vec<f32>) -> Vec<f32
     let ym = DMatrix::from_row_slice(y.len(),1,&y);
     let w_matrix = (((xm.transpose() * &xm).try_inverse()).unwrap() * xm.transpose()) * ym;
     return w_matrix.data.as_vec().to_vec();
+}
+
+#[no_mangle]
+pub extern fn gradien_retropropagation (w : Vec<f32>, x: f32, sigma:f32) -> f32 {
+    let mut sum = 0.0;
+    for i in 1..w.len(){
+        sum += w[i] * sigma;
+    }
+    let mut sig = (1.0 - x.powf(2.0) ) * sum;
+    return sig;
+}
+
+#[no_mangle]
+pub extern  fn gradien_retropropagation_last_classification (y: i8, xlj: f32 ) ->f32 {
+        let mut  result :f32;
+    result = (1.0 - xlj.powf(2.0) ) * (xlj - y as f32);
+    return result;
+}
+
+#[no_mangle]
+pub extern  fn gradien_retropropagation_last_regression (y: i8, xlj: f32 ) ->f32 {
+    let mut  result :f32;
+    result = (xlj - y as f32);
+    return result;
+}
+/**
+* Function to labal random y for X0
+* Fonction qui permet d'étiqueté au hasard
+**/
+pub extern  fn init_random_y_xo(x:Vec<f32>) -> Vec<f32> {
+    let mut vectorY: Vec<f32> = vec![];
+    vectorY.push(1.0);
+    for i in 0.. x.len(){
+        vectory.push(rng.gen_range(0, 1));
+    }
+    return vectorY;
 }
 
