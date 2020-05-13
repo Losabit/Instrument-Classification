@@ -7,6 +7,7 @@ use nalgebra::DMatrix;
 pub extern fn init_linear_model(size: i16, start: f32, end: f32) -> Vec<f32>{
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
+    vector.push(1.0);
     for _it in 0..size{
         vector.push(rng.gen_range(start, end));
     }
@@ -14,14 +15,20 @@ pub extern fn init_linear_model(size: i16, start: f32, end: f32) -> Vec<f32>{
 }
 
 #[no_mangle]
-pub extern fn predict_linear_model_classification(w:&Vec<f32>, xk:&Vec<f32>)-> i8{
+pub extern fn predict_linear_model_regression(w:&Vec<f32>, xk:&Vec<f32>)-> f32{
     let mut sum = w[0];
     for i in 0..xk.len(){
         sum += w[i + 1] * xk[i];
     }
-    return if sum >= 0.0 { 1 } else { -1 }
+    return sum;
 }
 
+#[no_mangle]
+pub extern fn predict_linear_model_classification(w:&Vec<f32>, xk:&Vec<f32>)-> i8{
+    return if predict_linear_model_regression(w,xk) >= 0.0 { 1 } else { -1 }
+}
+
+//Vec à une dimension, ajouter alors la taille pour chaque dimension et chaque dimension
 #[no_mangle]
 pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>>, y:&Vec<i8>, nb_iter:i32, alpha:f32) {
     for _it in 0..nb_iter {
@@ -34,8 +41,9 @@ pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>
         w[0] += alpha * (y[k] - gxk as i8) as f32;
     }
 }
+
 #[no_mangle]
-pub extern fn train_linear_model_regression(x: &[f32], y: &[f32]) -> Vec<f32>{
+pub extern fn train_linear_model_regression(x: Vec<f32>, y: Vec<f32>) -> Vec<f32>{
     assert_eq!(x.len()/2, y.len());
     let xm = DMatrix::from_row_slice(y.len(),2,&x);
     let ym = DMatrix::from_row_slice(y.len(),1,&y);

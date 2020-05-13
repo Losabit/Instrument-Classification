@@ -15,14 +15,14 @@ fn main(){
     println!("{:?}",w);
 */
     //regression
-    let mut x = [0f32;40];
-    let mut y = [0f32;20]; 
+    let mut x = vec![];
+    let mut y = vec![]; 
     let mut rng = rand::thread_rng();
     for i in 0..20{
-        x[i * 2] = 1.0;
-        x[i * 2 + 1]  = (i + 1) as f32;  
-        y[i] = 1.5 * ((i + 1) as f32) + 0.75 + ((rng.gen_range(0.0,1.0) - 0.35) * 2.0);
+        x.push(1.0);
+        x.push((i + 1) as f32);  
+        y.push(1.5 * ((i + 1) as f32) + 0.75 + ((rng.gen_range(0.0,1.0) - 0.35) * 2.0));
     }
-    let w = lib::train_linear_model_regression(&x,&y);
+    let w = lib::train_linear_model_regression(x,y);
     println!("{:?}",w);
 }
