@@ -25,4 +25,7 @@ fn main(){
     }
     let w = lib::train_linear_model_regression(x,y);
     println!("{:?}",w);
+
+    let result = lib::init_multicouche(&[2,3,2,1], 0.0, 1.0);
+    println!("{:?}",result);
 }

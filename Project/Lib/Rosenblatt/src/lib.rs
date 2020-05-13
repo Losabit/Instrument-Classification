@@ -3,8 +3,41 @@ extern crate nalgebra;
 use rand::Rng;
 use nalgebra::DMatrix;
 
+fn calculate_signal(w:&Vec<Vec<f32>>, x:&Vec<f32>, neurone:usize) -> f32 {
+    let mut value = 0.0;
+    for i in 0..w.len(){
+        value += w[i][neurone] * x[i];
+    }
+    return value;
+}
+
 #[no_mangle]
-pub extern fn init_linear_model(size: i16, start: f32, end: f32) -> Vec<f32>{
+pub extern fn init_multicouche(neurones_by_couche: &[usize], start: f32, end: f32) -> Vec<Vec<Vec<f32>>> {
+    let mut model: Vec<Vec<Vec<f32>>> = vec![];
+    let mut rng = rand::thread_rng();
+    for i in 0..neurones_by_couche.len() - 1{
+        model.push(vec![]);
+
+        let mut vector_biais: Vec<f32> = vec![];
+        for _it in 0..neurones_by_couche[i + 1]{
+            vector_biais.push(1.0)
+        }
+        model[i].push(vector_biais);
+
+        for _j in 0..neurones_by_couche[i]{
+            let mut vector: Vec<f32> = vec![];
+            for _it in 0..neurones_by_couche[i + 1]{
+                vector.push(rng.gen_range(start, end));
+            }
+            model[i].push(vector);
+        }
+    }
+    return model;
+}
+
+
+#[no_mangle]
+pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>{
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
     vector.push(1.0);
