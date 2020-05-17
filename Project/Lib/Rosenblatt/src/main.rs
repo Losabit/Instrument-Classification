@@ -1,9 +1,10 @@
 extern crate rand;
 mod lib;
-use rand::Rng;
+//use rand::Rng;
 
 
 fn main(){
+//linear
     //classification
     /*
     let mut w = lib::init_linear_model(3, 0.0, 1.0);
@@ -15,7 +16,7 @@ fn main(){
     println!("{:?}",w);
 */
     //regression
-    let mut x = vec![];
+   /* let mut x = vec![];
     let mut y = vec![]; 
     let mut rng = rand::thread_rng();
     for i in 0..20{
@@ -25,7 +26,15 @@ fn main(){
     }
     let w = lib::train_linear_model_regression(x,y);
     println!("{:?}",w);
+    */
 
-    let result = lib::init_multicouche(&[2,3,2,1], 0.0, 1.0);
-    println!("{:?}",result);
+//multicouche 
+    //classification
+    let model = lib::init_multicouche(&[2,3,2,1], 0.0, 1.0);
+    println!("{:?}",model);
+
+    let mut x : Vec<Vec<f32>> = vec![vec![1.0, 0.4, 0.7]];
+    let y = vec![-1,1];
+    lib::init_out_neurone(&model, &mut x);
+    println!("{:?}",x);
 }
