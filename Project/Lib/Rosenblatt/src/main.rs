@@ -30,11 +30,11 @@ fn main(){
 
 //multicouche 
     //classification
-    let model = lib::init_multicouche(&[2,3,2,1], 0.0, 1.0);
+ /*   let model = lib::init_multicouche(&[2,3,2,1], 0.0, 1.0);
     println!("{:?}",model);
 
     let mut x : Vec<Vec<f32>> = vec![vec![1.0, 0.4, 0.7]];
     let y = vec![-1,1];
     lib::init_out_neurone(&model, &mut x);
-    println!("{:?}",x);
+    println!("{:?}",x);*/
 }

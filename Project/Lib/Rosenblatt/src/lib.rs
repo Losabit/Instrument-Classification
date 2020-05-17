@@ -4,15 +4,53 @@ use rand::Rng;
 use nalgebra::DMatrix;
 
 #[no_mangle]
-pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>{
+pub  extern  fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>{
+
     let mut vector: Vec<f32> = vec![];
+    unsafe{
     let mut rng = rand::thread_rng();
-    vector.push(1.0);
-    for _it in 0..size{
-        vector.push(rng.gen_range(start, end));
+
+        vector.push(1.0);
+
+        for _it in 0..size {
+            vector.push(rng.gen_range(start, end));
+        }
     }
     return vector;
 }
+#[no_mangle]
+pub extern  fn init_linear_model_tc(size: usize, start: f32, end: f32) -> &[f32]{
+
+    let mut vector: Vec<f32> = vec![];
+    unsafe{
+    let mut rng = rand::thread_rng();
+
+        vector.push(1.0);
+
+        for _it in 0..size {
+            vector.push(rng.gen_range(start, end));
+        }
+    }
+
+    let mut c: &[f32] = &vector;
+    return c;
+}
+
+#[no_mangle]
+pub unsafe  extern  fn init_linear_model_tab(size: usize, start: f32, end: f32) -> &mut[f32] {
+
+    let mut vector: Vec<f32> = vec![];
+    let mut array= [0f32;10];
+    unsafe{
+    let mut rng = rand::thread_rng();
+        array[0] = 1.0;
+        for _it in 0..10 {
+            array[_it]  = rng.gen_range(start, end);
+        }
+    }
+    return &array;
+}
+
 
 #[no_mangle]
 pub extern fn predict_linear_model_regression(w:&Vec<f32>, xk:&Vec<f32>)-> f32{

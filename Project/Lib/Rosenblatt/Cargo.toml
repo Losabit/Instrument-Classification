@@ -11,7 +11,7 @@ name = "rosenblatt"
 path = "src/main.rs"
 
 [lib]
-name = "supervisingml"
+name = "mllib_rustt"
 crate-type = ["cdylib"]
 
 [dependencies]
