@@ -18,42 +18,30 @@ pub  extern  fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>
     }
     return vector;
 }
-#[no_mangle]
-pub extern  fn init_linear_model_tc(size: usize, start: f32, end: f32) -> &[f32]{
-
-    let mut vector: Vec<f32> = vec![];
-    unsafe{
-    let mut rng = rand::thread_rng();
-
-        vector.push(1.0);
-
-        for _it in 0..size {
-            vector.push(rng.gen_range(start, end));
-        }
-    }
-
-    let mut c: &[f32] = &vector;
-    return c;
-}
 
 #[no_mangle]
-pub unsafe  extern  fn init_linear_model_tab(size: usize, start: f32, end: f32) -> &mut[f32] {
+pub unsafe  extern  fn init_linear_model_tab(size: usize, start: f32, end: f32) -> [f32;10] {
 
-    let mut vector: Vec<f32> = vec![];
     let mut array= [0f32;10];
     unsafe{
     let mut rng = rand::thread_rng();
         array[0] = 1.0;
-        for _it in 0..10 {
+        for _it in 0..size {
             array[_it]  = rng.gen_range(start, end);
         }
     }
-    return &array;
+    return array;
 }
-
-
 #[no_mangle]
 pub extern fn predict_linear_model_regression(w:&Vec<f32>, xk:&Vec<f32>)-> f32{
+    let mut sum = w[0];
+    for i in 0..xk.len(){
+        sum += w[i + 1] * xk[i];
+    }
+    return sum;
+}
+#[no_mangle]
+pub extern fn predict_linear_model_regression_tab(w:&[f32], xk:&[f32])-> f32{
     let mut sum = w[0];
     for i in 0..xk.len(){
         sum += w[i + 1] * xk[i];
@@ -64,6 +52,10 @@ pub extern fn predict_linear_model_regression(w:&Vec<f32>, xk:&Vec<f32>)-> f32{
 #[no_mangle]
 pub extern fn predict_linear_model_classification(w:&Vec<f32>, xk:&Vec<f32>)-> i8{
     return if predict_linear_model_regression(w,xk) >= 0.0 { 1 } else { -1 }
+}
+#[no_mangle]
+pub extern fn predict_linear_model_classification_tab(w:&[f32], xk:&[f32] )-> i8{
+    return if predict_linear_model_regression_tab(w,xk) >= 0.0 { 1 } else { -1 }
 }
 
 //Vec à une dimension, ajouter alors la taille pour chaque dimension et chaque dimension
@@ -79,6 +71,18 @@ pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>
         w[0] += alpha * (y[k] - gxk as i8) as f32;
     }
 }
+#[no_mangle]
+pub extern fn train_linear_model_classification_tab(w:&mut [f32], x:&[[f32]], y:&[i8], nb_iter:i32, alpha:f32) {
+    for _it in 0..nb_iter {
+        let mut rng = rand::thread_rng();
+        let k = rng.gen_range(0, x[0].len());
+        let gxk = predict_linear_model_classification_tab(w,&x[k]);
+        for i in 0..x[1].len() {
+            w[i + 1] += alpha * (y[k] - gxk as i8) as f32 * x[k][i];
+        }
+        w[0] += alpha * (y[k] - gxk as i8) as f32;
+    }
+}
 
 #[no_mangle]
 pub extern fn train_linear_model_regression(x: Vec<f32>, y: Vec<f32>) -> Vec<f32>{
@@ -88,6 +92,7 @@ pub extern fn train_linear_model_regression(x: Vec<f32>, y: Vec<f32>) -> Vec<f32
     let w_matrix = (((xm.transpose() * &xm).try_inverse()).unwrap() * xm.transpose()) * ym;
     return w_matrix.data.as_vec().to_vec();
 }
+
 
 /**
 * Function to labal random y for X0
