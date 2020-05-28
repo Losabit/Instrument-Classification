@@ -3,26 +3,8 @@ extern crate nalgebra;
 use rand::Rng;
 use nalgebra::DMatrix;
 
-/*
 #[no_mangle]
-pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>{
-
-    let mut vector: Vec<f32> = vec![];
-    unsafe{
-    let mut rng = rand::thread_rng();
-
-        vector.push(1.0);
-
-        for _it in 0..size {
-            vector.push(rng.gen_range(start, end));
-        }
-    }
-    return vector;
-}
-*/
-
-#[no_mangle]
-pub extern fn init_linear_model_tab(size: usize, start: f32, end: f32) -> *mut f64 {
+pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> *mut f64 {
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
     vector.push(1.0);
@@ -30,37 +12,31 @@ pub extern fn init_linear_model_tab(size: usize, start: f32, end: f32) -> *mut f
     for _it in 0..size {
         vector.push(rng.gen_range(start, end));
     }
-    let mut slice = vector.into_boxed_slice();
-    return slice.as_mut_ptr();
+    return vector.into_boxed_slice().as_mut_ptr();
 }
 
 #[no_mangle]
-pub extern fn predict_linear_model_regression(w:&Vec<f32>, xk:&Vec<f32>)-> f32{
+pub extern "C" fn predict_linear_model_regression(w_ptr: *mut f32, xk_ptr: *mut f32, xk_size: usize)-> f32{
+    let w;
+    let xk;
+
+    unsafe {
+        w = from_raw_parts(w_ptr, xk_size + 1)
+        xk = from_raw_parts(xk_ptr, xk_size)
+    }
+
     let mut sum = w[0];
-    for i in 0..xk.len(){
+    for i in 0..xk_size{
         sum += w[i + 1] * xk[i];
     }
     return sum;
 }
-#[no_mangle]
-pub extern fn predict_linear_model_regression_tab(w:&[f32], xk:&[f32])-> f32{
-    let mut sum = w[0];
-    for i in 0..xk.len(){
-        sum += w[i + 1] * xk[i];
-    }
-    return sum;
-}
 
 #[no_mangle]
-pub extern fn predict_linear_model_classification(w:&Vec<f32>, xk:&Vec<f32>)-> i8{
-    return if predict_linear_model_regression(w,xk) >= 0.0 { 1 } else { -1 }
-}
-#[no_mangle]
-pub extern fn predict_linear_model_classification_tab(w:&[f32], xk:&[f32] )-> i8{
-    return if predict_linear_model_regression_tab(w,xk) >= 0.0 { 1 } else { -1 }
+pub extern "C" fn predict_linear_model_classification(w_ptr: *mut f32, xk_ptr: *mut f32, xk_size: usize)-> i8{
+    return if predict_linear_model_regression(w_ptr,xk_ptr, xk_size) >= 0.0 { 1 } else { -1 }
 }
 
-//Vec à une dimension, ajouter alors la taille pour chaque dimension et chaque dimension
 #[no_mangle]
 pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>>, y:&Vec<i8>, nb_iter:i32, alpha:f32) {
     for _it in 0..nb_iter {
@@ -73,11 +49,26 @@ pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>
         w[0] += alpha * (y[k] - gxk as i8) as f32;
     }
 }
+
 #[no_mangle]
-pub extern fn train_linear_model_classification_tab(w:&mut [f32], x:&[[f32]], y:&[i8], nb_iter:i32, alpha:f32) {
-    for _it in 0..nb_iter {
-        let mut rng = rand::thread_rng();
-        let k = rng.gen_range(0, x[0].len());
+pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y: *mut i8, sample_size: usize, result_size: usize, nb_iter: usize, alpha:f32) {
+    let mut rng = rand::thread_rng();
+    let model;
+    let dataset_inputs;
+    let dataset_outputs;
+
+    unsafe {
+        model = from_raw_parts(w, result_size + 1);
+        dataset_inputs = from_raw_parts(x, sample_size * result_size);
+        dataset_outputs = from_raw_parts(y, sample_size)
+    }
+
+    for _it in 0..nb_iter {    
+        let k = rng.gen_range(0, sample_size);
+        let index_k = k * result_size;
+        let inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
+        let output_k = dataset_outputs[k];
+
         let gxk = predict_linear_model_classification_tab(w,&x[k]);
         for i in 0..x[1].len() {
             w[i + 1] += alpha * (y[k] - gxk as i8) as f32 * x[k][i];
