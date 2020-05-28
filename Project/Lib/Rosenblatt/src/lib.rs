@@ -22,6 +22,7 @@ pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>{
 */
 
 #[no_mangle]
+<<<<<<< HEAD
 pub extern fn init_linear_model_tab(size: usize, start: f32, end: f32) -> *mut f32 {
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
@@ -73,7 +74,10 @@ pub extern fn train_linear_model_classification(w:&mut Vec<f32>, x:&Vec<Vec<f32>
         w[0] += alpha * (y[k] - gxk as i8) as f32;
     }
 }
+<<<<<<< HEAD
 /**
+=======
+>>>>>>> parent of bf70f6a... Some functions to python
 #[no_mangle]
 pub extern fn train_linear_model_classification_tab(w:&mut [f32], x:&[[f32]], y:&[i8], nb_iter:i32, alpha:f32) {
     for _it in 0..nb_iter {
