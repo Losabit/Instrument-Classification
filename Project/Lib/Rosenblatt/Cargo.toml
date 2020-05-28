@@ -11,7 +11,7 @@ name = "rosenblatt"
 path = "src/main.rs"
 
 [lib]
-name = "mllib_rust"
+name = "mlliib_rust"
 crate-type = ["cdylib"]
 
 [dependencies]

@@ -11,7 +11,7 @@ pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> *mut f32 {
     vector.push(1.0);
 
     for _it in 0..size {
-        vector.push(rng.gen_range(start, end));
+        vector.push(rng.gen_range(-1.0, 1.0));
     }
     return vector.into_boxed_slice().as_mut_ptr();
 }
@@ -34,12 +34,12 @@ pub extern "C" fn predict_linear_model_regression(w_ptr: *mut f32, xk_ptr: *mut 
 }
 
 #[no_mangle]
-pub extern "C" fn predict_linear_model_classification(w_ptr: *mut f32, xk_ptr: *mut f32, xk_size: usize)-> i8{
-    return if predict_linear_model_regression(w_ptr,xk_ptr, xk_size) >= 0.0 { 1 } else { -1 }
+pub extern "C" fn predict_linear_model_classification(w_ptr: *mut f32, xk_ptr: *mut f32, xk_size: usize)-> f32{
+    return if predict_linear_model_regression(w_ptr, xk_ptr, xk_size) >= 0.0 { 1 } else { -1 } as f32;
 }
 
 #[no_mangle]
-pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y: *mut i8, sample_size: usize, result_size: usize, nb_iter: usize, alpha:f32) {
+pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y: *mut f32, sample_size: usize, result_size: usize, nb_iter: usize, alpha:f32) {
     let mut rng = rand::thread_rng();
     let model;
     let dataset_inputs;
@@ -51,16 +51,16 @@ pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y:
         dataset_outputs = from_raw_parts(y, sample_size)
     }
 
-    for _it in 0..nb_iter {    
+    for _it in 0..nb_iter {
         let k = rng.gen_range(0, sample_size);
         let index_k = k * result_size;
         let  inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
         let output_k = dataset_outputs[k];
-        let gxk = linear_predict_model_classification_(result_size,model,inputs_k,);
+        let gxk = linear_predict_model_classification_(result_size,model,inputs_k);
         for i in 0..result_size {
-            model[i + 1] += alpha * (output_k - gxk as i8) as f32 * inputs_k[i];
+            model[i + 1] += alpha * (output_k - gxk )  * inputs_k[i];
         }
-        model[0] += alpha * (output_k - gxk as i8) as f32;
+        model[0] += alpha * (output_k - gxk ) ;
     }
 }
 fn linear_predict_model_regression_(inputs_size: usize, model: &[f32], inputs: &[f32]) -> f32 {
