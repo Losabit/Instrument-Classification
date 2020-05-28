@@ -24,6 +24,9 @@ pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> Vec<f32>{
 #[no_mangle]
 <<<<<<< HEAD
 pub extern fn init_linear_model_tab(size: usize, start: f32, end: f32) -> *mut f32 {
+=======
+pub extern fn init_linear_model_tab(size: usize, start: f32, end: f32) -> *mut f64 {
+>>>>>>> parent of bf70f6a... Some functions to python
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
     vector.push(1.0);
