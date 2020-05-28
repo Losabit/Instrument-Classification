@@ -1,7 +1,4 @@
 extern crate rand;
-
-use rand::Rng;
-
 mod lib;
 //use rand::Rng;
 
