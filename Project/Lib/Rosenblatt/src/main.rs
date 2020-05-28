@@ -28,7 +28,7 @@ fn main(){
         x.push((i + 1) as f32);  
         y.push(1.5 * ((i + 1) as f32) + 0.75 + ((rng.gen_range(0.0,1.0) - 0.35) * 2.0));
     }
-    let w = lib::train_linear_model_regression(x,y);
+    let w = lib::train_linear_model_regression(x.as_mut_ptr(),y.as_mut_ptr(),40);
     println!("{:?}",w);
 
 

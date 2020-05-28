@@ -2,9 +2,10 @@ extern crate rand;
 extern crate nalgebra;
 use rand::Rng;
 use nalgebra::DMatrix;
+use std::slice::{from_raw_parts, from_raw_parts_mut};
 
 #[no_mangle]
-pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> *mut f64 {
+pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> *mut f32 {
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
     vector.push(1.0);
@@ -21,8 +22,8 @@ pub extern "C" fn predict_linear_model_regression(w_ptr: *mut f32, xk_ptr: *mut 
     let xk;
 
     unsafe {
-        w = from_raw_parts(w_ptr, xk_size + 1)
-        xk = from_raw_parts(xk_ptr, xk_size)
+        w = from_raw_parts(w_ptr, xk_size + 1);
+        xk = from_raw_parts(xk_ptr, xk_size);
     }
 
     let mut sum = w[0];
@@ -45,7 +46,7 @@ pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y:
     let dataset_outputs;
 
     unsafe {
-        model = from_raw_parts(w, result_size + 1);
+        model = from_raw_parts_mut(w, result_size + 1);
         dataset_inputs = from_raw_parts(x, sample_size * result_size);
         dataset_outputs = from_raw_parts(y, sample_size)
     }
@@ -53,17 +54,31 @@ pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y:
     for _it in 0..nb_iter {    
         let k = rng.gen_range(0, sample_size);
         let index_k = k * result_size;
-        let inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
+        let  inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
         let output_k = dataset_outputs[k];
-
-        let gxk = predict_linear_model_classification_tab(w,&x[k]);
-        for i in 0..x[1].len() {
-            w[i + 1] += alpha * (y[k] - gxk as i8) as f32 * x[k][i];
+        let gxk = linear_predict_model_classification_(result_size,model,inputs_k,);
+        for i in 0..result_size {
+            model[i + 1] += alpha * (output_k - gxk as i8) as f32 * inputs_k[i];
         }
-        w[0] += alpha * (y[k] - gxk as i8) as f32;
+        model[0] += alpha * (output_k - gxk as i8) as f32;
     }
 }
+fn linear_predict_model_regression_(inputs_size: usize, model: &[f32], inputs: &[f32]) -> f32 {
+    let mut sum = model[0];
+    for i in 0..inputs_size {
+        sum += model[i + 1] * inputs[i]
+    }
+    sum
+}
+pub extern fn linear_predict_model_classification_(inputs_size: usize, model: &[f32], inputs: &[f32]) -> f32 {
+    let rslt = linear_predict_model_regression_(inputs_size, model, inputs);
 
+    if rslt >= 0.0 {
+        1.0
+    } else {
+        -1.0
+    }
+}
 #[no_mangle]
 pub extern "C" fn train_linear_model_regression(x_ptr: *mut f32, y_ptr: *mut f32, x_size: usize) -> *mut f32{
     let x;
