@@ -9,7 +9,7 @@ use std::slice::{from_raw_parts, from_raw_parts_mut};
 pub extern fn init_linear_model(size: usize) -> *mut f64 {
     let mut vector = Vec::new();
     let mut rng = rand::thread_rng();
-   // vector.push(1.0);
+
     for _it in 0..size+1 {
         vector.push(rng.gen_range(-1.0, 1.0) as f64);
     }
@@ -19,17 +19,34 @@ pub extern fn init_linear_model(size: usize) -> *mut f64 {
     return ptr
 }
 
-fn predict_linear_model_regression(model: &[f64], x: &[f64], x_size: usize)-> f64{
+fn predict_linear_model_regression_(model: &[f64], x: &[f64], x_size: usize)-> f64{
     let mut sum = model[0];
     for i in 0..x_size {
         sum += model[i + 1] * x[i]
     }
     return sum;
 }
-#[no_mangle]
-pub extern "C" fn predict_linear_model_classification(model: &[f64], x: &[f64], x_size: usize)-> f64{
-    return if predict_linear_model_regression(model, x, x_size) >= 0.0 { 1 } else { -1 } as f64;
+
+fn predict_linear_model_classification_(model: &[f64], x: &[f64], x_size: usize)-> f64{
+    return if predict_linear_model_regression_(model, x, x_size) >= 0.0 { 1 } else { -1 } as f64;
 }
+
+#[no_mangle]
+pub extern "C" fn predict_linear_model_regression(model_ptr: *mut f64, x_ptr: *mut f64, x_size: usize)-> f64{
+    let model;
+    let x;
+    unsafe {
+        model = from_raw_parts(model_ptr, x_size + 1);
+        x = from_raw_parts(x_ptr, x_size);
+    }
+    return predict_linear_model_regression_(model, x, x_size)
+}
+
+#[no_mangle]
+pub extern "C" fn predict_linear_model_classification(model_ptr: *mut f64, x_ptr: *mut f64, x_size: usize)-> f64{
+    return if predict_linear_model_regression(model_ptr, x_ptr, x_size) >= 0.0 { 1 } else { -1 } as f64;
+}
+
 
 #[no_mangle]
 pub extern "C" fn train_linear_model_regression(x_ptr: *mut f64, y_ptr: *mut f64, x_size: usize) -> *mut f64{
@@ -64,7 +81,7 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
         let index_k = k * result_size;
         let  inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
         let output_k = dataset_outputs[k];
-        let gxk = predict_linear_model_classification(model,inputs_k, result_size);
+        let gxk = predict_linear_model_classification_(model, inputs_k, result_size);
         for i in 0..result_size {
             model[i + 1] += alpha * (output_k - gxk )  * inputs_k[i];
         }
