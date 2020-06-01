@@ -1,5 +1,5 @@
 [package]
-name = "Rosenblatt"
+name = "SupervisingML"
 version = "0.1.0"
 authors = ["Quentin <quentin.clodion@gmail.com>", "Marvin <>", "Ahmed <>"]
 edition = "2018"
@@ -7,11 +7,11 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name = "rosenblatt"
+name = "supervising_ml"
 path = "src/main.rs"
 
 [lib]
-name = "mlliib_rust"
+name = "mllib_rust"
 crate-type = ["cdylib"]
 
 [dependencies]

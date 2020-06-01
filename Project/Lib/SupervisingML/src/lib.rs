@@ -4,8 +4,9 @@ use rand::Rng;
 use nalgebra::DMatrix;
 use std::slice::{from_raw_parts, from_raw_parts_mut};
 
+//Linéaire
 #[no_mangle]
-pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> *mut f32 {
+pub extern fn init_linear_model(size: usize) -> *mut f32 {
     let mut vector: Vec<f32> = vec![];
     let mut rng = rand::thread_rng();
     vector.push(1.0);
@@ -16,26 +17,31 @@ pub extern fn init_linear_model(size: usize, start: f32, end: f32) -> *mut f32 {
     return vector.into_boxed_slice().as_mut_ptr();
 }
 
-#[no_mangle]
-pub extern "C" fn predict_linear_model_regression(w_ptr: *mut f32, xk_ptr: *mut f32, xk_size: usize)-> f32{
-    let w;
-    let xk;
-
-    unsafe {
-        w = from_raw_parts(w_ptr, xk_size + 1);
-        xk = from_raw_parts(xk_ptr, xk_size);
-    }
-
-    let mut sum = w[0];
-    for i in 0..xk_size{
-        sum += w[i + 1] * xk[i];
+fn predict_linear_model_regression(model: &[f32], x: &[f32], x_size: usize)-> f32{
+    let mut sum = model[0];
+    for i in 0..x_size {
+        sum += model[i + 1] * x[i]
     }
     return sum;
 }
 
+fn predict_linear_model_classification(model: &[f32], x: &[f32], x_size: usize)-> f32{
+    return if predict_linear_model_regression(model, x, x_size) >= 0.0 { 1 } else { -1 } as f32;
+}
+
 #[no_mangle]
-pub extern "C" fn predict_linear_model_classification(w_ptr: *mut f32, xk_ptr: *mut f32, xk_size: usize)-> f32{
-    return if predict_linear_model_regression(w_ptr, xk_ptr, xk_size) >= 0.0 { 1 } else { -1 } as f32;
+pub extern "C" fn train_linear_model_regression(x_ptr: *mut f32, y_ptr: *mut f32, x_size: usize) -> *mut f32{
+    let x;
+    let y;
+    unsafe {
+        x = from_raw_parts(x_ptr, x_size);
+        y = from_raw_parts(y_ptr, x_size / 2);
+    }
+
+    let xm = DMatrix::from_row_slice(x_size / 2, 2, &x);
+    let ym = DMatrix::from_row_slice(x_size / 2, 1, &y);
+    let w_matrix = (((xm.transpose() * &xm).try_inverse()).unwrap() * xm.transpose()) * ym;
+    return w_matrix.data.as_vec().to_vec().into_boxed_slice().as_mut_ptr();
 }
 
 #[no_mangle]
@@ -56,59 +62,15 @@ pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y:
         let index_k = k * result_size;
         let  inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
         let output_k = dataset_outputs[k];
-        let gxk = linear_predict_model_classification_(result_size,model,inputs_k);
+        let gxk = predict_linear_model_classification(model,inputs_k, result_size);
         for i in 0..result_size {
             model[i + 1] += alpha * (output_k - gxk )  * inputs_k[i];
         }
         model[0] += alpha * (output_k - gxk ) ;
     }
 }
-fn linear_predict_model_regression_(inputs_size: usize, model: &[f32], inputs: &[f32]) -> f32 {
-    let mut sum = model[0];
-    for i in 0..inputs_size {
-        sum += model[i + 1] * inputs[i]
-    }
-    sum
-}
-pub extern fn linear_predict_model_classification_(inputs_size: usize, model: &[f32], inputs: &[f32]) -> f32 {
-    let rslt = linear_predict_model_regression_(inputs_size, model, inputs);
 
-    if rslt >= 0.0 {
-        1.0
-    } else {
-        -1.0
-    }
-}
-#[no_mangle]
-pub extern "C" fn train_linear_model_regression(x_ptr: *mut f32, y_ptr: *mut f32, x_size: usize) -> *mut f32{
-    let x;
-    let y;
-    unsafe {
-        x = from_raw_parts(x_ptr, x_size);
-        y = from_raw_parts(y_ptr, x_size / 2);
-    }
-
-    let xm = DMatrix::from_row_slice(x_size / 2, 2, &x);
-    let ym = DMatrix::from_row_slice(x_size / 2, 1, &y);
-    let w_matrix = (((xm.transpose() * &xm).try_inverse()).unwrap() * xm.transpose()) * ym;
-    return w_matrix.data.as_vec().to_vec().into_boxed_slice().as_mut_ptr();
-}
-
-/**
-* Function to labal random y for X0
-* Fonction qui permet d'étiqueté au hasard
-**/
-#[warn(dead_code)]
-fn init_random_y_xo(x:Vec<f32>) -> Vec<f32> {
-    let mut vector_y: Vec<f32> = vec![];
-    let mut rng = rand::thread_rng();
-    vector_y.push(1.0);
-    for _it in 0.. x.len(){
-        vector_y.push(rng.gen_range(0.0, 1.0));
-    }
-    return vector_y;
-}
-
+//Multi-couche
 fn size_of_couche(w: &Vec<Vec<Vec<f32>>>, couche: usize, count_biais: bool) -> usize {
     if couche < w.len() {
         return if count_biais == true { w[couche].len() } else { w[couche].len() - 1}
