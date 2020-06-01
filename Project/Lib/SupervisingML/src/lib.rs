@@ -17,7 +17,7 @@ pub extern fn init_linear_model(size: usize) -> *mut f32 {
     return vector.into_boxed_slice().as_mut_ptr();
 }
 
-fn predict_linear_model_regression(model: &[f32], x: &[f32], x_size: usize)-> f32{
+fn predict_linear_model_regression_(model: &[f32], x: &[f32], x_size: usize)-> f32{
     let mut sum = model[0];
     for i in 0..x_size {
         sum += model[i + 1] * x[i]
@@ -25,8 +25,24 @@ fn predict_linear_model_regression(model: &[f32], x: &[f32], x_size: usize)-> f3
     return sum;
 }
 
-fn predict_linear_model_classification(model: &[f32], x: &[f32], x_size: usize)-> f32{
-    return if predict_linear_model_regression(model, x, x_size) >= 0.0 { 1 } else { -1 } as f32;
+fn predict_linear_model_classification_(model: &[f32], x: &[f32], x_size: usize)-> f32{
+    return if predict_linear_model_regression_(model, x, x_size) >= 0.0 { 1 } else { -1 } as f32;
+}
+
+#[no_mangle]
+pub extern "C" fn predict_linear_model_regression(model_ptr: *mut f32, x_ptr: *mut f32, x_size: usize)-> f32{
+    let model;
+    let x;
+    unsafe {
+        model = from_raw_parts(model_ptr, x_size + 1);
+        x = from_raw_parts(x_ptr, x_size);
+    }
+    return predict_linear_model_regression_(model, x, x_size)
+}
+
+#[no_mangle]
+pub extern "C" fn predict_linear_model_classification(model_ptr: *mut f32, x_ptr: *mut f32, x_size: usize)-> f32{
+    return if predict_linear_model_regression(model_ptr, x_ptr, x_size) >= 0.0 { 1 } else { -1 } as f32;
 }
 
 #[no_mangle]
