@@ -78,7 +78,7 @@ pub extern "C" fn train_linear_model_classification(w: *mut f32, x: *mut f32, y:
         let index_k = k * result_size;
         let  inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
         let output_k = dataset_outputs[k];
-        let gxk = predict_linear_model_classification(model,inputs_k, result_size);
+        let gxk = predict_linear_model_classification_(model, inputs_k, result_size);
         for i in 0..result_size {
             model[i + 1] += alpha * (output_k - gxk )  * inputs_k[i];
         }
