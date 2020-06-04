@@ -71,7 +71,7 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
     let dataset_outputs;
 
     unsafe {
-        model = from_raw_parts_mut(w, result_size + 1);
+        model = from_raw_parts_mut(w , result_size + 1);
         dataset_inputs = from_raw_parts(x, sample_size * result_size);
         dataset_outputs = from_raw_parts(y, sample_size)
     }
@@ -92,7 +92,7 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
 
 //Multi-couche
 #[no_mangle]
-pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *mut usize, number_of_couches: usize) -> *mut f64 {
+pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> *mut f64 {
     let mut model: Vec<f64> = vec![];
     let mut rng = rand::thread_rng();
     let neurones_by_couche;
@@ -119,7 +119,7 @@ pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *mut usize, num
 }
 
 #[no_mangle]
-pub extern "C" fn get_model_size(neurones_by_couche_ptr: *mut usize, number_of_couches: usize) -> usize {
+pub extern "C" fn get_model_size(neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> usize {
     let neurones_by_couche;
     unsafe{
         neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
@@ -133,8 +133,7 @@ pub extern "C" fn get_model_size(neurones_by_couche_ptr: *mut usize, number_of_c
 
 #[no_mangle]
 pub extern fn train_multicouche_model_classification(w: &mut Vec<Vec<Vec<f64>>>, x: &mut Vec<Vec<f64>>, y: &Vec<i8>,  nb_iter:usize, alpha:f64 ) -> Vec<f64>{
-    assert_eq!(x.len() - 1, w.len());
-    init_out_neurone(&w, x);
+   // init_out_neurone(&w, x);
     let mut sigma : Vec<Vec<f64>> = vec![vec![]];
     for i in 0..y.len(){
         sigma[0].push(gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]));
@@ -144,12 +143,14 @@ pub extern fn train_multicouche_model_classification(w: &mut Vec<Vec<Vec<f64>>>,
     for _it in 0..nb_iter{
         for couche in 0..w.len(){
             for neurone in 0..w[couche].len(){
+                let sub_value = alpha * x[couche][neurone] * sigma[couche][neurone];
                 for next_neurone in 0..w[couche][neurone].len(){
-                    w[couche][neurone][next_neurone] = w[couche][neurone][next_neurone] - (alpha * x[couche][neurone] * sigma[couche][neurone]);
+                    w[couche][neurone][next_neurone] = w[couche][neurone][next_neurone] - sub_value;
                 }  
             }    
         }
-        refresh_out_neurone(&w, x);
+        // est ce que ca doit bien aller ici le refresh ??
+        //refresh_out_neurone(&w, x);
         for i in 0..sigma[last_couche].len() {
             sigma[last_couche][i] = gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]);
         }
@@ -163,35 +164,64 @@ pub extern fn train_multicouche_model_classification(w: &mut Vec<Vec<Vec<f64>>>,
     return vec![];
 }
 
-fn calculate_signal(w:&Vec<Vec<f64>>, x:&Vec<f64>, neurone:usize) -> f64 {
+//x couches indices : 0, 3, 7, 10
+fn get_correct_out_indice(neurones_by_couche: &[usize], couche: usize, neurone: usize) -> usize{
+    let mut indice = 0;
+    assert!(couche <= neurones_by_couche.len() - 1, "couche not exist or not reachable");
+    assert!(neurone <= neurones_by_couche[couche], "neurone not exist");
+
+    for i in 0..couche {
+        indice += neurones_by_couche[i] + 1;
+    }
+    indice += neurone; 
+    return indice;
+}
+
+//w  = [2,3,2,1] -> couches indices : 0, 9, 17 / neurones indices : 0 -> 0, 3, 6 / 1 -> 9, 11, 13, 15 / 2 -> 17,18,19
+fn get_correct_model_indice(neurones_by_couche: &[usize], couche: usize, neurone: usize, next_neurone: usize) -> usize{
+    let mut indice = 0;
+    assert!(couche <= neurones_by_couche.len() - 2, "couche not exist or not reachable");
+    assert!(neurone <= neurones_by_couche[couche], "neurone not exist");
+    assert!(next_neurone <= neurones_by_couche[couche + 1] - 1, "next neurone not exist");
+
+    for i in 0..couche {
+        indice += (neurones_by_couche[i] + 1) * neurones_by_couche[i + 1];
+    }
+    indice += neurones_by_couche[couche + 1] * neurone + next_neurone; 
+    return indice;
+}
+
+fn init_out_neurone(model: &[f64], x: &[f64], neurones_by_couche: &[usize]) -> *mut f64{
+    let mut x_vec : Vec<f64> = x.to_vec();
+    for couche in 0..neurones_by_couche.len() - 1{
+        x_vec.push(1.0);
+        for neurone in 0..neurones_by_couche[couche + 1]{
+            x_vec.push(calculate_signal(model, &x_vec, neurone, neurones_by_couche, couche));
+        }
+    }
+    let mut slice = x_vec.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr;
+}
+
+fn refresh_out_neurone(model: &[f64], x: &mut [f64], neurones_by_couche: &[usize]){
+    for couche in 1..neurones_by_couche.len(){
+        for neurone in 1..neurones_by_couche[couche]{
+            x[get_correct_out_indice(neurones_by_couche, couche, neurone)] = calculate_signal(model, x, neurone - 1, neurones_by_couche, couche);
+        }
+    }
+}
+
+fn calculate_signal(model: &[f64], x: &[f64], next_neurone:usize, neurones_by_couche: &[usize], couche: usize) -> f64 {
     let mut value = 0.0;
-    for i in 0..w.len(){
-        value += w[i][neurone] * x[i];
+    for neurone in 0..neurones_by_couche[couche]{
+        value += model[get_correct_model_indice(neurones_by_couche, couche, neurone, next_neurone)] * x[get_correct_out_indice(neurones_by_couche, couche, neurone)];
     }
-    return value;
+    return value.tanh();
 }
 
-pub fn init_out_neurone(model: &Vec<Vec<Vec<f64>>>, x: &mut Vec<Vec<f64>>){
-    for couche in 0..model.len(){
-        let mut vector : Vec<f64> = vec![];
-        vector.push(1.0);
-        for neurone in 0..size_of_couche(&model, couche + 1, false){
-            vector.push(calculate_signal(&model[couche], &x[couche], neurone).tanh());
-        }
-        x.push(vector);
-    }
-}
-
-pub fn refresh_out_neurone(model: &Vec<Vec<Vec<f64>>>, x: &mut Vec<Vec<f64>>){
-    for couche in 1..x.len(){
-        for neurone in 1..x[couche].len(){
-            x[couche][neurone] = calculate_signal(&model[couche - 1], &x[couche - 1], neurone - 1).tanh();
-        }
-    }
-}
-
-#[no_mangle]
-pub extern fn gradien_retropropagation (w : &Vec<f64>, x: &f64, sigma:f64) -> f64 {
+fn gradien_retropropagation (w : &[f64], x: f64, sigma:f64) -> f64 {
     let mut sum = 0.0;
     for i in 1..w.len(){
         sum += w[i] * sigma;
@@ -200,26 +230,11 @@ pub extern fn gradien_retropropagation (w : &Vec<f64>, x: &f64, sigma:f64) -> f6
     return sig;
 }
 
-#[no_mangle]
-pub extern  fn gradien_retropropagation_last_classification (y: i8, xlj: f64 ) -> f64 {
-    let result :f64 = (1.0 - xlj.powf(2.0) ) * (xlj - y as f64);
+fn gradien_retropropagation_last_classification (y: i8, xlj: f64 ) -> f64 {
+    let result :f64 = (1.0 - xlj.powf(2.0)) * (xlj - y as f64);
     return result;
 }
 
-#[no_mangle]
-pub extern  fn gradien_retropropagation_last_regression (y: f64, xlj: f64 ) -> f64 {
-    let result :f64 = xlj - y;
-    return result;
-}
-
-fn size_of_couche(w: &Vec<Vec<Vec<f64>>>, couche: usize, count_biais: bool) -> usize {
-    if couche < w.len() {
-        return if count_biais == true { w[couche].len() } else { w[couche].len() - 1}
-    }
-    else if couche == w.len() {
-        return if count_biais == true { w[couche - 1][0].len() + 1 } else { w[couche - 1][0].len() }
-    }
-    else {
-        return 0;
-    }
+fn gradien_retropropagation_last_regression (y: f64, xlj: f64 ) -> f64 {
+    return (xlj - y) as f64;
 }

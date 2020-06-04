@@ -33,7 +33,7 @@ fn main(){
 
 //multicouche 
     //classification
-    let mut neurone_by_couche : [usize;4] = [2,3,2,1];
+    let mut neurone_by_couche = [2,3,2,1];
     let size = lib::get_model_size(neurone_by_couche.as_mut_ptr(), 4);
     let model_ptr = lib::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
     let model;
@@ -43,9 +43,7 @@ fn main(){
     println!("{:?}",model);
     println!("{:?}",size);
 
-    let mut x : Vec<Vec<f32>> = vec![vec![1.0, 0.4, 0.7]];
+    let x = vec![1.0, 0.4, 0.7];
     let y = vec![-1,1];
-   // lib::init_out_neurone(&model, &mut x);
-    println!("{:?}",x);
-
+   //lib:init_multicouche_model( &[1.0, 0.4, 0.7])
 }
