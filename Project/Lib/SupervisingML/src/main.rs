@@ -1,7 +1,6 @@
 extern crate rand;
-
+use std::slice::{from_raw_parts, from_raw_parts_mut};
 use rand::Rng;
-
 mod lib;
 //use rand::Rng;
 
@@ -34,12 +33,19 @@ fn main(){
 
 //multicouche 
     //classification
-/*   let model = lib::init_multicouche(&[2,3,2,1], 0.0, 1.0);
+    let mut neurone_by_couche : [usize;4] = [2,3,2,1];
+    let size = lib::get_model_size(neurone_by_couche.as_mut_ptr(), 4);
+    let model_ptr = lib::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+    let model;
+    unsafe{
+        model = from_raw_parts(model_ptr, size);
+    }
     println!("{:?}",model);
+    println!("{:?}",size);
 
     let mut x : Vec<Vec<f32>> = vec![vec![1.0, 0.4, 0.7]];
     let y = vec![-1,1];
-    lib::init_out_neurone(&model, &mut x);
+   // lib::init_out_neurone(&model, &mut x);
     println!("{:?}",x);
-*/
+
 }

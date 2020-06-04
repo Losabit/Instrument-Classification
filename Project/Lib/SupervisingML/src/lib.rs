@@ -79,9 +79,10 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
     for _it in 0..nb_iter {
         let k = rng.gen_range(0, sample_size);
         let index_k = k * result_size;
-        let  inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
+        let inputs_k = &dataset_inputs[index_k..(index_k + result_size)];
         let output_k = dataset_outputs[k];
         let gxk = predict_linear_model_classification_(model, inputs_k, result_size);
+        
         for i in 0..result_size {
             model[i + 1] += alpha * (output_k - gxk )  * inputs_k[i];
         }
@@ -90,16 +91,76 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
 }
 
 //Multi-couche
-fn size_of_couche(w: &Vec<Vec<Vec<f64>>>, couche: usize, count_biais: bool) -> usize {
-    if couche < w.len() {
-        return if count_biais == true { w[couche].len() } else { w[couche].len() - 1}
+#[no_mangle]
+pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *mut usize, number_of_couches: usize) -> *mut f64 {
+    let mut model: Vec<f64> = vec![];
+    let mut rng = rand::thread_rng();
+    let neurones_by_couche;
+    unsafe{
+        neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
     }
-    else if couche == w.len() {
-        return if count_biais == true { w[couche - 1][0].len() + 1 } else { w[couche - 1][0].len() }
+    
+    for i in 0..neurones_by_couche.len() - 1{
+        
+        for _it in 0..neurones_by_couche[i + 1]{
+            model.push(1.0)
+        }
+        
+        for _j in 0..neurones_by_couche[i]{
+            for _it in 0..neurones_by_couche[i + 1]{
+                model.push(rng.gen_range(-1.0, 1.0) as f64);
+            }
+        }
     }
-    else {
-        return 0;
+    let mut slice = model.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr;
+}
+
+#[no_mangle]
+pub extern "C" fn get_model_size(neurones_by_couche_ptr: *mut usize, number_of_couches: usize) -> usize {
+    let neurones_by_couche;
+    unsafe{
+        neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
     }
+    let mut size = 0;
+    for i in 0..number_of_couches - 1{
+        size += (neurones_by_couche[i] + 1) * neurones_by_couche[i + 1];
+    }
+    return size;
+}
+
+#[no_mangle]
+pub extern fn train_multicouche_model_classification(w: &mut Vec<Vec<Vec<f64>>>, x: &mut Vec<Vec<f64>>, y: &Vec<i8>,  nb_iter:usize, alpha:f64 ) -> Vec<f64>{
+    assert_eq!(x.len() - 1, w.len());
+    init_out_neurone(&w, x);
+    let mut sigma : Vec<Vec<f64>> = vec![vec![]];
+    for i in 0..y.len(){
+        sigma[0].push(gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]));
+    }
+    let last_couche = sigma.len() - 1;
+    
+    for _it in 0..nb_iter{
+        for couche in 0..w.len(){
+            for neurone in 0..w[couche].len(){
+                for next_neurone in 0..w[couche][neurone].len(){
+                    w[couche][neurone][next_neurone] = w[couche][neurone][next_neurone] - (alpha * x[couche][neurone] * sigma[couche][neurone]);
+                }  
+            }    
+        }
+        refresh_out_neurone(&w, x);
+        for i in 0..sigma[last_couche].len() {
+            sigma[last_couche][i] = gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]);
+        }
+        for couche in (0..last_couche).rev() {
+            for neurone in 0..sigma[couche].len() {
+                //sigma[couche][neurone] = gradien_retropropagation()
+            }
+        }
+    }
+    
+    return vec![];
 }
 
 fn calculate_signal(w:&Vec<Vec<f64>>, x:&Vec<f64>, neurone:usize) -> f64 {
@@ -151,58 +212,14 @@ pub extern  fn gradien_retropropagation_last_regression (y: f64, xlj: f64 ) -> f
     return result;
 }
 
-#[no_mangle]
-pub extern fn init_multicouche(neurones_by_couche: &[usize], start: f64, end: f64) -> Vec<Vec<Vec<f64>>> {
-    let mut model: Vec<Vec<Vec<f64>>> = vec![];
-    let mut rng = rand::thread_rng();
-    for i in 0..neurones_by_couche.len() - 1{
-        model.push(vec![]);
-
-        let mut vector_biais: Vec<f64> = vec![];
-        for _it in 0..neurones_by_couche[i + 1]{
-            vector_biais.push(1.0)
-        }
-        model[i].push(vector_biais);
-
-        for _j in 0..neurones_by_couche[i]{
-            let mut vector: Vec<f64> = vec![];
-            for _it in 0..neurones_by_couche[i + 1]{
-                vector.push(rng.gen_range(start, end));
-            }
-            model[i].push(vector);
-        }
+fn size_of_couche(w: &Vec<Vec<Vec<f64>>>, couche: usize, count_biais: bool) -> usize {
+    if couche < w.len() {
+        return if count_biais == true { w[couche].len() } else { w[couche].len() - 1}
     }
-    return model;
-}
-
-#[no_mangle]
-pub extern fn train_multicouche_model_classification(w: &mut Vec<Vec<Vec<f64>>>, x: &mut Vec<Vec<f64>>, y: &Vec<i8>,  nb_iter:usize, alpha:f64 ) -> Vec<f64>{
-    assert_eq!(x.len() - 1, w.len());
-    init_out_neurone(&w, x);
-    let mut sigma : Vec<Vec<f64>> = vec![vec![]];
-    for i in 0..y.len(){
-        sigma[0].push(gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]));
+    else if couche == w.len() {
+        return if count_biais == true { w[couche - 1][0].len() + 1 } else { w[couche - 1][0].len() }
     }
-    let last_couche = sigma.len() - 1;
-    
-    for _it in 0..nb_iter{
-        for couche in 0..w.len(){
-            for neurone in 0..w[couche].len(){
-                for next_neurone in 0..w[couche][neurone].len(){
-                    w[couche][neurone][next_neurone] = w[couche][neurone][next_neurone] - (alpha * x[couche][neurone] * sigma[couche][neurone]);
-                }  
-            }    
-        }
-        refresh_out_neurone(&w, x);
-        for i in 0..sigma[last_couche].len() {
-            sigma[last_couche][i] = gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]);
-        }
-        for couche in (0..last_couche).rev() {
-            for neurone in 0..sigma[couche].len() {
-                //sigma[couche][neurone] = gradien_retropropagation()
-            }
-        }
+    else {
+        return 0;
     }
-    
-    return vec![];
 }
