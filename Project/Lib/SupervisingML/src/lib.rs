@@ -132,36 +132,69 @@ pub extern "C" fn get_model_size(neurones_by_couche_ptr: *const usize, number_of
 }
 
 #[no_mangle]
-pub extern fn train_multicouche_model_classification(w: &mut Vec<Vec<Vec<f64>>>, x: &mut Vec<Vec<f64>>, y: &Vec<i8>,  nb_iter:usize, alpha:f64 ) -> Vec<f64>{
-   // init_out_neurone(&w, x);
+pub extern "C" fn get_out_size(neurones_by_couche: &[usize]) -> usize {
+    let mut size = 0;
+    for i in 0..neurones_by_couche.len(){
+        size += neurones_by_couche[i] + 1;
+    }
+    return size;
+}
+
+#[no_mangle]
+pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut i8, neurones_by_couche_ptr: *const usize, number_of_couches: usize, nb_iter:usize, alpha:f64 ){
+    let model;
+    let neurones_by_couche;
+    let mut x;
+    let y;
+    unsafe {
+        model = from_raw_parts_mut(model_ptr, get_model_size(neurones_by_couche_ptr, number_of_couches));
+        neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
+        x = from_raw_parts_mut(x_ptr , neurones_by_couche[0] + 1);
+        x = from_raw_parts_mut(init_out_neurone(model, &x, neurones_by_couche), get_out_size(neurones_by_couche));
+        y = from_raw_parts(y_ptr, neurones_by_couche[neurones_by_couche.len() - 1]);
+    }
+
+    //ajouter toutes les couches de sigma
+    println!("Sigma Print : ");
     let mut sigma : Vec<Vec<f64>> = vec![vec![]];
     for i in 0..y.len(){
-        sigma[0].push(gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]));
+        sigma[0].push(gradien_retropropagation_last_classification(y[i], x[get_correct_out_indice(neurones_by_couche, number_of_couches - 1, i + 1)]));
     }
-    let last_couche = sigma.len() - 1;
+    println!("{:?}",sigma);
+
+    for couche in (0..number_of_couches - 1).rev(){
+        let mut buff_vec : Vec<f64> = vec![];
+        for neurone in 0..neurones_by_couche[couche]{
+            println!("couche = {:?} / neurone = {:?}", couche, neurone);
+            buff_vec.push(gradien_retropropagation(model, x, sigma[0][neurone], neurones_by_couche, couche, neurone));
+        }
+        sigma.insert(0, buff_vec);
+        println!("{:?}",sigma);
+    }
     
+
     for _it in 0..nb_iter{
-        for couche in 0..w.len(){
-            for neurone in 0..w[couche].len(){
-                let sub_value = alpha * x[couche][neurone] * sigma[couche][neurone];
-                for next_neurone in 0..w[couche][neurone].len(){
-                    w[couche][neurone][next_neurone] = w[couche][neurone][next_neurone] - sub_value;
+        for couche in 0..number_of_couches{
+            for neurone in 0..neurones_by_couche[couche] + 1{
+                let sub_value = alpha * x[get_correct_out_indice(neurones_by_couche, couche, neurone)] * sigma[couche][neurone];
+                for next_neurone in 0..neurones_by_couche[couche + 1] + 1{
+                    model[get_correct_model_indice(neurones_by_couche, couche, neurone, next_neurone)] = model[get_correct_model_indice(neurones_by_couche, couche, neurone, next_neurone)] - sub_value;
                 }  
             }    
         }
-        // est ce que ca doit bien aller ici le refresh ??
-        //refresh_out_neurone(&w, x);
-        for i in 0..sigma[last_couche].len() {
-            sigma[last_couche][i] = gradien_retropropagation_last_classification(y[i], x[x.len() - 1][i]);
+
+        // est ce que ca doit bien aller ici tout ces refresh ??
+        refresh_out_neurone(model, &mut x, neurones_by_couche);
+        /*for i in 0..sigma[last_couche].len() {
+            sigma[last_couche][i] = gradien_retropropagation_last_classification(y[i], x[get_correct_out_indice(neurones_by_couche, number_of_couches - 1, i)]);
         }
         for couche in (0..last_couche).rev() {
             for neurone in 0..sigma[couche].len() {
                 //sigma[couche][neurone] = gradien_retropropagation()
             }
         }
+        */
     }
-    
-    return vec![];
 }
 
 //x couches indices : 0, 3, 7, 10
@@ -191,7 +224,7 @@ fn get_correct_model_indice(neurones_by_couche: &[usize], couche: usize, neurone
     return indice;
 }
 
-fn init_out_neurone(model: &[f64], x: &[f64], neurones_by_couche: &[usize]) -> *mut f64{
+pub fn init_out_neurone(model: &[f64], x: &[f64], neurones_by_couche: &[usize]) -> *mut f64{
     let mut x_vec : Vec<f64> = x.to_vec();
     for couche in 0..neurones_by_couche.len() - 1{
         x_vec.push(1.0);
@@ -221,12 +254,12 @@ fn calculate_signal(model: &[f64], x: &[f64], next_neurone:usize, neurones_by_co
     return value.tanh();
 }
 
-fn gradien_retropropagation (w : &[f64], x: f64, sigma:f64) -> f64 {
+fn gradien_retropropagation (w : &[f64], x: &[f64], sigma:f64, neurones_by_couche: &[usize], couche: usize, neurone: usize) -> f64 {
     let mut sum = 0.0;
-    for i in 1..w.len(){
-        sum += w[i] * sigma;
+    for i in 1..neurones_by_couche[couche]{
+        sum += w[get_correct_model_indice(neurones_by_couche, couche, neurone, i)] * sigma;
     }
-    let sig = (1.0 - x.powf(2.0) ) * sum;
+    let sig = (1.0 - x[get_correct_out_indice(neurones_by_couche, couche, neurone)].powf(2.0) ) * sum;
     return sig;
 }
 
