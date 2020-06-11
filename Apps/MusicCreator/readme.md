@@ -14,4 +14,5 @@ Par la suite il a été décidé de la changer en une application Winforms et l'
 
 ## Lancer l'application
 L'éxécutable du projet se trouve dans SoundAnalyzer/bin
+
 Attention ! : Le fait qu'il s'agisse d'une application Winform a rendu impossible l'utilisation de Mono. De ce fait, l'application est disponible seuleument sur Windows.
