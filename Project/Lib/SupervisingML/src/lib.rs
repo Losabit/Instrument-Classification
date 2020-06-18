@@ -90,13 +90,12 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
     }
 }
 
-//Multi-couche
-#[repr(C)]
-pub struct Model_out {
-    model: *mut f64,
-    out: *mut f64
+enum ActivationFunction {
+    None,
+    Tanh
 }
 
+//Multi-couche
 #[no_mangle]
 pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> *mut f64 {
     let mut model: Vec<f64> = vec![];
@@ -154,7 +153,7 @@ pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_
     unsafe {
         model = from_raw_parts_mut(model_ptr, get_model_size(neurones_by_couche_ptr, number_of_couches));
         neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
-        x = from_raw_parts_mut(x_ptr , neurones_by_couche[0] + 1);
+        x = from_raw_parts_mut(x_ptr , neurones_by_couche[0]);
         x = from_raw_parts_mut(init_out_neurone(model, &x, neurones_by_couche), get_out_size(neurones_by_couche));
         y = from_raw_parts(y_ptr, neurones_by_couche[neurones_by_couche.len() - 1]);
     }
@@ -248,12 +247,17 @@ fn get_correct_model_indice(neurones_by_couche: &[usize], couche: usize, neurone
     return indice;
 }
 
-pub fn init_out_neurone(model: &[f64], x: &[f64], neurones_by_couche: &[usize]) -> *mut f64{
-    let mut x_vec : Vec<f64> = x.to_vec();
+pub fn init_out_neurone(model: &[f64], x: &[f64], activation_function: ActivationFunction, neurones_by_couche: &[usize]) -> *mut f64{
+    let mut x_vec : Vec<f64> = vec![];
+    x_vec.push(1.0);
+    for i in 0..x.len(){
+        x_vec.push(x[i]);
+    }
+
     for couche in 0..neurones_by_couche.len() - 1{
         x_vec.push(1.0);
         for neurone in 0..neurones_by_couche[couche + 1]{
-            x_vec.push(calculate_signal(model, &x_vec, neurone, neurones_by_couche, couche));
+            x_vec.push(calculate_signal(model, &x_vec, activation_function, neurone, neurones_by_couche, couche));
         }
     }
     let mut slice = x_vec.into_boxed_slice();
@@ -262,20 +266,27 @@ pub fn init_out_neurone(model: &[f64], x: &[f64], neurones_by_couche: &[usize]) 
     return ptr;
 }
 
-fn refresh_out_neurone(model: &[f64], x: &mut [f64], neurones_by_couche: &[usize]){
+fn refresh_out_neurone(model: &[f64], x: &mut [f64], activation_function: ActivationFunction, neurones_by_couche: &[usize]){
     for couche in 0..neurones_by_couche.len() - 1{
         for neurone in 1..neurones_by_couche[couche + 1]{
-            x[get_correct_out_indice(neurones_by_couche, couche, neurone)] = calculate_signal(model, x, neurone, neurones_by_couche, couche);
+            x[get_correct_out_indice(neurones_by_couche, couche, neurone)] = calculate_signal(model, x, activation_function, neurone, neurones_by_couche, couche);
         }
     }
 }
 
-fn calculate_signal(model: &[f64], x: &[f64], next_neurone:usize, neurones_by_couche: &[usize], couche: usize) -> f64 {
+fn calculate_signal(model: &[f64], x: &[f64], activation_function: ActivationFunction, next_neurone:usize, neurones_by_couche: &[usize], couche: usize) -> f64 {
     let mut value = 0.0;
     for neurone in 0..neurones_by_couche[couche]{
         value += model[get_correct_model_indice(neurones_by_couche, couche, neurone, next_neurone)] * x[get_correct_out_indice(neurones_by_couche, couche, neurone)];
     }
-    return value.tanh();
+    return use_activation_function(value, activation_function);
+}
+
+fn use_activation_function(value: f64, activation_function: ActivationFunction) -> f64 {
+    match activation_function {
+        ActivationFunction::Tanh => return value.tanh(),
+        ActivationFunction::None => return value
+    }
 }
 
 fn gradien_retropropagation (w : &[f64], x: &[f64], sigma: &[f64], neurones_by_couche: &[usize], couche: usize, neurone: usize) -> f64 {
