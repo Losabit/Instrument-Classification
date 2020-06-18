@@ -2,9 +2,6 @@ import ctypes
 
 #avacariu.me/writing/2014/calling-rust-from-python
 class MLP:
-    class ModelOut(Structure):
-        __fields__ = [("out", ctypes.POINTER(ctypes.c_double)), ("model",ctypes.POINTER(ctypes.c_double)]
-    
     def __init__(self, dll_path):
         self.lib = ctypes.CDLL(dll_path)
         self.initialize_rust_functions()
@@ -25,7 +22,7 @@ class MLP:
             ctypes.c_int,
             ctypes.c_int,
             ctypes.c_double]
-        self.lib.train_multicouche_model_classification.restype = None
+        self.lib.train_multicouche_model_classification.restype = ctypes.POINTER(ctypes.c_double)
 
     def init_multicouche_model(self, neurones_by_couche):
         self.model =  self.lib.init_multicouche_model(
