@@ -32,8 +32,8 @@ fn main(){
 
 //multicouche 
     //classification
-    let mut neurone_by_couche = [2,3,2,2];
-    let size = lib::get_model_size(neurone_by_couche.as_mut_ptr(), 4);
+    let mut neurone_by_couche = [2,2,1];
+    let size = lib::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
     let model_ptr = lib::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
     let model;
     unsafe{
@@ -42,8 +42,12 @@ fn main(){
     println!("{:?}",model);
     println!("{:?}",size);
 
-    let mut x = vec![1.0, 0.4, 0.7];
-    let mut y = vec![-1,1];
-    lib::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_ptr(), neurone_by_couche.len(), 1000, 0.2);
+    let mut x = vec![
+    0.0, 0.0, 
+    1.0, 0.0, 
+    0.0, 1.0, 
+    1.0, 1.0];
+    let mut y = vec![-1, 1, 1, -1];
+    lib::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_ptr(), neurone_by_couche.len(), y.len(), 1000, 0.1);
     println!("{:?}",model);
 }

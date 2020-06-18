@@ -91,6 +91,12 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
 }
 
 //Multi-couche
+#[repr(C)]
+pub struct Model_out {
+    model: *mut f64,
+    out: *mut f64
+}
+
 #[no_mangle]
 pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> *mut f64 {
     let mut model: Vec<f64> = vec![];
@@ -101,9 +107,8 @@ pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *const usize, n
     }
     
     for i in 0..neurones_by_couche.len() - 1{
-        
         for _it in 0..neurones_by_couche[i + 1]{
-            model.push(1.0)
+            model.push(rng.gen_range(-1.0, 1.0) as f64);
         }
         
         for _j in 0..neurones_by_couche[i]{
@@ -119,33 +124,33 @@ pub extern "C" fn init_multicouche_model(neurones_by_couche_ptr: *const usize, n
 }
 
 #[no_mangle]
-pub extern "C" fn get_model_size(neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> usize {
+pub extern "C" fn predict_multicouche_model_classification(model_ptr: *mut f64, out_ptr: *mut f64, x_ptr: *mut f64, neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> *mut f64 {
+    let model;
+    let mut out;
+    let x;
     let neurones_by_couche;
-    unsafe{
+
+    unsafe {
+        model = from_raw_parts(model_ptr, get_model_size(neurones_by_couche_ptr, number_of_couches));
         neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
+        out = from_raw_parts_mut(out_ptr, neurones_by_couche[neurones_by_couche.len() - 1]);
+        x = from_raw_parts(x_ptr , neurones_by_couche[0]);
     }
-    let mut size = 0;
-    for i in 0..number_of_couches - 1{
-        size += (neurones_by_couche[i] + 1) * neurones_by_couche[i + 1];
+    
+    for neurone in 1..neurones_by_couche[0] + 1{
+        out[0] = x[neurone - 1];
     }
-    return size;
+
+    return model_ptr;
 }
 
 #[no_mangle]
-pub extern "C" fn get_out_size(neurones_by_couche: &[usize]) -> usize {
-    let mut size = 0;
-    for i in 0..neurones_by_couche.len(){
-        size += neurones_by_couche[i] + 1;
-    }
-    return size;
-}
-
-#[no_mangle]
-pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut i8, neurones_by_couche_ptr: *const usize, number_of_couches: usize, nb_iter:usize, alpha:f64 ){
+pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut i8, neurones_by_couche_ptr: *const usize, number_of_couches: usize, number_exemples: usize, nb_iter:usize, alpha:f64) -> *mut f64{
     let model;
     let neurones_by_couche;
     let mut x;
     let y;
+
     unsafe {
         model = from_raw_parts_mut(model_ptr, get_model_size(neurones_by_couche_ptr, number_of_couches));
         neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
@@ -153,6 +158,8 @@ pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_
         x = from_raw_parts_mut(init_out_neurone(model, &x, neurones_by_couche), get_out_size(neurones_by_couche));
         y = from_raw_parts(y_ptr, neurones_by_couche[neurones_by_couche.len() - 1]);
     }
+
+    println!("x : {:?}",x);
 
     let mut sigma : Vec<Vec<f64>> = vec![vec![]];
     for i in 0..y.len(){
@@ -166,6 +173,7 @@ pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_
         }
         sigma.insert(0, buff_vec);
     }
+    println!("delta : {:?}",sigma);
     
     for _it in 0..nb_iter{
         for couche in 0..number_of_couches - 1{
@@ -188,6 +196,30 @@ pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_
         }
         */
     }
+    
+    return model_ptr;
+}
+
+#[no_mangle]
+pub extern "C" fn get_model_size(neurones_by_couche_ptr: *const usize, number_of_couches: usize) -> usize {
+    let neurones_by_couche;
+    unsafe{
+        neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
+    }
+    let mut size = 0;
+    for i in 0..number_of_couches - 1{
+        size += (neurones_by_couche[i] + 1) * neurones_by_couche[i + 1];
+    }
+    return size;
+}
+
+#[no_mangle]
+pub extern "C" fn get_out_size(neurones_by_couche: &[usize]) -> usize {
+    let mut size = 0;
+    for i in 0..neurones_by_couche.len(){
+        size += neurones_by_couche[i] + 1;
+    }
+    return size;
 }
 
 //x couches indices : 0, 3, 7, 10
