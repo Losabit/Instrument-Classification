@@ -51,12 +51,20 @@ fn main(){
     
     let predict_value;
     let predict_value_2;
+    let predict_value_3;
+    let predict_value_4;
     let predict_value_ptr = lib::predict_multicouche_model_classification(model_ptr,  x[0..2].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
     let predict_value_2_ptr = lib::predict_multicouche_model_classification(model_ptr,  x[2..4].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
+    let predict_value_3_ptr = lib::predict_multicouche_model_classification(model_ptr,  x[4..6].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
+    let predict_value_4_ptr = lib::predict_multicouche_model_classification(model_ptr,  x[6..8].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
     unsafe{
         predict_value = from_raw_parts(predict_value_ptr, 1);
         predict_value_2 = from_raw_parts(predict_value_2_ptr, 1);
+        predict_value_3 = from_raw_parts(predict_value_3_ptr, 1);
+        predict_value_4 = from_raw_parts(predict_value_4_ptr, 1);
     }
     println!("predict value 1 = {:?} for {:?}",predict_value, &x[0..2]);
     println!("predict value 2 = {:?} for {:?}",predict_value_2, &x[2..4]);
+    println!("predict value 3 = {:?} for {:?}",predict_value_3, &x[4..6]);
+    println!("predict value 4 = {:?} for {:?}",predict_value_4, &x[6..8]);
 }
