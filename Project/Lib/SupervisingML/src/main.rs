@@ -34,8 +34,8 @@ fn main(){
     //classification        
     let mut neurone_by_couche = [2,2,1];
     let size = lib::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
-    let model_ptr = lib::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
-    let model;
+    let mut model_ptr = lib::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+    let mut model;
     unsafe{
         model = from_raw_parts(model_ptr, size);
     }
@@ -47,8 +47,13 @@ fn main(){
     0.0, 1.0, 
     1.0, 1.0];
     let mut y = vec![-1, 1, 1, -1];
-    lib::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_ptr(), neurone_by_couche.len(), y.len(), 1000, 0.1);
     
+    model_ptr = lib::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_ptr(), neurone_by_couche.len(), y.len(), 10000, 0.1);
+    unsafe{
+        model = from_raw_parts(model_ptr, size);
+    }
+    println!("{:?}",model);
+
     let predict_value;
     let predict_value_2;
     let predict_value_3;
