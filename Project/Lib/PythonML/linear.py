@@ -44,25 +44,25 @@ class Linear:
             ctypes.c_int
         ]
 
-    def init_linear_model(size):
+    def init_linear_model(self,size):
         self.model = self.lib.init_linear_model(ctypes.c_int(size))
         self.model_size = size + 1
 
-    def predict_linear_model_classification(points):
+    def predict_linear_model_classification(self,points):
         return self.lib.predict_linear_model_classification(
             self.model,
             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(points)
         )
     
-     def predict_linear_model_regression(points):
+     def predict_linear_model_regression(self,points):
         return self.lib.predict_linear_model_regression(
             self.model,
             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(points)
         )
 
-    def train_linear_model_classification(x, y, result_size, nb_iter, alpha):
+    def train_linear_model_classification(self,x, y, result_size, nb_iter, alpha):
         self.lib.train_linear_model_classification(
             self.model,
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
@@ -73,7 +73,7 @@ class Linear:
             alpha
         )
     
-    def train_linear_model_regression(x, y, x_size):
+    def train_linear_model_regression(self,x, y, x_size):
         return self.lib.train_linear_model_regression(
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),

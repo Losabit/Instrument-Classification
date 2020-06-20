@@ -53,6 +53,7 @@ class MLP:
         self.model =  self.lib.init_multicouche_model(
             neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)),
             ctypes.c_int(len(neurones_by_couche)))
+
     
     
 
