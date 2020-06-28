@@ -100,7 +100,7 @@
                     <tr>
                       <td style=""><br><i class="fa fa-camera-retro fa-lg" style=""></i></td>
                       <td>Saxophone</td>
-                      <td>Yes</td>
+                      <td>No</td>
                     </tr>
                     <tr>
                       <td>2</td>
