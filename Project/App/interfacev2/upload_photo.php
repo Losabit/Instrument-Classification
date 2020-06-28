@@ -3,7 +3,7 @@
  * upload_photo.php
  * ----------------
  *
- * Permet de gérer l'upload de photos du site
+ * Permet de gérer l'upload des fichiers du site
  *
  * Phase 1
  * -------
@@ -25,7 +25,7 @@
  *
  * Phase 3
  * -------
- * Déplacement de la photo
+ * Déplacement du fichier.
  *
  * @var $bd PDO
  */
@@ -78,7 +78,7 @@ $error = null; // Détermine le type d'erreur
                     <p style="font-weight: bold; text-align: center;">Vous allez être redirigé d'ici un instant..</p>';
                 <?php } }else
             {
-                echo "Extension invalide";
+                echo "Extension invalide, merci de nous fournir un .wave, mp3 , mp4, ou un fichier audio quelconques";
 
 
 
@@ -87,7 +87,7 @@ $error = null; // Détermine le type d'erreur
     }
     else
     {
-        echo 'il ny a pas de fichier';
+        echo 'Il ny a pas de fichier';
     }
 ?>
 
