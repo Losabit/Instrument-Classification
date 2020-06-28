@@ -1,6 +1,5 @@
 import ctypes
 
-
 # avacariu.me/writing/2014/calling-rust-from-python
 class MLP:
     def __init__(self, dll_path):
@@ -8,6 +7,7 @@ class MLP:
         self.initialize_rust_functions()
         self.model = []
         self.neurones_by_couche = []
+        self.nbNeuroneByCouche = 0
 
     def initialize_rust_functions(self):
         self.lib.init_multicouche_model.argtypes = [ctypes.POINTER(ctypes.c_int), ctypes.c_int]
@@ -51,23 +51,24 @@ class MLP:
 
     def init_multicouche_model(self, neurones_by_couche):
         self.neurones_by_couche = neurones_by_couche
+        self.nbNeuroneByCouche = len( neurones_by_couche)
         self.model = self.lib.init_multicouche_model(
             neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)),
-            ctypes.c_int(len(neurones_by_couche)))
+            ctypes.c_int(nbNeuroneByCouche))
 
     def predict_multicouche_model_classification(self, x):
         return self.lib.predict_multicouche_model_classification(
             self.model, 
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), 
             self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), 
-            len(self.neurones_by_couche))
+            len(self.neurones_by_couche) )
 
     def predict_multicouche_model_regression(self, x):
         return self.lib.predict_multicouche_model_regression(
             self.model, 
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), 
             self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), 
-            len(self.neurones_by_couche))
+            nbNeuroneByCouche)
 
     def train_multicouche_model_classification(self, x, y, nbExemple, nbIter, alpha):
         self.model = self.lib.train_multicouche_model_classification(
@@ -75,7 +76,7 @@ class MLP:
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_int8)),
             self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)),
-            len(self.neurones_by_couche),
+            nbNeuroneByCouche,
             nbExemple,
             nbIter,
             alpha)
@@ -86,7 +87,7 @@ class MLP:
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_int8)),
             self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)),
-            len(self.neurones_by_couche),
+            nbNeuroneByCouche,
             nbExemple,
             nbIter,
             alpha)
