@@ -1,13 +1,10 @@
 import csv
 import os
-import tensorflow as tf
-import tensorflow.keras as keras
 import numpy as np
 import matplotlib.pyplot as plt
-
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation
+import sys
+sys.path.append('../../Lib/PythonML')
+from linear import Linear
 
 # Import Data
 frequency_max = 20000
@@ -48,16 +45,12 @@ def importData(path, label_number = len(labels)):
 
 
 
-train_data, train_label = importData('/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Fourier/dataset/train')
-validation_data, validation_label = importData('/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Fourier/dataset/validation')
-
 # Linear classification
+train_data, train_label = importData('Fourier/dataset/train', 2)
+validation_data, validation_label = importData('Fourier/dataset/validation', 2)
 
-train_label = to_categorical(train_label)
-
-model = Sequential()
-model.add(Dense(1, activation='linear', input_shape=train_data.shape[1:]))
-model.summary()
-model.compile(optimizer = 'adam', loss = 'categorical_crossentropy')
-model.fit(train_data, train_label, epochs= 1000, batch_size=0.1)
-#plt.plot(data, regr.predict(data), 'b', data,y, 'k.')'''
+linear = Linear('../../Lib/SupervisingML/target/debug/libmllib_rust.so')
+linear.init_linear_model(frequency_max * 2 * frequency_precision * 2)
+linear.train_linear_model_classification(train_data, train_label, 1000, 0.1)
+for i in range(len(validation_data)):
+    print("predicted result : " + str(linear.predict_linear_model_classification(validation_data[i])) + " / result : " + str(validation_label[i]))

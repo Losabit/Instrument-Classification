@@ -7,8 +7,8 @@ import matplotlib.image as mpimg
 import random
 from random import randrange
 
-train_path = 'C:\\Users\\quent\\Desktop\\Projet Annuel\\Applis\\TestDataset\\ImageClassification\\dataset\\train'
-validation_path = 'C:\\Users\\quent\\Desktop\\Projet Annuel\\Applis\\TestDataset\\ImageClassification\\dataset\\validation'
+train_path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Spectrogramm/dataset/train'
+validation_path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Spectrogramm/dataset/validation'
 class_names = ['saxo', 'piano', 'guitare']
 IMG_HEIGHT = 109
 IMG_WIDTH = 146
@@ -29,6 +29,8 @@ for i in range(len(class_names)):
             if extension in file:
                 validation_images.append(mpimg.imread(os.path.join(r, file)))
                 validation_labels.append(i)
+
+print(len(train_images))
 
 for i in range(len(train_labels)):
     rand = random.randrange(i,len(train_labels))
@@ -51,7 +53,9 @@ for i in range(25):
     plt.xlabel(class_names[train_labels[i]])
 plt.show()
 '''
-
+arraynp = np.array(train_images)
+print(arraynp)
+'''
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(IMG_HEIGHT, IMG_WIDTH)),
     keras.layers.Dense(128, activation='relu'),
@@ -65,4 +69,4 @@ model.compile(optimizer='adam',
 model.fit(np.array(train_images), np.array(train_labels), epochs=10)
 test_loss, test_acc = model.evaluate(validation_images,  validation_labels, verbose=2)
 
-print('\nTest accuracy:', test_acc)
+print('\nTest accuracy:', test_acc)'''
