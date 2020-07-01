@@ -1,10 +1,13 @@
 # %% IMPORT
 import numpy as np
 import matplotlib.pyplot as plt
-from linear import *
+import sys
+sys.path.append('../Lib/PythonML')
+from linear import Linear
 
-linearMod = Linear("C:/Users/marvi/PycharmProjects/Cas_Test/mllib_rust.dll")
-model = linearMod.init_linear_model(2)
+linearMod = Linear('../Lib/SupervisingML/target/debug/libmllib_rust.so')
+linearMod.init_linear_model(2)
+
 X = np.array([
     [1, 1],
     [2, 3],
@@ -15,8 +18,9 @@ Y = np.array([
     -1,
     -1
 ], dtype='float64')
+
 flattened_X = X.flatten()
-linearMod.train_linear_model_classification(flattened_X, Y, X.shape[1], 1000, 0.01)
+linearMod.train_linear_model_classification(flattened_X, Y, X.shape[1], 10000, 0.05)
 test_points = np.array([[i, j] for i in range(50) for j in range(50)], dtype='float64') / 50.0 * 2.0 + 1.0
 test_points_predicted = np.zeros(len(test_points))
 red_points = []
