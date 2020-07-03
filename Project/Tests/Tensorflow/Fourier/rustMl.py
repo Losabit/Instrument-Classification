@@ -41,16 +41,16 @@ def importData(path, label_number = len(labels)):
             for file in f:
                 data.append(getCsvData(os.path.join(directory_path, file)))
                 label.append(i)
-    return (np.array(data), np.array(label))
+    return (np.array(data).flatten(), np.array(label).flatten())
 
 
 
-# Linear classification
+# Linear classification / Attention il s'agit d'array numpy
 train_data, train_label = importData('Fourier/dataset/train', 2)
 validation_data, validation_label = importData('Fourier/dataset/validation', 2)
 
 linear = Linear('../../Lib/SupervisingML/target/debug/libmllib_rust.so')
 linear.init_linear_model(frequency_max * 2 * frequency_precision * 2)
-linear.train_linear_model_classification(train_data, train_label, 1000, 0.1)
+linear.train_linear_model_classification(train_data, train_label, len(train_label), 10000, 0.01)
 for i in range(len(validation_data)):
     print("predicted result : " + str(linear.predict_linear_model_classification(validation_data[i])) + " / result : " + str(validation_label[i]))

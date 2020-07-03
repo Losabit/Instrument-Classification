@@ -60,13 +60,13 @@ class Linear:
             len(points)
         )
 
-    def train_linear_model_classification(self, x, y, result_size, nb_iter, alpha):
+    def train_linear_model_classification(self, x, y, sample_size, nb_iter, alpha):
         self.lib.train_linear_model_classification(
             self.model,
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            sample_size,
             self.model_size - 1,
-            result_size,
             nb_iter,
             alpha
         )

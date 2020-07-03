@@ -8,21 +8,12 @@ from linear import Linear
 linearMod = Linear('../Lib/SupervisingML/target/debug/libmllib_rust.so')
 
 
-
-X = np.array([
-    [1, 1],
-    [2, 3],
-    [3, 3]
-], dtype='float64')
-Y = np.array([
-    1,
-    -1,
-    -1
-], dtype='float64')
+X = np.concatenate([np.random.random((50,2)) * 0.9 + np.array([1, 1]), np.random.random((50,2)) * 0.9 + np.array([2, 2])])
+Y = np.concatenate([np.ones((25, 2)), np.ones((25, 2)) * -1.0])
 
 linearMod.init_linear_model(2)
 flattened_X = X.flatten()
-print(X.shape[1])
+
 linearMod.train_linear_model_classification(flattened_X, Y, X.shape[0], 1000, 0.1)
 test_points = np.array([[i, j] for i in range(50) for j in range(50)], dtype='float64') / 50.0 * 2.0 + 1.0
 test_points_predicted = np.zeros(len(test_points))
@@ -43,7 +34,7 @@ if len(red_points) > 0:
     plt.scatter(red_points[:, 0], red_points[:, 1], color='red', alpha=0.5, s=2)
 if len(blue_points) > 0:
     plt.scatter(blue_points[:, 0], blue_points[:, 1], color='blue', alpha=0.5, s=2)
-plt.scatter(X[0, 0], X[0, 1], color='blue', s=10)
-plt.scatter(X[1:3, 0], X[1:3, 1], color='red', s=10)
+plt.scatter(X[0:50, 0], X[0:50, 1], color='blue')
+plt.scatter(X[50:100,0], X[50:100,1], color='red')
 plt.show()
 plt.clf()
