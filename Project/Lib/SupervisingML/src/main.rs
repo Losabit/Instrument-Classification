@@ -1,5 +1,5 @@
 extern crate rand;
-//use rand::Rng;
+use rand::Rng;
 use std::slice::{from_raw_parts};
 mod mlp;
 mod linear;
@@ -36,15 +36,21 @@ fn main(){
     //regression
 /*
     let mut x : Vec<f64> = vec![];
-    let mut y = vec![];
+    let mut y : Vec<f64> = vec![];
     let mut rng = rand::thread_rng();
     for i in 0..20{
         x.push(1.0);
         x.push((i + 1) as f64);
         y.push(1.5 * ((i + 1) as f64) + 0.75 + ((rng.gen_range(0.0,1.0) - 0.35) * 2.0));
     }
-    let w = linear::train_linear_model_regression(x.as_mut_ptr(),y.as_mut_ptr(),40);
-    println!("{:?}",w);
+
+    let model;
+    let model_ptr = linear::train_linear_model_regression(x.as_mut_ptr(),y.as_mut_ptr(),40);
+
+    unsafe{
+        model = from_raw_parts(model_ptr, 2);
+    }
+    println!("{:?}",&model);
 */
 /*
 //multicouche 

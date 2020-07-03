@@ -53,9 +53,9 @@ class Linear:
                                                             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                                                             len(points))
 
-    def predict_linear_model_regression(self, points):
+    def predict_linear_model_regression(model, self, points):
         return self.lib.predict_linear_model_regression(
-            self.model,
+            model,
             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(points)
         )

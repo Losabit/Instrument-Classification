@@ -56,11 +56,14 @@ pub extern "C" fn train_linear_model_regression(x_ptr: *mut f64, y_ptr: *mut f64
         x = from_raw_parts(x_ptr, x_size);
         y = from_raw_parts(y_ptr, x_size / 2);
     }
-
+    
     let xm = DMatrix::from_row_slice(x_size / 2, 2, &x);
-    let ym = DMatrix::from_row_slice(x_size / 2, 1, &y);
+    let ym = DMatrix::from_row_slice(x_size / 2, 1, &y); 
     let w_matrix = (((xm.transpose() * &xm).try_inverse()).unwrap() * xm.transpose()) * ym;
-    return w_matrix.data.as_vec().to_vec().into_boxed_slice().as_mut_ptr();
+    let mut slice = w_matrix.data.as_vec().to_vec().into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr
 }
 
 #[no_mangle]
