@@ -14,7 +14,7 @@ class Linear:
 
         self.lib.predict_linear_model_regression.restype = ctypes.c_double
         self.lib.predict_linear_model_regression.argtypes = [
-            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
             ctypes.c_int
         ]
@@ -53,9 +53,9 @@ class Linear:
                                                             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                                                             len(points))
 
-    def predict_linear_model_regression(model, self, points):
+    def predict_linear_model_regression(self, points):
         return self.lib.predict_linear_model_regression(
-            model,
+            self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(points)
         )
@@ -72,8 +72,10 @@ class Linear:
         )
 
     def train_linear_model_regression(self, x, y, x_size):
-        return self.lib.train_linear_model_regression(
+        self.model = self.lib.train_linear_model_regression(
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             x_size
         )
+        self.model_size = 0
+        return self.model

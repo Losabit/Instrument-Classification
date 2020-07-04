@@ -41,21 +41,27 @@ fn main(){
     for i in 0..20{
         x.push(1.0);
         x.push((i + 1) as f64);
-        y.push(1.5 * ((i + 1) as f64) + 0.75 + ((rng.gen_range(0.0,1.0) - 0.35) * 2.0));
+        y.push(1.5 * ((i + 1) as f64) + 0.75 + (( - 0.35) * 2.0));
     }
-
-    let model;
-    let model_ptr = linear::train_linear_model_regression(x.as_mut_ptr(),y.as_mut_ptr(),40);
-
-    unsafe{
-        model = from_raw_parts(model_ptr, 2);
-    }
-    println!("{:?}",&model);
 */
 /*
+    let mut x = vec![1.0,1.0,2.0,2.0, 3.0, 1.0];
+    let mut y = vec![2.0,3.0,2.5];
+
+    let model;
+    let model_ptr = linear::train_linear_model_regression(x.as_mut_ptr(),y.as_mut_ptr(),x.len());
+
+    unsafe{
+        model = from_raw_parts(model_ptr, 3);
+    }
+    println!("{:?}",&model);
+    println!("{:?}", linear::predict_linear_model_regression(model_ptr, x.as_mut_ptr(), 2));
+
+*/
 //multicouche 
     //classification        
-    let mut neurone_by_couche = [2,2,1];
+    let mut neurone_by_couche = [2.0,3.0];
+    let mut rng = rand::thread_rng();
     let size = mlp::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
     let mut model_ptr = mlp::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
     let mut model;
@@ -64,36 +70,48 @@ fn main(){
     }
     println!("{:?}",model);
 
-    let mut x = vec![
-    0.0, 0.0, 
-    1.0, 0.0, 
-    0.0, 1.0, 
-    1.0, 1.0];
-    let mut y = vec![-1, 1, 1, -1];
+    let mut x = vec![];
+    for _ in 0..1000{
+        x.push(rng.gen_range(0.0,1.0) * 2.0 - 1.0)
+    }
+    let mut y = vec![];
+    for i in 0..500{
+        if -x[i * 2] - x[i * 2 + 1] - 0.5 > 0.0 && x[i * 2 + 1] < 0.0 && x[i * 2] - x[i * 2 + 1] - 0.5 < 0.0{
+            y.push(1.0);
+            y.push(0.0);
+            y.push(0.0);
+        }
+        else if -x[i * 2] - x[i * 2 + 1] - 0.5 < 0.0 && x[i * 2 + 1] > 0.0 && x[i * 2] - x[i * 2 + 1] - 0.5 < 0.0{
+            y.push(0.0);
+            y.push(1.0);
+            y.push(0.0);
+        }
+        else if -x[i * 2] - x[i * 2 + 1] - 0.5 < 0.0 && x[i * 2 + 1] < 0.0 && x[i * 2] - x[i * 2 + 1] - 0.5 > 0.0{
+            y.push(0.0);
+            y.push(0.0);
+            y.push(1.0);
+        }
+        else{
+            y.push(0.0);
+            y.push(0.0);
+            y.push(0.0);
+        }
+    }
     
-    model_ptr = mlp::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_ptr(), neurone_by_couche.len(), y.len(), 10000, 0.1);
+    model_ptr = mlp::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_mut_ptr(), neurone_by_couche.len(), y.len() / 3, 10000.0, 0.1);
     unsafe{
         model = from_raw_parts(model_ptr, size);
     }
     println!("{:?}",model);
-
-    let predict_value;
-    let predict_value_2;
-    let predict_value_3;
-    let predict_value_4;
-    let predict_value_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[0..2].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
-    let predict_value_2_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[2..4].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
-    let predict_value_3_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[4..6].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
-    let predict_value_4_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[6..8].as_mut_ptr(), neurone_by_couche.as_ptr(),  neurone_by_couche.len());
-    unsafe{
-        predict_value = from_raw_parts(predict_value_ptr, 1);
-        predict_value_2 = from_raw_parts(predict_value_2_ptr, 1);
-        predict_value_3 = from_raw_parts(predict_value_3_ptr, 1);
-        predict_value_4 = from_raw_parts(predict_value_4_ptr, 1);
+    
+     
+    let mut predict_value;
+    for i in 0..20 {
+        let predict_value_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[i * 2..(i + 1) * 2].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+        unsafe{
+            predict_value = from_raw_parts(predict_value_ptr, 3); 
+        }
+        println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i * 2..(i + 1) * 2], &y[i * 3..(i + 1) * 3]);
     }
-    println!("predict value 1 = {:?} for {:?}",predict_value, &x[0..2]);
-    println!("predict value 2 = {:?} for {:?}",predict_value_2, &x[2..4]);
-    println!("predict value 3 = {:?} for {:?}",predict_value_3, &x[4..6]);
-    println!("predict value 4 = {:?} for {:?}",predict_value_4, &x[6..8]);
-    */
+   
 }
