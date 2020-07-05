@@ -55,7 +55,7 @@ class Linear:
 
     def predict_linear_model_regression(self, points):
         return self.lib.predict_linear_model_regression(
-            self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            self.model,
             points.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(points)
         )
@@ -77,5 +77,5 @@ class Linear:
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             x_size
         )
-        self.model_size = 0
-        return self.model
+        self.model_size = x_size // 2
+        return [self.model[i] for i in range(self.model_size)]

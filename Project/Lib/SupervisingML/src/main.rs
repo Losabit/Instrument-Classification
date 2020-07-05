@@ -59,8 +59,8 @@ fn main(){
 
 */
 //multicouche 
-    //classification        
-    let mut neurone_by_couche = [2.0,3.0];
+         
+    let mut neurone_by_couche = [1.0,6.0,1.0];
     let mut rng = rand::thread_rng();
     let size = mlp::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
     let mut model_ptr = mlp::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
@@ -68,8 +68,9 @@ fn main(){
     unsafe{
         model = from_raw_parts(model_ptr, size);
     }
-    println!("{:?}",model);
 
+    //classification  
+    /* 
     let mut x = vec![];
     for _ in 0..1000{
         x.push(rng.gen_range(0.0,1.0) * 2.0 - 1.0)
@@ -103,8 +104,7 @@ fn main(){
         model = from_raw_parts(model_ptr, size);
     }
     println!("{:?}",model);
-    
-     
+
     let mut predict_value;
     for i in 0..20 {
         let predict_value_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[i * 2..(i + 1) * 2].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
@@ -113,5 +113,26 @@ fn main(){
         }
         println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i * 2..(i + 1) * 2], &y[i * 3..(i + 1) * 3]);
     }
+    */
+
+    //regression
+    let mut x = vec![1.0,2.0,3.0];
+    let mut y = vec![2.0,3.0,2.5];
+    
+    model_ptr = mlp::train_multicouche_model_regression(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_mut_ptr(), neurone_by_couche.len(), y.len(), 60000.0, 0.1);
+    unsafe{
+        model = from_raw_parts(model_ptr, size);
+    }
+    println!("{:?}",model);
+
+    let mut predict_value;
+    for i in 0..3 {
+        let predict_value_ptr = mlp::predict_multicouche_model_regression(model_ptr,  [x[i]].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+        unsafe{
+            predict_value = from_raw_parts(predict_value_ptr,1); 
+        }
+        println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i], &y[i]);
+    }
+   
    
 }

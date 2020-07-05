@@ -1,8 +1,5 @@
 extern crate rand;
 extern crate nalgebra;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
 use rand::Rng;
 use std::slice::{from_raw_parts, from_raw_parts_mut};
 
@@ -50,7 +47,7 @@ pub extern "C" fn predict_multicouche_model_classification(model_ptr: *mut f64, 
         model = from_raw_parts(model_ptr, get_model_size(neurones_by_couche_ptr, number_of_couches));
         neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
         x = from_raw_parts(x_ptr , neurones_by_couche[0] as usize);
-        out = from_raw_parts(init_out_neurone(model, &x, ActivationFunction::Tanh, neurones_by_couche), get_out_size(neurones_by_couche));
+        out = from_raw_parts(init_out_neurone(model, &x, ActivationFunction::Tanh, ActivationFunction::Tanh, neurones_by_couche), get_out_size(neurones_by_couche));
     }
 
     let last_couche_indice = get_correct_out_indice(neurones_by_couche, number_of_couches - 1, 1);
@@ -70,7 +67,7 @@ pub extern "C" fn predict_multicouche_model_regression(model_ptr: *mut f64, x_pt
         model = from_raw_parts(model_ptr, get_model_size(neurones_by_couche_ptr, number_of_couches));
         neurones_by_couche = from_raw_parts(neurones_by_couche_ptr, number_of_couches);
         x = from_raw_parts(x_ptr , neurones_by_couche[0] as usize);
-        out = from_raw_parts(init_out_neurone(model, &x, ActivationFunction::None, neurones_by_couche), get_out_size(neurones_by_couche));
+        out = from_raw_parts(init_out_neurone(model, &x, ActivationFunction::Tanh, ActivationFunction::None, neurones_by_couche), get_out_size(neurones_by_couche));
     }
 
     let last_couche_indice = get_correct_out_indice(neurones_by_couche, number_of_couches - 1, 1);
@@ -100,7 +97,7 @@ pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_
         let random = rng.gen_range(0, number_exemples);
         let mut delta : Vec<Vec<f64>> = vec![vec![]];
         unsafe {
-            out = from_raw_parts(init_out_neurone(model, &x[random * neurones_by_couche[0] as usize .. random * neurones_by_couche[0] as usize + neurones_by_couche[0] as usize], ActivationFunction::Tanh, neurones_by_couche), get_out_size(neurones_by_couche));
+            out = from_raw_parts(init_out_neurone(model, &x[random * neurones_by_couche[0] as usize .. random * neurones_by_couche[0] as usize + neurones_by_couche[0] as usize], ActivationFunction::Tanh, ActivationFunction::Tanh, neurones_by_couche), get_out_size(neurones_by_couche));
         }
         
 
@@ -131,7 +128,7 @@ pub extern "C" fn train_multicouche_model_classification(model_ptr: *mut f64, x_
 }
 
 #[no_mangle]
-pub extern "C" fn train_multicouche_model_regression(model_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut i8, neurones_by_couche_ptr: *mut f64, number_of_couches: usize, number_exemples: usize, nb_iter:usize, alpha:f64) -> *mut f64{
+pub extern "C" fn train_multicouche_model_regression(model_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut f64, neurones_by_couche_ptr: *mut f64, number_of_couches: usize, number_exemples: usize, nb_iter:f64, alpha:f64) -> *mut f64{
     let mut rng = rand::thread_rng();
     let model;
     let neurones_by_couche;
@@ -146,11 +143,11 @@ pub extern "C" fn train_multicouche_model_regression(model_ptr: *mut f64, x_ptr:
         y = from_raw_parts(y_ptr, neurones_by_couche[neurones_by_couche.len() - 1] as usize * number_exemples);
     }
     
-    for _it in 0..nb_iter{
+    for _it in 0..nb_iter as usize{
         let random = rng.gen_range(0, number_exemples);
         let mut delta : Vec<Vec<f64>> = vec![vec![]];
         unsafe {
-            out = from_raw_parts(init_out_neurone(model, &x[random * neurones_by_couche[0]  as usize .. random * neurones_by_couche[0] as usize + neurones_by_couche[0] as usize], ActivationFunction::None, neurones_by_couche), get_out_size(neurones_by_couche));
+            out = from_raw_parts(init_out_neurone(model, &x[random * neurones_by_couche[0]  as usize .. random * neurones_by_couche[0] as usize + neurones_by_couche[0] as usize], ActivationFunction::Tanh, ActivationFunction::None, neurones_by_couche), get_out_size(neurones_by_couche));
         }
         //println!("out : {:?}", out);
 
@@ -228,7 +225,7 @@ fn get_correct_model_indice(neurones_by_couche: &[f64], couche: usize, neurone: 
     return indice;
 }
 
-fn init_out_neurone(model: &[f64], x: &[f64], activation_function: ActivationFunction, neurones_by_couche: &[f64]) -> *mut f64{
+fn init_out_neurone(model: &[f64], x: &[f64], activation_function: ActivationFunction, output_function: ActivationFunction, neurones_by_couche: &[f64]) -> *mut f64{
     let mut x_vec : Vec<f64> = vec![];
     x_vec.push(1.0);
     for i in 0..x.len(){
@@ -238,7 +235,12 @@ fn init_out_neurone(model: &[f64], x: &[f64], activation_function: ActivationFun
     for couche in 1..neurones_by_couche.len(){
         x_vec.push(1.0);
         for next_neurone in 1..neurones_by_couche[couche] as usize + 1{
-            x_vec.push(calculate_signal(model, &x_vec, activation_function, next_neurone - 1, neurones_by_couche, couche - 1));
+            if couche != neurones_by_couche.len() - 1{
+                x_vec.push(calculate_signal(model, &x_vec, activation_function, next_neurone - 1, neurones_by_couche, couche - 1));
+            }
+            else {
+                x_vec.push(calculate_signal(model, &x_vec, output_function, next_neurone - 1, neurones_by_couche, couche - 1));
+            }
         }
     }
     let mut slice = x_vec.into_boxed_slice();
@@ -275,6 +277,6 @@ fn gradien_retropropagation_last_classification (y: i8, xlj: f64 ) -> f64 {
     return result;
 }
 
-fn gradien_retropropagation_last_regression (y: i8, xlj: f64 ) -> f64 {
-    return (xlj - y as f64) as f64;
+fn gradien_retropropagation_last_regression (y: f64, xlj: f64 ) -> f64 {
+    return (xlj - y) as f64;
 }

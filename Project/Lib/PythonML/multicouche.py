@@ -24,7 +24,7 @@ class MLP:
         self.lib.predict_multicouche_model_regression.argtypes = [
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
-            ctypes.POINTER(ctypes.c_int),
+            ctypes.POINTER(ctypes.c_double),
             ctypes.c_int]
         self.lib.predict_multicouche_model_regression.restype = ctypes.POINTER(ctypes.c_double)
 
@@ -42,11 +42,11 @@ class MLP:
         self.lib.train_multicouche_model_regression.argtypes = [
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
-            ctypes.POINTER(ctypes.c_int),
-            ctypes.POINTER(ctypes.c_int),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
             ctypes.c_int,
             ctypes.c_int,
-            ctypes.c_int,
+            ctypes.c_double,
             ctypes.c_double]
         self.lib.train_multicouche_model_regression.restype = ctypes.POINTER(ctypes.c_double)
 
@@ -70,7 +70,7 @@ class MLP:
         return self.lib.predict_multicouche_model_regression(
             self.model, 
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), 
-            self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), 
+            self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), 
             self.nbCouche)
 
     def train_multicouche_model_classification(self, x, y, nbExemple, nbIter, alpha):
@@ -88,8 +88,8 @@ class MLP:
         self.model = self.lib.train_multicouche_model_regression(
             self.model,
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-            y.ctypes.data_as(ctypes.POINTER(ctypes.c_int8)),
-            self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_int)),
+            y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             self.nbCouche,
             nbExemple,
             nbIter,
