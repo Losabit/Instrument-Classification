@@ -7,9 +7,9 @@ import matplotlib.image as mpimg
 import random
 from random import randrange
 
-train_path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Spectrogramm/dataset/train'
-validation_path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Spectrogramm/dataset/validation'
-class_names = ['saxo', 'piano', 'guitare']
+train_path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Spectrogram/dataset/train'
+validation_path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Tests/Tensorflow/Spectrogram/dataset/validation'
+class_names = ['saxo', 'guitare', 'piano']
 IMG_HEIGHT = 109
 IMG_WIDTH = 146
 extension = '.png'
@@ -22,11 +22,13 @@ for i in range(len(class_names)):
     for r, _, f in os.walk(os.path.join(train_path, class_names[i])):
         for file in f:
             if extension in file:
-                train_images.append(mpimg.imread(os.path.join(r, file)))
-                train_labels.append(i)
+                if len(train_images) == 0:
+                    train_images.append(mpimg.imread(os.path.join(r, file)))
+                    train_labels.append(i)
     for r, _, f in os.walk(os.path.join(validation_path, class_names[i])):
         for file in f:
             if extension in file:
+                continue
                 validation_images.append(mpimg.imread(os.path.join(r, file)))
                 validation_labels.append(i)
 
@@ -54,7 +56,7 @@ for i in range(25):
 plt.show()
 '''
 arraynp = np.array(train_images)
-print(arraynp)
+print(train_images)
 '''
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(IMG_HEIGHT, IMG_WIDTH)),
