@@ -3,8 +3,8 @@ import os
 import random
 
 
-#23Mo
-path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Test/Fourier/saxo/'    
+#12.8Go
+path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Train/Fourier/guitare/'    
 max_frequency = 18000
 
 def getCsvData(path):
