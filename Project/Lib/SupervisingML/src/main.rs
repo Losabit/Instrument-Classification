@@ -1,8 +1,11 @@
 extern crate rand;
 use rand::Rng;
 use std::slice::{from_raw_parts};
+use crate::rbf::train_native_rbf;
+
 mod mlp;
 mod linear;
+mod rbf;
 
 
 fn main(){
@@ -60,14 +63,20 @@ fn main(){
 */
 //multicouche 
          
-    let mut neurone_by_couche = [1.0,6.0,1.0];
-    let mut rng = rand::thread_rng();
-    let size = mlp::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
-    let mut model_ptr = mlp::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
-    let mut model;
-    unsafe{
-        model = from_raw_parts(model_ptr, size);
-    }
+    // let mut neurone_by_couche = [1.0,6.0,1.0];
+    // let mut rng = rand::thread_rng();
+    // let size = mlp::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
+    // let mut model_ptr = mlp::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+    // let mut model;
+    // unsafe{
+    //     model = from_raw_parts(model_ptr, size);
+    let x = *[3.0,3.0,3.0,3.0,3.0];
+    let y  = *[2.0,2.0,2.0,2.0,2.0];
+    let sample = 5.0 ;
+    let nbPerSemple =3.0;
+    let gamma = 0.01;
+    train_native_rbf(x,y,sample,nbPerSemple,gamma);
+
 
     //classification  
     /* 
