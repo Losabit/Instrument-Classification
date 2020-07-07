@@ -4,6 +4,8 @@ import ntpath
 from shutil import copyfile
 
 def removeDirectoryContent(folder):
+    if os.path.isdir(folder) == False:
+        os.mkdir(folder)
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
         if os.path.isfile(file_path) or os.path.islink(file_path):
@@ -12,12 +14,12 @@ def removeDirectoryContent(folder):
             shutil.rmtree(file_path)
 
 
-inpath = '/home/losabit/Desktop/PA/dataset_fresh/fourier/'
+inpath = '/home/losabit/Desktop/PA/dataset_fresh/spectrogramm/'
 outpath = 'Fourier/dataset'
 labels = ['guitare', 'piano', 'saxo']
-train_part = 0.8
-part_to_take = 0.025
-extension = '.csv'
+train_part = 0.85
+part_to_take = 1
+extension = '.png'
 
 for label in labels:
     files = []
@@ -29,8 +31,8 @@ for label in labels:
 
     random.shuffle(files)
     train_size = (int)(len(files) * train_part)
-    train_path = os.path.join(os.path.join(outpath,'train'), label)
-    validation_path = os.path.join(os.path.join(outpath,'validation'), label)
+    train_path = os.path.join('/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Train/Spectrogram/', label)
+    validation_path = os.path.join('/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Test/Spectrogram/', label)
 
     removeDirectoryContent(train_path)
     removeDirectoryContent(validation_path)
