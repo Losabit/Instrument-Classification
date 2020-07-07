@@ -35,8 +35,8 @@ pub  extern "C" fn train_native_rbf (x :  &[f64], y :  &[f64], input_per_sample:
         for i in 0.. nbSample  {
             for j in  0.. input_per_sample  {
                 let alpha = xm.row(i) - xm.row(j);
-                let toexp = -gamma * (alpha.pow(2));
-                phi_mat(i, j) = toexp.exp();
+                let toexp = -gamma * (alpha * alpha);
+                phi_mat[i as i32][j as i32] = toexp.exp();
             }
         }
     }
