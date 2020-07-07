@@ -139,12 +139,12 @@ fn main(){
     // }
 
     /// RBF
-    let x = [3.0,3.0,3.0,3.0,3.0];
-    let y  = [2.0,2.0,2.0,2.0,2.0];
-    let sample = 5.0 ;
-    let nbPerSemple =3.0;
+    let mut  x = [3.0,3.0,3.0,3.0,3.0];
+    let mut y  = [2.0,2.0,2.0,2.0,2.0];
+    let sample = 5 ;
+    let nbPerSemple =3;
     let gamma = 0.01;
-    train_native_rbf(*x,*y,sample,nbPerSemple,gamma);
+    train_native_rbf(x.as_mut_ptr(),y.as_mut_ptr(),sample,nbPerSemple,gamma);
    
    
 }
