@@ -144,11 +144,6 @@ fn main(){
     let sample = 5 ;
     let nbPerSemple =3;
     let gamma = 0.01;
-<<<<<<< HEAD
-    train_native_rbf(&x,&y,sample,nbPerSemple,gamma);
-=======
     //rbf::train_native_rbf(*x,*y,sample,nbPerSemple,gamma);
->>>>>>> b7c61fc7... Start svm
-   
    
 }

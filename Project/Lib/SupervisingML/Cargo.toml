@@ -17,4 +17,4 @@ crate-type = ["cdylib"]
 [dependencies]
 rand = "0.7.3"
 nalgebra = "0.21.0"
-gnuplot = "0.0.34"
+osqp = "0.6.0"

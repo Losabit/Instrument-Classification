@@ -1,8 +1,11 @@
 use std::slice::{from_raw_parts, from_raw_parts_mut};
+use osqp::{CscMatrix, Problem, Settings};
 extern crate nalgebra;
 use nalgebra::DMatrix;
 
+
 // SVM
+// https://docs.rs/osqp/0.6.0/osqp/
 #[no_mangle]
 pub extern "C" fn train_svm_model(x_ptr: *mut f64, y_ptr: *mut f64, x_size: usize, sample_size: usize) {
     let x;
