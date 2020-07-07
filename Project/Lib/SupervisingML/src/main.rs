@@ -144,7 +144,7 @@ fn main(){
     let sample = 5 ;
     let nbPerSemple =3;
     let gamma = 0.01;
-    train_native_rbf(x.as_mut_ptr(),y.as_mut_ptr(),sample,nbPerSemple,gamma);
+    train_native_rbf(&x,&y,sample,nbPerSemple,gamma);
    
    
 }

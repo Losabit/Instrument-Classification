@@ -27,9 +27,9 @@ pub extern "C" fn rbf_naive_predict_classification() -> f64{
     1.0
 }
 
-pub  extern "C" fn train_native_rbf (x :  * mut f64, y : *mut f64, input_per_sample: usize, nbSample : usize, gamma : f64 ) -> RBF{
-    let xm =  DMatrix::from_row_slice(input_per_sample , nbSample ,x.);
-    let ym = DMatrix::from_row_slice(input_per_sample , 1 as usize, &y);
+pub  extern "C" fn train_native_rbf (x :  &[f64], y :  &[f64], input_per_sample: usize, nbSample : usize, gamma : f64 ) -> RBF{
+    let xm =  DMatrix::from_row_slice(input_per_sample , nbSample ,x);
+    let ym = DMatrix::from_row_slice(input_per_sample , 1 as usize, y);
     let phi_mat = DMatrix::from_row_slice(input_per_sample, nbSample, 0);
     unsafe {
         for i in nbSample {
