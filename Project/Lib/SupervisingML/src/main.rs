@@ -5,6 +5,7 @@ use std::slice::{from_raw_parts};
 mod rbf;
 mod mlp;
 mod linear;
+mod svm;
 //mod rbf;
 
 
@@ -146,4 +147,17 @@ fn main(){
     let gamma = 0.01;
     //rbf::train_native_rbf(*x,*y,sample,nbPerSemple,gamma);
    
+    //SVM
+    let mut x = vec![1.0,3.0,2.0,2.0,3.0,2.0];
+    let mut y = vec![-1.0,1.0,1.0]; 
+    let model_ptr = svm::train_svm_model(x.as_mut_ptr(), y.as_mut_ptr(), 2, 3);
+    let model;
+    unsafe{
+        model = from_raw_parts(model_ptr, 3);
+    }
+    println!("model : {:?}",model);
+
+    for i in 0..3{
+        println!("predict : {:?} / result : {:?}", svm::predict_svm_model(model_ptr, x[i * 2..(i + 1) * 2].as_mut_ptr(), 3), y[i]);
+    }
 }
