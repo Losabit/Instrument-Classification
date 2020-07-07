@@ -30,10 +30,10 @@ pub extern "C" fn rbf_naive_predict_classification() -> f64{
 pub  extern "C" fn train_native_rbf (x :  &[f64], y :  &[f64], input_per_sample: usize, nbSample : usize, gamma : f64 ) -> RBF{
     let xm =  DMatrix::from_row_slice(input_per_sample , nbSample ,x);
     let ym = DMatrix::from_row_slice(input_per_sample , 1 as usize, y);
-    let phi_mat = DMatrix::from_row_slice(input_per_sample, nbSample, 0);
+    let phi_mat = DMatrix::from_row_slice(input_per_sample, nbSample, &[0]);
     unsafe {
-        for i in nbSample {
-            for j in input_per_sample {
+        for i in 0.. nbSample  {
+            for j in  0.. input_per_sample  {
                 let alpha = xm.row(i) - xm.row(j);
                 let toexp = -gamma * (alpha.pow(2));
                 phi_mat(i, j) = toexp.exp();
