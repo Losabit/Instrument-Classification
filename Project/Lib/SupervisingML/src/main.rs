@@ -70,12 +70,7 @@ fn main(){
     // let mut model;
     // unsafe{
     //     model = from_raw_parts(model_ptr, size);
-    let x = *[3.0,3.0,3.0,3.0,3.0];
-    let y  = *[2.0,2.0,2.0,2.0,2.0];
-    let sample = 5.0 ;
-    let nbPerSemple =3.0;
-    let gamma = 0.01;
-    train_native_rbf(x,y,sample,nbPerSemple,gamma);
+
 
 
     //classification  
@@ -125,23 +120,31 @@ fn main(){
     */
 
     //regression
-    let mut x = vec![1.0,2.0,3.0];
-    let mut y = vec![2.0,3.0,2.5];
-    
-    model_ptr = mlp::train_multicouche_model_regression(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_mut_ptr(), neurone_by_couche.len(), y.len(), 60000.0, 0.1);
-    unsafe{
-        model = from_raw_parts(model_ptr, size);
-    }
-    println!("{:?}",model);
+    // let mut x = vec![1.0,2.0,3.0];
+    // let mut y = vec![2.0,3.0,2.5];
+    //
+    // model_ptr = mlp::train_multicouche_model_regression(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_mut_ptr(), neurone_by_couche.len(), y.len(), 60000.0, 0.1);
+    // unsafe{
+    //     model = from_raw_parts(model_ptr, size);
+    // }
+    // println!("{:?}",model);
+    //
+    // let mut predict_value;
+    // for i in 0..3 {
+    //     let predict_value_ptr = mlp::predict_multicouche_model_regression(model_ptr,  [x[i]].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+    //     unsafe{
+    //         predict_value = from_raw_parts(predict_value_ptr,1);
+    //     }
+    //     println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i], &y[i]);
+    // }
 
-    let mut predict_value;
-    for i in 0..3 {
-        let predict_value_ptr = mlp::predict_multicouche_model_regression(model_ptr,  [x[i]].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
-        unsafe{
-            predict_value = from_raw_parts(predict_value_ptr,1); 
-        }
-        println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i], &y[i]);
-    }
+    /// RBF
+    let x = [3.0,3.0,3.0,3.0,3.0];
+    let y  = [2.0,2.0,2.0,2.0,2.0];
+    let sample = 5.0 ;
+    let nbPerSemple =3.0;
+    let gamma = 0.01;
+    train_native_rbf(*x,*y,sample,nbPerSemple,gamma);
    
    
 }
