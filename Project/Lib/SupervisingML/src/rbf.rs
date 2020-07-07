@@ -2,7 +2,7 @@ use rand::Rng;
 use nalgebra::{DMatrix};
 use rand::seq::index::sample;
 
-struct RBF { w: DMatrix<f64> , x: DMatrix<f64> , gamma : f64 , }
+pub struct RBF { w: DMatrix<f64> , x: DMatrix<f64> , gamma : f64 , }
 
 pub extern "C" fn randvalue(size: usize, it : usize) -> f64 {
     let mut rng = rand::thread_rng();
@@ -18,19 +18,19 @@ pub  extern  "C" fn init_rbf(w : DMatrix<f64> , x :DMatrix<f64> , gamma: f64) ->
     return r;
 }
 pub extern "C" fn rbf_naive_predict_classification() -> f64{
-    // if(1){
-    //     1.0
-    // }
-    // else{
-    //     -1.0
-    // }
-    1.0
-}
+    if(true){
+        1.0
+    }
+    else{
+        -1.0
+    }
 
-pub  extern "C" fn train_native_rbf (x :  &[f64], y :  &[f64], input_per_sample: usize, nbSample : usize, gamma : f64 ) -> RBF{
-    let xm =  DMatrix::from_row_slice(input_per_sample , nbSample ,x);
-    let ym = DMatrix::from_row_slice(input_per_sample , 1 as usize, y);
-    let phi_mat = DMatrix::from_row_slice(input_per_sample, nbSample, &[0]);
+}
+/*
+pub  extern "C" fn train_native_rbf (x : * f64, y : * f64, input_per_sample: f64, nbSample : f64, gamma : f64 ) -> RBF{
+    let xm =  DMatrix::from_row_slice(input_per_sample, nbSample, &x);
+    let ym = DMatrix::from_row_slice(input_per_sample, 1, &y);
+    let phi_mat = DMatrix::from_row_slice(input_per_sample, nbSample, 0);
     unsafe {
         for i in 0.. nbSample  {
             for j in  0.. input_per_sample  {
@@ -44,3 +44,4 @@ pub  extern "C" fn train_native_rbf (x :  &[f64], y :  &[f64], input_per_sample:
    let rbf =  init_rbf(wm, xm, gamma);
     return rbf;
 }
+*/
