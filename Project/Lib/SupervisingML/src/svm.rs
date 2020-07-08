@@ -1,8 +1,5 @@
-use std::slice::{from_raw_parts, from_raw_parts_mut};
+use std::slice::{from_raw_parts};
 use osqp::{CscMatrix, Problem, Settings};
-extern crate nalgebra;
-use nalgebra::DMatrix;
-
 
 // SVM
 // https://docs.rs/osqp/0.6.0/osqp/
@@ -38,11 +35,9 @@ pub extern "C" fn train_svm_model(x_ptr: *mut f64, y_ptr: *mut f64, dimension: u
     for i in 0..sample_size{
         let mut vector = vec![];
         for j in 0..sample_size{
-            let mut sum = 0.0;
-            for n in 0..dimension{
-                sum += x[i * dimension + n] * x[j * dimension + n]
-            }
-            vector.push(y[i] * y[j] * sum);
+            let x1 = &x[i * dimension .. (i + 1) * dimension];
+            let x2 = &x[j * dimension .. (j + 1) * dimension];
+            vector.push(y[i] * y[j] * basic_kernel_compute(x1, x2));
         }
         
         let mut slice_p = vector.into_boxed_slice();
@@ -74,13 +69,13 @@ pub extern "C" fn train_svm_model(x_ptr: *mut f64, y_ptr: *mut f64, dimension: u
     Box::leak(slice_1);
     A.push(buff_1);
     A.push(buff_a);
-
+    /*
     println!("P : {:?}",P);
     println!("q : {:?}",q);
     println!("A : {:?}",A);
     println!("l : {:?}",l);
     println!("u : {:?}",u);
-    
+    */
 
     let P = CscMatrix::from(P).into_upper_tri();
     let settings = Settings::default()
@@ -90,7 +85,7 @@ pub extern "C" fn train_svm_model(x_ptr: *mut f64, y_ptr: *mut f64, dimension: u
     let mut prob = Problem::new(P, &q, A, &l, &u, &settings).expect("failed to setup problem");
     let result = prob.solve();
     let alpha = result.x().expect("failed to solve problem");
-    println!("alpha : {:?}", alpha);
+    //println!("alpha : {:?}", alpha);
 
     let mut w : Vec<f64> = vec![];
     let mut indice_to_take : usize = 0;
@@ -115,7 +110,7 @@ pub extern "C" fn train_svm_model(x_ptr: *mut f64, y_ptr: *mut f64, dimension: u
         }
         w.insert(0, 1.0 / y[indice_to_take] - sum);
     }
-    println!("W : {:?}", w);
+    //println!("W : {:?}", w);
 
     let mut slice = w.into_boxed_slice();
     let ptr = slice.as_mut_ptr();
@@ -141,7 +136,6 @@ pub extern "C" fn predict_svm_model(w_ptr: *mut f64, x_ptr: *mut f64, size: usiz
         w = from_raw_parts(w_ptr, size + 1);
     }
 
-    //if predict_svm_model_value(w, x, size) >= 0.0 {
     if predict_linear_model_regression_(w, x, size) >= 0.0{
         return 1.0;
     }
@@ -150,10 +144,17 @@ pub extern "C" fn predict_svm_model(w_ptr: *mut f64, x_ptr: *mut f64, size: usiz
     }
 }
 
-//On cherche value =  0 pour avoir le max
-fn predict_svm_model_value(w: &[f64], x: &[f64], size: usize) -> f64 {
-    let xm = DMatrix::from_row_slice(size, 1, &x);
-    let wm = DMatrix::from_row_slice(size, 1, &w);
-    let result_matrix = wm.transpose() * &xm + wm.row(0);
-    return result_matrix.data.as_vec().to_vec().into_boxed_slice()[0];
+fn polynomial_kernel_compute(x1: &[f64], x2: &[f64], degree: i32) -> f64 {
+    assert_eq!(x1.len(), x2.len());
+    let sum = basic_kernel_compute(x1, x2);
+    return (1.0 + sum).powi(degree);
+}
+
+fn basic_kernel_compute(x1: &[f64], x2: &[f64]) -> f64 {
+    assert_eq!(x1.len(), x2.len());
+    let mut sum = 0.0;
+    for i in 0..x1.len(){
+        sum += x1[i] * x2[i];
+    }
+    return sum;
 }
