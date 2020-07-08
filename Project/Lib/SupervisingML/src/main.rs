@@ -139,6 +139,7 @@ fn main(){
     //     println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i], &y[i]);
     // }
 
+<<<<<<< Updated upstream
     /// RBF
     let mut  x = [3.0,3.0,3.0,3.0,3.0];
     let mut y  = [2.0,2.0,2.0,2.0,2.0];
@@ -146,6 +147,17 @@ fn main(){
     let nbPerSemple =3;
     let gamma = 0.01;
     //rbf::train_native_rbf(*x,*y,sample,nbPerSemple,gamma);
+=======
+    // RBF
+    let mut  x = [-1.0,2.0,1.0,-1.0,-1.0,1.0];
+    let mut y  = [-1.0,1.0,-1.0];
+    let sample = 3 ;
+    let nbPerSemple =2;
+    let gamma = 1.0;
+    let r = train_native_rbf(&x,&y,sample,nbPerSemple,gamma);
+    println!("{:?} ",r.w);
+
+>>>>>>> Stashed changes
    
     //SVM
     let mut x = vec![1.0,3.0,2.0,2.0,3.0,2.0];
