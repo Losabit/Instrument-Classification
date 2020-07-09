@@ -62,7 +62,6 @@
                       </div>
                       <br>
                       <button  style="margin-right: 20%" class="btn btn-sucess" type="submit">Envoyer
-                          <a href="ListModel.php"> <button  style="margin-right: 20%" class="btn btn-sucess" >Voir les modèls </button></a>
 
                     </form>
                   </div>
@@ -121,8 +120,11 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>  <a href="ListModel.php"> <button  style="margin-right: 20%" class="btn btn-sucess" >Voir les modèls </button></a>
+
+
   </div>
+
   <div class="pt-5">
     <div class="container">
       <div class="row">
