@@ -61,8 +61,9 @@ $error = null; // Détermine le type d'erreur
                         $message = 'Erreur lors du déplacement du fichier en phase 3';
                         break;
                 }
+				
 				if (in_array($extension_upload,$extensions_trans)){
-					exec("lame –decode uploads/".$photoName. " uploads/".$photoName .".wav");
+					exec("lame –decode uploads/".$photoName.mp3" uploads/".$photoName .".wav");
 
 					
 				}
