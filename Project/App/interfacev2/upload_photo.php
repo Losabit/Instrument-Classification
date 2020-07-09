@@ -43,7 +43,8 @@ $error = null; // Détermine le type d'erreur
             // On vérifie qu'il s'agit bien d'une image
             $infosfichier = pathinfo($_FILES['photo']['name']);
             $extension_upload = $infosfichier['extension'];
-            $extensions_autorisees = ['jpg', 'jpeg', 'gif', 'png','PNG','mp3','wave','mp4','pdf'];
+            $extensions_autorisees = ['mp3','wave','mp4'];
+			$extensions_trans = ['mp3','mp4'];
             $description = $_POST['description'];
             $name = $_POST['titre'];
 
@@ -60,6 +61,11 @@ $error = null; // Détermine le type d'erreur
                         $message = 'Erreur lors du déplacement du fichier en phase 3';
                         break;
                 }
+				if (in_array($extension_upload,$extensions_trans)){
+					exec("lame –decode uploads/".$photoName. " uploads/".$photoName .".wav");
+
+					
+				}
 
                 if ($error === null) { ?>
                     <p style="color:green; font-size: 20px; font-weight: bold; text-align: center;">Envoyé avec succès !</p>
