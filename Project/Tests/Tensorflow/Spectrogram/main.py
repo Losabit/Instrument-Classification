@@ -69,6 +69,6 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 model.fit(np.array(train_images), np.array(train_labels), epochs=10)
-test_loss, test_acc = model.evaluate(validation_images,  validation_labels, verbose=2)
+)test_loss, test_acc = model.evaluate(validation_images,  validation_labels, verbose=2)
 
 print('\nTest accuracy:', test_acc)'''
