@@ -61,7 +61,9 @@
                         <input class="btn btn-primary" type="file" name="photo" id="photo">
                       </div>
                       <br>
-                      <button  style="margin-right: 20%" class="btn btn-sucess" type="submit">Envoyer</button>
+                      <button  style="margin-right: 20%" class="btn btn-sucess" type="submit">Envoyer
+                          <a href="ListModel.php"> <button  style="margin-right: 20%" class="btn btn-sucess" >Voir les modèls </button></a>
+
                     </form>
                   </div>
                 </div>

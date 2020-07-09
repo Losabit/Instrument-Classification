@@ -64,6 +64,7 @@ $error = null; // Détermine le type d'erreur
 				
 				if (in_array($extension_upload,$extensions_trans)){
 					exec("lame –decode uploads/".$photoName.mp3" uploads/".$photoName .".wav");
+					echo `script.py`
 
 					
 				}
@@ -98,7 +99,7 @@ $error = null; // Détermine le type d'erreur
     }
 ?>
 
-<meta http-equiv="refresh" content="5;index.php">
+<meta http-equiv="refresh" content="35;index.php">
 
 <div class="row">
     <img src="img/loading.gif" style="display: block; margin-left: auto; margin-right: auto;">
