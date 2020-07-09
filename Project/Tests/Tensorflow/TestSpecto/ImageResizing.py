@@ -11,13 +11,13 @@ def getFiles(path, extension):
     return files
 
 
-start_width = 64
-start_height = 64
+start_width = 496
+start_height = 369
 factor_width_height = start_width / start_height
-height = 109
+height = 64
 width = (int)(height * factor_width_height)
 
-path = 'D:\Dev\Instrument-Classification\Project\Tests\Tensorflow\TestSpecto\dataset/validation'
+path = 'D:\Dev\Instrument-Classification\Project\Tests\Tensorflow\TestSpecto\dataset/train'
 subDirectories = ['saxo','piano','guitare']
 
 for subDirectory in subDirectories:

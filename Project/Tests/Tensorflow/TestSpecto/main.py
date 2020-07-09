@@ -2,14 +2,15 @@ import os
 import numpy as np
 import matplotlib.image as mpimg
 import random
+import  tensorflow as tf
 from tensorflow import keras
 
 traning_path = "D:\Dev\Instrument-Classification\Project\Tests\Tensorflow\TestSpecto\dataset/train"
 validation_path = "D:\Dev\Instrument-Classification\Project\Tests\Tensorflow\TestSpecto\dataset/validation"
-class_names = ['piano', 'saxophone', 'guitare']
+class_names = ['piano', 'saxo', 'guitare']
 extension = '.png'
 IMGH = 64
-IMGW = 64
+IMGW = 86
 train_images = []
 validation_images = []
 train_labels = []
@@ -37,10 +38,18 @@ for i in range(len(validation_labels)):
     validation_images[i], validation_images[rand] = validation_images[rand], validation_images[rand]
     validation_labels[i], validation_labels[rand] = validation_labels[rand], validation_labels[rand]
 arraynp = np.array(train_images)
-print(arraynp)
-# model = keras.Sequential([keras.layers.Flatten(input_shape=(IMGH, IMGW)),
-#                           keras.layers.Dense(140, activation='relu'),
-#                           keras.layers.Dense(10)])
-# model.compile(loss=keras.losses.mean_squared_error, optimizer=keras.optimizers.Adam(),
-#               metrics=[keras.metrics.categorical_accuracy])
-# model.fit(np.array(train_images), np.array(train_labels), epochs=100)
+#print(arraynp)
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(IMGH, IMGW)),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dense(3)
+])
+
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.mean_squared_error,
+              metrics=['accuracy'])
+
+model.fit(np.array(train_images),np.array(train_labels), epochs=10)
+test_loss, test_acc = model.evaluate(validation_images,  validation_labels, verbose=2)
+
+print('\n Test accuracy:', test_acc)
