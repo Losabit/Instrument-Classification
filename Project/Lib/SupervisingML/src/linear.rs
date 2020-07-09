@@ -67,7 +67,7 @@ pub extern "C" fn train_linear_model_regression(x_ptr: *mut f64, y_ptr: *mut f64
 }
 
 #[no_mangle]
-pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y: *mut f64, sample_size: usize, result_size: usize, nb_iter: usize, alpha:f64) {
+pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y: *mut f64, sample_size: usize, result_size: usize, nb_iter: usize, alpha:f64) -> *mut f64{
     let mut rng = rand::thread_rng();
     let model;
     let dataset_inputs;
@@ -91,4 +91,6 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
         }
         model[0] += alpha * (output_k - gxk ) ;
     }
+    let ptr = model.as_mut_ptr();
+    return ptr;
 }

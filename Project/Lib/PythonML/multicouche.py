@@ -94,3 +94,26 @@ class MLP:
             nbExemple,
             nbIter,
             alpha)
+
+    def save_model(self, path):
+        model_size = 0
+        for i in range(len(self.neurones_by_couche) - 1):
+            model_size += (int(self.neurones_by_couche[i]) + 1) * int(self.neurones_by_couche[i + 1])
+        model_list = [str(self.model[i]) for i in range(model_size)]
+        model_string = ';'.join(model_list)
+        layer_string = ';'.join([str(int(neurones)) for neurones in self.neurones_by_couche])
+        with open(path, 'w') as file:
+            file.write(model_string + '\n')
+            file.write(layer_string) 
+
+    def load_model(self, path):
+        with open(path, 'r') as file:
+            lines = file.readlines()
+            model = lines[0].split(';')
+            self.model = np.array([float(model[i]) for i in range(len(model))],  dtype='float64')
+            self.model = self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+            self.model_size = len(model)  
+
+            neurones = lines[1].split(';')
+            self.neurones_by_couche = np.array([int(neurones[i]) for i in range(len(neurones))],  dtype='float64')
+            self.nbCouche = len(neurones)       

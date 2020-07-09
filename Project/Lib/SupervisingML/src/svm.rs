@@ -51,12 +51,14 @@ pub extern "C" fn train_svm_model_rbf_kernel(x_ptr: *mut f64, y_ptr: *mut f64, d
             let x1 = &x[i * dimension .. (i + 1) * dimension];
             let x2 = &x[j * dimension .. (j + 1) * dimension];
             if type_solver == 0 {
-                vector.push(y[i] * y[j] * rbf_kernel_compute(&model, x1) * rbf_kernel_compute(&model, x2));
+                // vector.push(y[i] * y[j] * rbf_kernel_compute(&model, x1) * rbf_kernel_compute(&model, x2));
                // vector.push(y[i] * y[j] * rbf_kernel_compute2(&model, x1, x2));
+               vector.push(y[i] * y[j] * rbf_kernel_compute3(x1, x2, gamma));
             }
             else if type_solver == 1 {
-                vector.push(y[i] * y[j] * rbf_kernel_compute(&model, x1).tanh() * rbf_kernel_compute(&model, x2).tanh());
+               // vector.push(y[i] * y[j] * rbf_kernel_compute(&model, x1).tanh() * rbf_kernel_compute(&model, x2).tanh());
                // vector.push(y[i] * y[j] * rbf_kernel_compute2(&model, x1, x2).tanh());
+               vector.push(y[i] * y[j] * rbf_kernel_compute3(x1, x2, gamma));
             }
         }
         
@@ -331,6 +333,17 @@ pub fn rbf_kernel_compute(model: &RBF, x: &[f64]) -> f64{
         sum += for_sum[i];
     }
     return sum;
+}
+
+pub fn rbf_kernel_compute3(x1: &[f64], x2: &[f64], gamma: f64) -> f64{
+    assert_eq!(x1.len(), x2.len());
+    let mut vector_x = Vec::new();
+    for k in 0..x1.len(){
+        vector_x.push(x1[k] - x2[k])
+    }
+    let alpha = DMatrix::from_row_slice(x1.len(), 1, &vector_x);
+    let toexp = -gamma * (alpha.norm() * alpha.norm());
+    return toexp.exp();
 }
 
 pub fn rbf_kernel_compute2(model: &RBF, x1: &[f64], x2: &[f64]) -> f64{

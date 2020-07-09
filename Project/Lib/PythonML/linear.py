@@ -1,4 +1,5 @@
 import ctypes
+import numpy as np
 
 
 class Linear:
@@ -10,7 +11,7 @@ class Linear:
 
     def initialize_rust_functions(self):
         self.lib.init_linear_model.argtypes = [ctypes.c_int]
-        self.lib.init_linear_model.restype = ctypes.c_void_p
+        self.lib.init_linear_model.restype = ctypes.POINTER(ctypes.c_double)
 
         self.lib.predict_linear_model_regression.restype = ctypes.c_double
         self.lib.predict_linear_model_regression.argtypes = [
@@ -21,14 +22,14 @@ class Linear:
 
         self.lib.predict_linear_model_classification.restype = ctypes.c_double
         self.lib.predict_linear_model_classification.argtypes = [
-            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
             ctypes.c_int
         ]
 
-        self.lib.train_linear_model_classification.restype = None
+        self.lib.train_linear_model_classification.restype = ctypes.POINTER(ctypes.c_double)
         self.lib.train_linear_model_classification.argtypes = [
-            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
             ctypes.c_int,
@@ -61,7 +62,7 @@ class Linear:
         )
 
     def train_linear_model_classification(self, x, y, sample_size, nb_iter, alpha):
-        self.lib.train_linear_model_classification(
+        self.model = self.lib.train_linear_model_classification(
             self.model,
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
@@ -79,3 +80,17 @@ class Linear:
         )
         self.model_size = x_size // 2
         return [self.model[i] for i in range(self.model_size)]
+
+    def save_model(self, path):
+        model_list = [str(self.model[i]) for i in range(self.model_size)]
+        model_string = ';'.join(model_list)
+        with open(path, 'w') as file:
+            file.write(model_string)
+
+    def load_model(self, path):
+        with open(path, 'r') as file:
+            model = file.readlines()[0]
+            model = model.split(';')
+            self.model = np.array([float(model[i]) for i in range(len(model))],  dtype='float64')
+            self.model = self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+            self.model_size = len(model)

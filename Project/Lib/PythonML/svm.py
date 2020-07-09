@@ -88,3 +88,17 @@ class SVM:
             0
         )
         self.model_size = x.shape[1] + 1
+
+    def save_model(self, path):
+        model_list = [str(self.model[i]) for i in range(self.model_size)]
+        model_string = ';'.join(model_list)
+        with open(path, 'w') as file:
+            file.write(model_string)
+
+    def load_model(self, path):
+        with open(path, 'r') as file:
+            model = file.readlines()[0]
+            model = model.split(';')
+            self.model = np.array([float(model[i]) for i in range(len(model))],  dtype='float64')
+            self.model = self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+            self.model_size = len(model)
