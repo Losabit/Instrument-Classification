@@ -92,29 +92,3 @@ pub extern "C" fn train_linear_model_classification(w: *mut f64, x: *mut f64, y:
         model[0] += alpha * (output_k - gxk ) ;
     }
 }
-
-#[warn(dead_code)]
-fn output2d_to_1d(output_ptr: *mut f64, output_size: usize, output_elements: usize) -> *mut f64{
-    if output_elements <= 1 {
-        return output_ptr;
-    }
-    
-    let mut vector = Vec::new();
-    let mut result;
-    let outputs;
-
-    unsafe {
-        outputs = from_raw_parts(output_ptr, output_size * output_elements);
-    }
-    for i in 0..output_size{
-        result = 0.0;
-        for j in 0..output_elements{
-            result += outputs[i * output_elements + j] * (j + 1) as f64;
-        }
-        vector.push(result);
-    }
-    let mut slice = vector.into_boxed_slice();
-    let ptr = slice.as_mut_ptr();
-    Box::leak(slice);
-    return ptr
-}

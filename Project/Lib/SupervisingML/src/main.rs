@@ -1,12 +1,10 @@
 extern crate rand;
 use rand::Rng;
 use std::slice::{from_raw_parts};
-use crate::rbf::train_native_rbf;
 
 mod mlp;
 mod linear;
 mod svm;
-mod rbf;
 
 fn main(){
 //linear
@@ -137,18 +135,13 @@ fn main(){
     //     }
     //     println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i], &y[i]);
     // }
-    // RBF
-    let mut  x = [-1.0,2.0,1.0,-1.0,-1.0,1.0];
-    let mut y  = [-1.0,1.0,-1.0];
-    let sample = 3 ;
-    let nbPerSemple =2;
-    let gamma = 1.0;
-    let r = train_native_rbf(&x,&y,sample,nbPerSemple,gamma);
-    println!("{:?} ",r.w);
+    
+
+    
     //SVM
     let mut x = vec![1.0,3.0,2.0,2.0,3.0,2.0];
     let mut y = vec![-1.0,1.0,1.0]; 
-    let model_ptr = svm::train_svm_model(x.as_mut_ptr(), y.as_mut_ptr(), 2, 3);
+    let model_ptr = svm::train_svm_model_rbf_kernel(x.as_mut_ptr(), y.as_mut_ptr(), 2, 3, 0.2, 1);
     let model;
     unsafe{
         model = from_raw_parts(model_ptr, 3);
@@ -158,4 +151,5 @@ fn main(){
     for i in 0..3{
         println!("predict : {:?} / result : {:?}", svm::predict_svm_model(model_ptr, x[i * 2..(i + 1) * 2].as_mut_ptr(), 3), y[i]);
     }
+    
 }
