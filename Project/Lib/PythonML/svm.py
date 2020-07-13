@@ -29,8 +29,7 @@ class SVM:
             ctypes.POINTER(ctypes.c_double),
             ctypes.c_int,
             ctypes.c_int,
-            ctypes.c_double,
-            ctypes.c_int
+            ctypes.c_double
         ]
 
         self.lib.predict_svm_model.restype = ctypes.c_double
@@ -46,17 +45,11 @@ class SVM:
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(x))
 
-    def train_svm_model_classification(self, x, y, kernel, *args):
+    def train_svm_model(self, x, y, kernel, *args):
         if kernel == self.Kernel.BASIC:
             self.train_svm_model_basic_kernel(x,y)
         elif kernel == self.Kernel.RBF:
-            self.train_svm_model_rbf_kernel_classification(x,y,args[0])
-
-    def train_svm_model_regression(self, x, y, kernel, *args):
-        if kernel == self.Kernel.BASIC:
-            self.train_svm_model_basic_kernel(x,y)
-        elif kernel == self.Kernel.RBF:
-            self.train_svm_model_rbf_kernel_regression(x,y,args[0])
+            self.train_svm_model_rbf_kernel(x,y,args[0])
         
     def train_svm_model_basic_kernel(self, x, y):
         self.model = self.lib.train_svm_model_basic_kernel(
@@ -67,28 +60,16 @@ class SVM:
         )
         self.model_size = x.shape[1] + 1
 
-    def train_svm_model_rbf_kernel_classification(self, x, y, gamma):
+    def train_svm_model_rbf_kernel(self, x, y, gamma):
         self.model = self.lib.train_svm_model_rbf_kernel(
             x.flatten().ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             x.shape[1],
             x.shape[0],
-            gamma,
-            1
+            gamma
         )
         self.model_size = x.shape[1] + 1
     
-    def train_svm_model_rbf_kernel_regression(self, x, y, gamma):
-        self.model = self.lib.train_svm_model_rbf_kernel(
-            x.flatten().ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-            y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-            x.shape[1],
-            x.shape[0],
-            gamma,
-            0
-        )
-        self.model_size = x.shape[1] + 1
-
     def save_model(self, path):
         model_list = [str(self.model[i]) for i in range(self.model_size)]
         model_string = ';'.join(model_list)
