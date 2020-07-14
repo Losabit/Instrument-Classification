@@ -17,11 +17,12 @@ factor_width_height = start_width / start_height
 height = 109
 width = (int)(height * factor_width_height)
 
-path = 'C:\\Users\\quent\\Desktop\\Projet Annuel\\Applis\\TestDataset\\ImageClassification\\dataset\\validation'
+path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Test/Spectrogram'
 subDirectories = ['saxo','piano','guitare']
 
 for subDirectory in subDirectories:
     files = getFiles(os.path.join(path,subDirectory), '.png')
     for i in range(len(files)):
         image = Image.open(files[i])
-        image.resize((width,height)).save(files[i])
+        print(image)
+        #image.resize((width,height)).save(files[i])
