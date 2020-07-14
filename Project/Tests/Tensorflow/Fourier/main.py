@@ -24,11 +24,11 @@ else:
 
 
 train_data, train_label = importData(train_path, 3, train_max_by_label)
-validation_data, validation_label = importData(validation_path, 3, train_max_by_label // 2)
+validation_data, validation_label = importData(validation_path, 2, train_max_by_label // 2)
 print("Import Finish")
 
 train_data, train_label = shuffle(train_data, train_label)
-validation_data, validation_label = shuffle(validation_data, validation_label)  
+validation_data, validation_label = shuffle(validation_data, validation_label)
 
 # Linear classification
 '''
@@ -54,7 +54,8 @@ model = keras.Sequential([
     keras.layers.Flatten(input_shape=train_data.shape[1:]),
     keras.layers.Dense(128, activation='tanh'),
     keras.layers.Dense(128, activation='tanh'),
-    keras.layers.Dense(3)
+    keras.layers.Dense(128,activation='tanh'),
+    keras.layers.Dense(5)
 ])
 
 model.compile(optimizer='adam',
