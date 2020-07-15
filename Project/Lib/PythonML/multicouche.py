@@ -1,14 +1,23 @@
 import ctypes
+import enum
 import numpy as np
 
 # avacariu.me/writing/2014/calling-rust-from-python
 class MLP:
+    class ActivationFunction(enum.Enum):
+        Null = 0.0
+        Tanh = 1.0
+        Relu = 2.0
+        Sigmoid = 3.0
+
     def __init__(self, dll_path):
         self.lib = ctypes.CDLL(dll_path)
         self.initialize_rust_functions()
         self.model = []
         self.neurones_by_couche = []
         self.nbCouche = 0
+        self.activation_function = self.ActivationFunction.Tanh
+        self.output_function = self.ActivationFunction.Tanh
 
     def initialize_rust_functions(self):
         self.lib.init_multicouche_model.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_int]
@@ -18,7 +27,9 @@ class MLP:
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
-            ctypes.c_int]
+            ctypes.c_int,
+            ctypes.c_double,
+            ctypes.c_double]
         self.lib.predict_multicouche_model_classification.restype = ctypes.POINTER(ctypes.c_double)
 
         self.lib.predict_multicouche_model_regression.argtypes = [
@@ -35,6 +46,8 @@ class MLP:
             ctypes.POINTER(ctypes.c_double),
             ctypes.c_int,
             ctypes.c_int,
+            ctypes.c_double,
+            ctypes.c_double,
             ctypes.c_double,
             ctypes.c_double]
         self.lib.train_multicouche_model_classification.restype = ctypes.POINTER(ctypes.c_double)
@@ -64,7 +77,9 @@ class MLP:
             self.model, 
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), 
             self.neurones_by_couche.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), 
-            len(self.neurones_by_couche))
+            len(self.neurones_by_couche),
+            self.activation_function.value,
+            self.output_function.value)
 
     def predict_multicouche_model_regression(self, x):
         return self.lib.predict_multicouche_model_regression(
@@ -82,7 +97,9 @@ class MLP:
             self.nbCouche,
             nbExemple,
             nbIter,
-            alpha)
+            alpha,
+            self.activation_function.value,
+            self.output_function.value)
 
     def train_multicouche_model_regression(self, x, y, nbExemple, nbIter, alpha):
         self.model = self.lib.train_multicouche_model_regression(

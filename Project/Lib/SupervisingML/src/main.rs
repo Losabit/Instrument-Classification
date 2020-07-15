@@ -62,18 +62,18 @@ fn main(){
 */
 //multicouche 
          
-    // let mut neurone_by_couche = [1.0,6.0,1.0];
-    // let mut rng = rand::thread_rng();
-    // let size = mlp::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
-    // let mut model_ptr = mlp::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
-    // let mut model;
-    // unsafe{
-    //     model = from_raw_parts(model_ptr, size);
+    let mut neurone_by_couche = [1.0,6.0,1.0];
+    let mut rng = rand::thread_rng();
+    let size = mlp::get_model_size(neurone_by_couche.as_mut_ptr(), neurone_by_couche.len());
+    let mut model_ptr = mlp::init_multicouche_model(neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+    let mut model;
+    unsafe{
+        model = from_raw_parts(model_ptr, size);
 
-
+    }
 
     //classification  
-    /* 
+     
     let mut x = vec![];
     for _ in 0..1000{
         x.push(rng.gen_range(0.0,1.0) * 2.0 - 1.0)
@@ -102,7 +102,7 @@ fn main(){
         }
     }
     
-    model_ptr = mlp::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_mut_ptr(), neurone_by_couche.len(), y.len() / 3, 10000.0, 0.1);
+    model_ptr = mlp::train_multicouche_model_classification(model_ptr, x.as_mut_ptr(), y.as_mut_ptr(), neurone_by_couche.as_mut_ptr(), neurone_by_couche.len(), y.len() / 3, 10000.0, 0.1, 1.0, 2.0);
     unsafe{
         model = from_raw_parts(model_ptr, size);
     }
@@ -110,13 +110,13 @@ fn main(){
 
     let mut predict_value;
     for i in 0..20 {
-        let predict_value_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[i * 2..(i + 1) * 2].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len());
+        let predict_value_ptr = mlp::predict_multicouche_model_classification(model_ptr,  x[i * 2..(i + 1) * 2].as_mut_ptr(), neurone_by_couche.as_mut_ptr(),  neurone_by_couche.len(), 1.0, 2.0);
         unsafe{
             predict_value = from_raw_parts(predict_value_ptr, 3); 
         }
         println!("predict value {:?} = {:?} for {:?} / {:?}", i + 1, predict_value, &x[i * 2..(i + 1) * 2], &y[i * 3..(i + 1) * 3]);
     }
-    */
+    
 
     //regression
     // let mut x = vec![1.0,2.0,3.0];
@@ -175,7 +175,7 @@ fn main(){
     for i in 0..60{
         println!("predict : {:?} / result : {:?}", svm::predict_svm_model(model_ptr, x[i * 2..(i + 1) * 2].as_mut_ptr(), 3), y[i]);
     }
-    */
+    // RBF
     let x = vec![1.0, 1.0, 2.0, 3.0, 3.0, 3.0];
     let pred = vec![2.0,2.0];
     let y  = vec![
@@ -190,4 +190,5 @@ fn main(){
     }
     println!("model : {:?}", model);
     println!("model : {:?}",rbf::predict_rbf(model_ptr, x.as_ptr(), pred.as_ptr(), 100.0, 3.0, 2.0));   
+    */
 }

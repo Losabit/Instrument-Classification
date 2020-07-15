@@ -17,4 +17,6 @@ crate-type = ["cdylib"]
 [dependencies]
 rand = "0.7.3"
 nalgebra = "0.21.0"
+num-traits = "0.2"
+num-derive = "0.2"
 osqp = "0.6.0"
