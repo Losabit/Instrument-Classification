@@ -23,11 +23,11 @@ class OperationMode(Enum):
 
 
 
-inpath = ['C:\\Users\\quent\\Desktop\\dataset\\mono\\saxo\\', 'C:\\Users\\quent\\Desktop\\dataset\\mono\\saxo\\', 'C:\\Users\\quent\\Desktop\\dataset\\mono\\saxo\\']
-outpath = ['C:\\Users\\quent\\Desktop\\dataset\\fourierPng\\saxo\\', 'C:\\Users\\quent\\Desktop\\dataset\\fourierPng\\saxo\\', 'C:\\Users\\quent\\Desktop\\dataset\\fourierPng\\saxo\\']
-filename = ['Saxo', 'Guitare', 'Piano']
+inpath = '/home/losabit/Desktop/toimport/guitare/'
+outpath = '/home/losabit/Desktop/toimport/spectro/guitare/'
+filename = 'Guitare'
 mode = ExtractMode.PNG
-operation = OperationMode.Fourier
+operation = OperationMode.Spectrogram
 
 files = []
 for r, _, f in os.walk(inpath):

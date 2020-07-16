@@ -17,7 +17,7 @@ factor_width_height = start_width / start_height
 height = 109
 width = (int)(height * factor_width_height)
 
-path = 'C:\\Users\\quent\\Desktop\\Projet Annuel\\Applis\\TestDataset\\ImageClassification\\dataset\\validation'
+path = '/home/losabit/Desktop/toimport/spectro/'
 subDirectories = ['saxo','piano','guitare']
 
 for subDirectory in subDirectories:
