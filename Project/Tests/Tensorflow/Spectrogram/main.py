@@ -82,7 +82,7 @@ if ORIGINAL_IMG_HEIGHT == IMG_HEIGHT and ORIGINAL_IMG_WIDTH == IMG_WIDTH:
     train_images = np.delete(train_images, 3, 3)
     validation_images = np.delete(validation_images, 3, 3)
 
-print(train_images.shape)
+print(train_labels)
 
 '''
 plt.figure(figsize=(10,10))

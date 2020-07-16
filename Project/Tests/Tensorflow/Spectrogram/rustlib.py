@@ -37,7 +37,7 @@ def shuffle(data,label):
         data[i], data[rand] = data[rand], data[i]
     return (data,label)
 
-def test(model, data, label):
+def test(model, data, label, last_couche):
     good_predict = [0 for i in range(last_couche + 1)]
     number_of_predict = [0 for i in range(last_couche + 1)]
     for i in range(len(data)):

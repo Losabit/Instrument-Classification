@@ -17,12 +17,11 @@ factor_width_height = start_width / start_height
 height = 109
 width = (int)(height * factor_width_height)
 
-path = '/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Test/Spectrogram'
+path = '/home/losabit/Desktop/toimport/spectro/'
 subDirectories = ['saxo','piano','guitare']
 
 for subDirectory in subDirectories:
     files = getFiles(os.path.join(path,subDirectory), '.png')
     for i in range(len(files)):
         image = Image.open(files[i])
-        print(image)
-        #image.resize((width,height)).save(files[i])
+        image.resize((width,height)).save(files[i])

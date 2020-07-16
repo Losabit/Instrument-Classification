@@ -14,10 +14,10 @@ def removeDirectoryContent(folder):
             shutil.rmtree(file_path)
 
 
-inpath = '/home/losabit/Desktop/PA/dataset_fresh/spectrogramm/'
-outpath = 'Fourier/dataset'
+inpath = '/home/losabit/Desktop/toimport/spectro/'
+outpath = '/home/losabit/Desktop/toimport/train_val/'
 labels = ['guitare', 'piano', 'saxo']
-train_part = 0.85
+train_part = 0.9
 part_to_take = 1
 extension = '.png'
 
@@ -31,8 +31,8 @@ for label in labels:
 
     random.shuffle(files)
     train_size = (int)(len(files) * train_part)
-    train_path = os.path.join('/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Train/Spectrogram/', label)
-    validation_path = os.path.join('/home/losabit/Desktop/PA/Instrument-Classification/Project/Dataset/Test/Spectrogram/', label)
+    train_path = os.path.join('/home/losabit/Desktop/toimport/train_val/train', label)
+    validation_path = os.path.join('/home/losabit/Desktop/toimport/train_val/validation', label)
 
     removeDirectoryContent(train_path)
     removeDirectoryContent(validation_path)
