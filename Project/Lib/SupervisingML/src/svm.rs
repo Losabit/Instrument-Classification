@@ -1,12 +1,176 @@
 use std::slice::{from_raw_parts};
-use osqp::{CscMatrix, Problem, Settings};
+//use osqp::{CscMatrix, Problem, Settings};
 use nalgebra::{DMatrix};
 
 // SVM
 // https://docs.rs/osqp/0.6.0/osqp/
-// type_solver : 0 -> régréssion/ 1 -> classification 
+#[no_mangle]
+pub extern "C" fn train_svm_model(alpha_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize) -> *mut f64{
+    let x;
+    let y;
+    let alpha;
+    unsafe {
+        alpha = from_raw_parts(alpha_ptr, sample_size);
+        x = from_raw_parts(x_ptr , dimension * sample_size);
+        y = from_raw_parts(y_ptr, sample_size);
+    }
+    
+    let mut w : Vec<f64> = vec![];
+    let mut indice_to_take : usize = 0;
+    let mut found_indice = false;
+    for i in 0..sample_size{
+        if alpha[i] > 0.0 && !found_indice{
+            indice_to_take = i;
+            found_indice = true;
+        }
+        for j in 0..dimension{
+            if i == 0{
+                w.push(0.0);
+            }
+            w[j] += x[i * dimension + j] * y[i] * alpha[i];
+        }
+    }
 
-fn train_svm_model(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sample_size: usize) -> *mut f64{
+    if found_indice {
+        let mut sum = 0.0;
+        for i in 0..dimension{
+            sum += w[i] * x[indice_to_take * dimension + i];
+        }
+        w.insert(0, 1.0 / y[indice_to_take] - sum);
+    }
+
+    let mut slice = w.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr  
+}
+
+fn predict_linear_model_regression_(model: &[f64], x: &[f64], x_size: usize)-> f64{
+    let mut sum = model[0];
+    for i in 0..x_size {
+        sum += model[i + 1] * x[i]
+    }
+    return sum;
+}
+
+#[no_mangle]
+pub extern "C" fn predict_svm_model(w_ptr: *mut f64, x_ptr: *mut f64, size: usize) -> f64 {
+    let x;
+    let w;
+    unsafe {
+        x = from_raw_parts(x_ptr , size);
+        w = from_raw_parts(w_ptr, size + 1);
+    }
+
+    if predict_linear_model_regression_(w, x, size) >= 0.0{
+        return 1.0;
+    }
+    else {
+        return -1.0;
+    }
+}
+
+// KERNELS
+// Polynomial
+fn polynomial_kernel_compute(x1: &[f64], x2: &[f64], degree: i32) -> f64 {
+    assert_eq!(x1.len(), x2.len());
+    let sum = basic_kernel_compute(x1, x2);
+    return (1.0 + sum).powi(degree);
+}
+
+#[no_mangle]
+pub extern "C" fn polynomial_kernel_build(x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize, degree: i32) -> *mut f64{
+    let mut p : Vec<f64> = vec![];
+    let x;
+    let y;
+    unsafe {
+        x = from_raw_parts(x_ptr , dimension * sample_size);
+        y = from_raw_parts(y_ptr, sample_size);
+    }
+   
+    for i in 0..sample_size{
+        for j in 0..sample_size{
+            let x1 = &x[i * dimension .. (i + 1) * dimension];
+            let x2 = &x[j * dimension .. (j + 1) * dimension];
+            p.push(y[i] * y[j] * polynomial_kernel_compute(x1, x2, degree));
+        }
+    }
+    let mut slice = p.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr
+}
+
+// Basique
+fn basic_kernel_compute(x1: &[f64], x2: &[f64]) -> f64 {
+    assert_eq!(x1.len(), x2.len());
+    let mut sum = 0.0;
+    for i in 0..x1.len(){
+        sum += x1[i] * x2[i];
+    }
+    return sum;
+}
+
+#[no_mangle]
+pub extern "C" fn basic_kernel_build(x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize) -> *mut f64{
+    let mut p : Vec<f64> = vec![];
+    let x;
+    let y;
+    unsafe {
+        x = from_raw_parts(x_ptr , dimension * sample_size);
+        y = from_raw_parts(y_ptr, sample_size);
+    }
+    
+    for i in 0..sample_size{
+        for j in 0..sample_size{
+            let x1 = &x[i * dimension .. (i + 1) * dimension];
+            let x2 = &x[j * dimension .. (j + 1) * dimension];
+            p.push(y[i] * y[j] * basic_kernel_compute(x1, x2));
+        }
+    }
+    let mut slice = p.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr
+}
+
+// RBF
+pub fn rbf_kernel_compute(x1: &[f64], x2: &[f64], gamma: f64) -> f64{
+    assert_eq!(x1.len(), x2.len());
+    let mut vector_x = Vec::new();
+    for k in 0..x1.len(){
+        vector_x.push(x1[k] - x2[k])
+    }
+    let alpha = DMatrix::from_row_slice(x1.len(), 1, &vector_x);
+    let toexp = -gamma * (alpha.norm() * alpha.norm());
+    return toexp.exp();
+}
+
+#[no_mangle]
+pub extern "C" fn rbf_kernel_build(x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize, gamma: f64) -> *mut f64{
+    let mut p : Vec<f64> = vec![];
+    let x;
+    let y;
+    unsafe {
+        x = from_raw_parts(x_ptr , dimension * sample_size);
+        y = from_raw_parts(y_ptr, sample_size);
+    }
+
+    for i in 0..sample_size{
+        for j in 0..sample_size{
+            let x1 = &x[i * dimension .. (i + 1) * dimension];
+            let x2 = &x[j * dimension .. (j + 1) * dimension]; 
+            p.push(y[i] * y[j] * rbf_kernel_compute(x1, x2, gamma));
+        }
+    }
+    let mut slice = p.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr
+}
+
+/*
+fn train_svm_model_qp(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sample_size: usize) -> *mut f64{
     /*
     println!("x : {:?}", x);
     println!("y : {:?}", y);
@@ -101,189 +265,4 @@ fn train_svm_model(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sampl
     Box::leak(slice);
     return ptr  
 }
-
-#[no_mangle]
-pub extern "C" fn train_svm_model_(alpha_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize) -> *mut f64{
-    let x;
-    let y;
-    let alpha;
-    unsafe {
-        alpha = from_raw_parts(alpha_ptr, sample_size);
-        x = from_raw_parts(x_ptr , dimension * sample_size);
-        y = from_raw_parts(y_ptr, sample_size);
-    }
-    
-    let mut w : Vec<f64> = vec![];
-    let mut indice_to_take : usize = 0;
-    let mut found_indice = false;
-    for i in 0..sample_size{
-        if alpha[i] > 0.0 && !found_indice{
-            indice_to_take = i;
-            found_indice = true;
-        }
-        for j in 0..dimension{
-            if i == 0{
-                w.push(0.0);
-            }
-            w[j] += x[i * dimension + j] * y[i] * alpha[i];
-        }
-    }
-
-    if found_indice {
-        let mut sum = 0.0;
-        for i in 0..dimension{
-            sum += w[i] * x[indice_to_take * dimension + i];
-        }
-        w.insert(0, 1.0 / y[indice_to_take] - sum);
-    }
-
-    let mut slice = w.into_boxed_slice();
-    let ptr = slice.as_mut_ptr();
-    Box::leak(slice);
-    return ptr  
-}
-
-#[no_mangle]
-pub extern "C" fn train_svm_model_rbf_kernel(x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize, gamma: f64) -> *mut f64{
-    let mut p : Vec<&[f64]> = vec![];
-    let x;
-    let y;
-    unsafe {
-        x = from_raw_parts(x_ptr , dimension * sample_size);
-        y = from_raw_parts(y_ptr, sample_size);
-    }
-    
-    for i in 0..sample_size{
-        let mut vector = vec![];
-        for j in 0..sample_size{
-            let x1 = &x[i * dimension .. (i + 1) * dimension];
-            let x2 = &x[j * dimension .. (j + 1) * dimension]; 
-            vector.push(y[i] * y[j] * rbf_kernel_compute(x1, x2, gamma));
-        }
-        
-        let mut slice_p = vector.into_boxed_slice();
-        let ptr_p = slice_p.as_mut_ptr();
-        let buff_p;
-        unsafe{
-            buff_p = from_raw_parts(ptr_p, sample_size);
-        }
-        Box::leak(slice_p);
-        p.push(buff_p);
-    }
-    return train_svm_model(p, x, y, dimension, sample_size);
-}
-
-#[no_mangle]
-pub extern "C" fn train_svm_model_basic_kernel(x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize) -> *mut f64{
-    let mut p : Vec<&[f64]> = vec![];
-    let x;
-    let y;
-    unsafe {
-        x = from_raw_parts(x_ptr , dimension * sample_size);
-        y = from_raw_parts(y_ptr, sample_size);
-    }
-    
-    for i in 0..sample_size{
-        let mut vector = vec![];
-        for j in 0..sample_size{
-            let x1 = &x[i * dimension .. (i + 1) * dimension];
-            let x2 = &x[j * dimension .. (j + 1) * dimension];
-            vector.push(y[i] * y[j] * basic_kernel_compute(x1, x2));
-        }
-        
-        let mut slice_p = vector.into_boxed_slice();
-        let ptr_p = slice_p.as_mut_ptr();
-        let buff_p;
-        unsafe{
-            buff_p = from_raw_parts(ptr_p, sample_size);
-        }
-        Box::leak(slice_p);
-        p.push(buff_p);
-    }
-    return train_svm_model(p, x, y, dimension, sample_size);
-}
-
-#[no_mangle]
-pub extern "C" fn train_svm_model_polynomial_kernel(x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize, degree: i32) -> *mut f64{
-    let mut p : Vec<&[f64]> = vec![];
-    let x;
-    let y;
-    unsafe {
-        x = from_raw_parts(x_ptr , dimension * sample_size);
-        y = from_raw_parts(y_ptr, sample_size);
-    }
-    
-    for i in 0..sample_size{
-        let mut vector = vec![];
-        for j in 0..sample_size{
-            let x1 = &x[i * dimension .. (i + 1) * dimension];
-            let x2 = &x[j * dimension .. (j + 1) * dimension];
-            vector.push(y[i] * y[j] * polynomial_kernel_compute(x1, x2, degree));
-        }
-        
-        let mut slice_p = vector.into_boxed_slice();
-        let ptr_p = slice_p.as_mut_ptr();
-        let buff_p;
-        unsafe{
-            buff_p = from_raw_parts(ptr_p, sample_size);
-        }
-        Box::leak(slice_p);
-        p.push(buff_p);
-    }
-    return train_svm_model(p, x, y, dimension, sample_size);
-}
-
-fn predict_linear_model_regression_(model: &[f64], x: &[f64], x_size: usize)-> f64{
-    let mut sum = model[0];
-    for i in 0..x_size {
-        sum += model[i + 1] * x[i]
-    }
-    return sum;
-}
-
-#[no_mangle]
-pub extern "C" fn predict_svm_model(w_ptr: *mut f64, x_ptr: *mut f64, size: usize) -> f64 {
-    let x;
-    let w;
-    unsafe {
-        x = from_raw_parts(x_ptr , size);
-        w = from_raw_parts(w_ptr, size + 1);
-    }
-
-    if predict_linear_model_regression_(w, x, size) >= 0.0{
-        return 1.0;
-    }
-    else {
-        return -1.0;
-    }
-}
-
-// KERNELS
-// Polynomial
-fn polynomial_kernel_compute(x1: &[f64], x2: &[f64], degree: i32) -> f64 {
-    assert_eq!(x1.len(), x2.len());
-    let sum = basic_kernel_compute(x1, x2);
-    return (1.0 + sum).powi(degree);
-}
-
-// Basique
-fn basic_kernel_compute(x1: &[f64], x2: &[f64]) -> f64 {
-    assert_eq!(x1.len(), x2.len());
-    let mut sum = 0.0;
-    for i in 0..x1.len(){
-        sum += x1[i] * x2[i];
-    }
-    return sum;
-}
-
-// RBF
-pub fn rbf_kernel_compute(x1: &[f64], x2: &[f64], gamma: f64) -> f64{
-    assert_eq!(x1.len(), x2.len());
-    let mut vector_x = Vec::new();
-    for k in 0..x1.len(){
-        vector_x.push(x1[k] - x2[k])
-    }
-    let alpha = DMatrix::from_row_slice(x1.len(), 1, &vector_x);
-    let toexp = -gamma * (alpha.norm() * alpha.norm());
-    return toexp.exp();
-}
+*/
