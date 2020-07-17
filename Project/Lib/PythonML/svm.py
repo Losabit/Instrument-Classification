@@ -10,6 +10,7 @@ class SVM:
     class Kernel(enum.Enum):
         BASIC = 1
         RBF = 2
+        POLYNOMIAL = 3
         
     def __init__(self, dll_path):
         self.lib = ctypes.CDLL(dll_path)
@@ -18,23 +19,6 @@ class SVM:
         self.model_size = 0
 
     def initialize_rust_functions(self):
-        self.lib.train_svm_model_basic_kernel.restype = ctypes.POINTER(ctypes.c_double)
-        self.lib.train_svm_model_basic_kernel.argtypes = [
-            ctypes.POINTER(ctypes.c_double),
-            ctypes.POINTER(ctypes.c_double),
-            ctypes.c_int,
-            ctypes.c_int
-        ]
-
-        self.lib.train_svm_model_rbf_kernel.restype = ctypes.POINTER(ctypes.c_double)
-        self.lib.train_svm_model_rbf_kernel.argtypes = [
-            ctypes.POINTER(ctypes.c_double),
-            ctypes.POINTER(ctypes.c_double),
-            ctypes.c_int,
-            ctypes.c_int,
-            ctypes.c_double
-        ]
-
         self.lib.predict_svm_model.restype = ctypes.c_double
         self.lib.predict_svm_model.argtypes = [
             ctypes.POINTER(ctypes.c_double),
@@ -42,8 +26,34 @@ class SVM:
             ctypes.c_int
         ]
 
-        self.lib.train_svm_model_.restype = ctypes.POINTER(ctypes.c_double)
-        self.lib.train_svm_model_.argtypes = [
+        self.lib.basic_kernel_build.restype = ctypes.POINTER(ctypes.c_double)
+        self.lib.basic_kernel_build.argtypes = [
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_int,
+            ctypes.c_int
+        ]
+
+        self.lib.rbf_kernel_build.restype = ctypes.POINTER(ctypes.c_double)
+        self.lib.rbf_kernel_build.argtypes = [
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_double
+        ]
+
+        self.lib.polynomial_kernel_build.restype = ctypes.POINTER(ctypes.c_double)
+        self.lib.polynomial_kernel_build.argtypes = [
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_int32
+        ]
+
+        self.lib.train_svm_model.restype = ctypes.POINTER(ctypes.c_double)
+        self.lib.train_svm_model.argtypes = [
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
             ctypes.POINTER(ctypes.c_double),
@@ -56,52 +66,62 @@ class SVM:
             self.model,
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             len(x))
+    
+    def qp_solver(self, P, x, y):
+        n_samples, n_features = x.shape
+        P = cvxopt.matrix(P, (n_samples, n_samples))
+        q = cvxopt.matrix(np.ones(n_samples) * -1)
+        A = cvxopt.matrix(y, (1, n_samples))
+        b = cvxopt.matrix(0.0)
+        G = cvxopt.matrix(np.diag(np.ones(n_samples) * -1))
+        h = cvxopt.matrix(np.zeros(n_samples))
+        cvxopt.solvers.options['show_progress'] = False
+        solution = cvxopt.solvers.qp(P, q, G, h, A, b)
+        return solution
 
-    def train_svm_model(self, x, y, kernel, *args):
+    def kernel_build(self,kernel, x, y, args):
         if kernel == self.Kernel.BASIC:
-            self.train_svm_model_basic_kernel(x,y)
+            return self.basic_kernel_build(x,y)
         elif kernel == self.Kernel.RBF:
-            self.train_svm_model_rbf_kernel(x,y,args[0])
-        
-    def train_svm_model_basic_kernel(self, x, y):
-        self.model = self.lib.train_svm_model_basic_kernel(
+            return self.rbf_kernel_build(x,y,args[0])
+        elif kernel == self.Kernel.POLYNOMIAL:
+            return self.polynomial_kernel_build(x, y, int(args[0]))
+
+        return None
+
+    def basic_kernel_build(self, x, y):
+        P = self.lib.basic_kernel_build(
             x.flatten().ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             x.shape[1],
             x.shape[0]
         )
-        self.model_size = x.shape[1] + 1
+        return [P[i] for i in range(x.shape[0] * x.shape[0])]
 
-    def train_svm_model_rbf_kernel(self, x, y, gamma):
-        self.model = self.lib.train_svm_model_rbf_kernel(
+    def rbf_kernel_build(self, x, y, gamma):
+        P = self.lib.rbf_kernel_build(
             x.flatten().ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             x.shape[1],
             x.shape[0],
             gamma
         )
-        self.model_size = x.shape[1] + 1
-    
-    def qp_solver(self, x, y):
-        n_samples, n_features = x.shape
-        K = np.zeros((n_samples, n_samples))
-        for i in range(n_samples):
-            for j in range(n_samples):
-                K[i,j] = np.dot(x[i], x[j])
-        
-        P = cvxopt.matrix(np.outer(y, y) * K)
-        q = cvxopt.matrix(np.ones(n_samples) * -1)
-        A = cvxopt.matrix(y, (1, n_samples))
-        b = cvxopt.matrix(0.0)
-        G = cvxopt.matrix(np.diag(np.ones(n_samples) * -1))
-        h = cvxopt.matrix(np.zeros(n_samples))
-        solution = cvxopt.solvers.qp(P, q, G, h, A, b)
-        return solution
+        return [P[i] for i in range(x.shape[0] * x.shape[0])]
 
-    def train_svm_model_qp(self, x, y):
-        solution = self.qp_solver(x, y)
+    def polynomial_kernel_build(self, x, y, degree):
+        P = self.lib.polynomial_kernel_build(
+            x.flatten().ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+            x.shape[1],
+            x.shape[0],
+            degree
+        )
+        return [P[i] for i in range(x.shape[0] * x.shape[0])]
+
+    def train_svm_model(self, P, x, y):        
+        solution = self.qp_solver(P, x, y)
         x_qp = np.array(solution['x'], dtype='float64')
-        self.model = self.lib.train_svm_model_(
+        self.model = self.lib.train_svm_model(
             x_qp.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             x.flatten().ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
