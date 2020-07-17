@@ -34,6 +34,8 @@
 $error = null; // Détermine le type d'erreur
 
 // On vérifie que le fichier a bien été envoyé et sans aucune erreur
+echo  $_FILES['photo']['error'] == 0;
+echo $_FILES['photo']['error'];
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
             // On retire les accents
             $photoName = strtr($_FILES['photo']['name'],
@@ -62,12 +64,12 @@ $error = null; // Détermine le type d'erreur
                         break;
                 }
 				
-				if (in_array($extension_upload,$extensions_trans)){
-					exec("lame –decode uploads/".$photoName.mp3" uploads/".$photoName .".wav");
-					echo `script.py`
-
-					
-				}
+//				if (in_array($extension_upload,$extensions_trans)){
+//					exec("lame –decode uploads/$photoName.mp3 uploads/$photoName.wav");
+//					echo `script.py`;
+//
+//
+//				}
 
                 if ($error === null) { ?>
                     <p style="color:green; font-size: 20px; font-weight: bold; text-align: center;">Envoyé avec succès !</p>
@@ -98,9 +100,9 @@ $error = null; // Détermine le type d'erreur
         echo 'Il ny a pas de fichier';
     }
 ?>
-
-<meta http-equiv="refresh" content="35;index.php">
-
+<?php echo $_POST["Model"] ?>
+<!--<meta http-equiv="refresh" content="5;index.php">
+-->
 <div class="row">
     <img src="img/loading.gif" style="display: block; margin-left: auto; margin-right: auto;">
 </div>

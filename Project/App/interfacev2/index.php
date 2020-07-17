@@ -59,6 +59,21 @@
                       <div class="form-group" style="text-align: center;">
                         <label for="photo" class="form-label">Votre fichier</label> <br>
                         <input class="btn btn-primary" type="file" name="photo" id="photo">
+                          <br>
+                          <label for="model" class="form-labael"> Le model </label><br>
+                          <select name="Model" size="1">
+                          <?php
+                          $dir = "Models/";
+                          if (is_dir($dir)) {
+                              if ($dh = opendir($dir)) {
+                                  while (($file = readdir($dh)) !== false) {
+                                      echo  "<OPTION value='$file'> $file </OPTION>";
+                                  }
+                                  closedir($dh);
+                              }
+                          }
+                          ?>
+                          </select>
                       </div>
                       <br>
                       <button  style="margin-right: 20%" class="btn btn-sucess" type="submit">Envoyer
@@ -120,7 +135,7 @@
           </div>
         </div>
       </div>
-    </div>  <a href="ListModel.php"> <button  style="margin-right: 20%" class="btn btn-sucess" >Voir les modèls </button></a>
+<!--    </div>  <a href="ListModel.php"> <button  style="margin-right: 20%" class="btn btn-sucess" >Voir les modèls </button></a>-->
 
 
   </div>
