@@ -16,11 +16,8 @@ fn train_svm_model(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sampl
     println!("type_solver : {:?}", type_solver);
     */
     
-    // Min 1/2 * X(transpos) * PX + q(transpos)X
-    // Fonction objective S^n_+ = x(transpos)i * xj * yi * yj
     // Fonction objective vector R^n = -1
     let mut q : Vec<f64> = vec![];
-
     // l <= Ax <= u
     // contraintes R^m * n = yT
     let mut A : Vec<&[f64]> = vec![];
@@ -31,9 +28,9 @@ fn train_svm_model(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sampl
     l.push(0.0);
     l.push(0.0);
     // contrainte haute
-    let mut u : Vec<f64> = vec![];
-    u.push(f64::INFINITY);
+    let mut u : Vec<f64> = vec![]; 
     u.push(0.0);
+    u.push(f64::INFINITY);
 
     for i in 0..sample_size{
         q.push(-1.0);
@@ -53,16 +50,16 @@ fn train_svm_model(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sampl
     }
     Box::leak(slice_a);
     Box::leak(slice_1);
-    A.push(buff_1);
     A.push(buff_a);
+    A.push(buff_1);
 
-    /*
+   
     println!("P : {:?}",P);
-    println!("q : {:?}",q);
+    //println!("q : {:?}",q);
     println!("A : {:?}",A);
     println!("l : {:?}",l);
     println!("u : {:?}",u);
-    */
+    
 
     let P = CscMatrix::from(P).into_upper_tri();
     let settings = Settings::default()
@@ -98,6 +95,47 @@ fn train_svm_model(P: Vec<&[f64]>, x: &[f64], y: &[f64], dimension: usize, sampl
         w.insert(0, 1.0 / y[indice_to_take] - sum);
     }
     //println!("W : {:?}", w);
+
+    let mut slice = w.into_boxed_slice();
+    let ptr = slice.as_mut_ptr();
+    Box::leak(slice);
+    return ptr  
+}
+
+#[no_mangle]
+pub extern "C" fn train_svm_model_(alpha_ptr: *mut f64, x_ptr: *mut f64, y_ptr: *mut f64, dimension: usize, sample_size: usize) -> *mut f64{
+    let x;
+    let y;
+    let alpha;
+    unsafe {
+        alpha = from_raw_parts(alpha_ptr, sample_size);
+        x = from_raw_parts(x_ptr , dimension * sample_size);
+        y = from_raw_parts(y_ptr, sample_size);
+    }
+    
+    let mut w : Vec<f64> = vec![];
+    let mut indice_to_take : usize = 0;
+    let mut found_indice = false;
+    for i in 0..sample_size{
+        if alpha[i] > 0.0 && !found_indice{
+            indice_to_take = i;
+            found_indice = true;
+        }
+        for j in 0..dimension{
+            if i == 0{
+                w.push(0.0);
+            }
+            w[j] += x[i * dimension + j] * y[i] * alpha[i];
+        }
+    }
+
+    if found_indice {
+        let mut sum = 0.0;
+        for i in 0..dimension{
+            sum += w[i] * x[indice_to_take * dimension + i];
+        }
+        w.insert(0, 1.0 / y[indice_to_take] - sum);
+    }
 
     let mut slice = w.into_boxed_slice();
     let ptr = slice.as_mut_ptr();

@@ -61,7 +61,7 @@ pub extern "C" fn train_rbf(x_ptr: *const f64, y_ptr: *const f64, input_per_samp
 
             let alpha = DMatrix::from_row_slice(nb_sample,1,&sum);
             let toexp = -gamma * (alpha.norm() * alpha.norm());
-            phi.push( toexp.exp());
+            phi.push(toexp.exp());
         }
     }
     let phi_mat = DMatrix::from_row_slice(input_per_sample,input_per_sample,&phi);
@@ -76,3 +76,9 @@ pub extern "C" fn train_rbf(x_ptr: *const f64, y_ptr: *const f64, input_per_samp
     Box::leak(slice);
     return ptr
 }
+
+/*
+fn get_centroids(x: &[f64], input_per_sample: usize, nb_sample: usize){
+
+}
+*/
