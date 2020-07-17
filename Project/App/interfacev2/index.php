@@ -61,7 +61,7 @@
                         <input class="btn btn-primary" type="file" name="photo" id="photo">
                           <br>
                           <label for="model" class="form-labael"> Le model </label><br>
-                          <select name="Model" size="1">
+                          <select name="model" size="1" id="model">
                           <?php
                           $dir = "Models/";
                           if (is_dir($dir)) {

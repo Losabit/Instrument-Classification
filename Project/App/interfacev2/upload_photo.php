@@ -35,22 +35,33 @@ $error = null; // Détermine le type d'erreur
 
 // On vérifie que le fichier a bien été envoyé et sans aucune erreur
 echo  $_FILES['photo']['error'] == 0;
+echo "<br>";
 echo $_FILES['photo']['error'];
+echo "<br>";
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {
             // On retire les accents
             $photoName = strtr($_FILES['photo']['name'],
                 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',
                 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-            echo $photoName;
+        echo "<br>";
+
+        echo $photoName;
+        echo "<br>";
+
             // On vérifie qu'il s'agit bien d'une image
             $infosfichier = pathinfo($_FILES['photo']['name']);
-            $extension_upload = $infosfichier['extension'];
-            $extensions_autorisees = ['mp3','wave','mp4'];
-			$extensions_trans = ['mp3','mp4'];
-            $description = $_POST['description'];
-            $name = $_POST['titre'];
+        echo "<br>";
 
-            if (in_array($extension_upload,$extensions_autorisees)) // Il faut que les 2 variables valent 1 (vrai) pour rentrer dans le IF
+        $extension_upload = $infosfichier['extension'];
+            $extensions_autorisees = ['mp3','wav','mp4'];
+			$extensions_trans = ['mp3','mp4'];
+            $name = $_POST['titre'];
+            $model = $_POST['model'];
+            echo "ext : " . $infosfichier['extension'];
+        echo "<br>";
+
+
+        if (in_array($extension_upload,$extensions_autorisees)) // Il faut que les 2 variables valent 1 (vrai) pour rentrer dans le IF
             {
 
                 // On peut déplacer le fichier du rep temporaire et le stocker définitivement dans le dossier "uploads"
@@ -100,7 +111,7 @@ echo $_FILES['photo']['error'];
         echo 'Il ny a pas de fichier';
     }
 ?>
-<?php echo $_POST["Model"] ?>
+<?php //echo $_POST["Model"] ?>
 <!--<meta http-equiv="refresh" content="5;index.php">
 -->
 <div class="row">
