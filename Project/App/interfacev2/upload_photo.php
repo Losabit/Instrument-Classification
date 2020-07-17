@@ -1,36 +1,4 @@
 <?php ;
-/**
- * upload_photo.php
- * ----------------
- *
- * Permet de gérer l'upload des fichiers du site
- *
- * Phase 1
- * -------
- * A l'enregistrement, id_photo = ?
- * -> On ne peut pas se contenter de lire le dernier id dans la base de données car si jamais quelqu'un envoie
- * sa photo au même momemnt il risque de lire également le même id maxiumum, causant ainsi un conflit
- * Exemple:
- * - user1 envoie sa photo à 12:00:00 et 0ms -> il lit que le dernier id est 49 par exemple
- * - user2 envoie sa photo à 12:00:00 et 1ms -> il aussi que le dernier id est 49 car user1 n'a pas encore
- * terminé le traitement de son image
- * Conclusion: les deux photo auront id = 50 dans la base de données => conflit
- *
- * -> On enregistre avec titre_photo par exemple à 'superphoto_%id%.jpg'
- *
- * Phase 2
- * -------
- * Après l'enregistrement, on connait l'id réel dans la colonne id_photo
- * -> Met à jour titre_photo avec l'id_photo en remplaçant %id% par id_photo
- *
- * Phase 3
- * -------
- * Déplacement du fichier.
- *
- * @var $bd PDO
- */
-
-
 $error = null; // Détermine le type d'erreur
 
 // On vérifie que le fichier a bien été envoyé et sans aucune erreur
@@ -75,17 +43,23 @@ echo "<br>";
                         break;
                 }
 				
-//				if (in_array($extension_upload,$extensions_trans)){
-//					exec("lame –decode uploads/$photoName.mp3 uploads/$photoName.wav");
-//					echo `script.py`;
-//
-//
-//				}
+				if (in_array($extension_upload,$extensions_trans)){
+					exec("lame –decode uploads/$photoName.mp3 uploads/$photoName.wav");
+
+
+
+				}
 
                 if ($error === null) { ?>
                     <p style="color:green; font-size: 20px; font-weight: bold; text-align: center;">Envoyé avec succès !</p>
                     <br>
-                    <p style="font-weight: bold; text-align: center;">Vous allez être redirigé d'ici un instant..</p>
+                    <p style="font-weight: bold; text-align: center;">Vous allez être redirigé d'ici un instant..
+                        <?php
+                        $pathFile = $_GET['dirName']. $_GET['fileName'];
+                        $output = shell_exec("python /var/www/interface/script.py $pathFile ");
+                        echo 'ouut :'$output;
+                        ?>
+                    </p>
                 <?php } else { ?>
                     <p style="color:red; font-size: 30px; font-weight: bold; text-align: center;">
                         Erreur, échec de l'envoi !<br>
@@ -111,9 +85,7 @@ echo "<br>";
         echo 'Il ny a pas de fichier';
     }
 ?>
-<?php //echo $_POST["Model"] ?>
-<!--<meta http-equiv="refresh" content="5;index.php">
--->
+
 <div class="row">
     <img src="img/loading.gif" style="display: block; margin-left: auto; margin-right: auto;">
 </div>
