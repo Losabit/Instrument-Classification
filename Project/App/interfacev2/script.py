@@ -8,11 +8,6 @@ import shutil
 import tensorflow as tf
 sys.path.append('PythonML')
 
-<<<<<<< HEAD
-print(sys.argv[1])
-#TODO FICHIER TO SPECTO
-# 
-=======
 from linear import Linear
 from multicouche import MLP
 from svm import SVM
@@ -95,4 +90,3 @@ shutil.rmtree(outpath)
 print("recognize at " + str(piano_count / (len(data) // frequency - 1)) + "% a piano")
 print("recognize at " + str(saxo_count / (len(data) // frequency - 1)) + "% a saxophone")
 print("recognize at " + str(guitare_count / (len(data) // frequency - 1)) + "% a guitar")
->>>>>>> ed762b07... add prodict mlp on website
