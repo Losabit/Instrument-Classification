@@ -19,7 +19,7 @@ pub extern "C" fn predict_rbf(w_ptr: *const f64, start_x_ptr: *const f64, x_ptr:
     for i in 0..model_size{
         let mut vector_x = Vec::new();
         for k in 0..x.len(){
-            vector_x.push(x[k] - start_x[i * k + k])
+            vector_x.push(x[k] - start_x[input_per_sample * i + k])
         }
         let alpha = DMatrix::from_row_slice(x.len(), 1, &vector_x);
         let toexp = -gamma * (alpha.norm() * alpha.norm());
