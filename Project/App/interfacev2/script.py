@@ -114,10 +114,10 @@ for i in range(len(data) // frequency - 1):
 shutil.rmtree(outpath)
 
 if model_type == 1:
-    print("recognize at " + str((piano_count * 100) / (len(data) // frequency - 1)) + "% a piano")
-    print("recognize at " + str((saxo_count * 100) / (len(data) // frequency - 1)) + "% a saxophone")
-    print("recognize at " + str((guitare_count * 100) / (len(data) // frequency - 1)) + "% a guitar")
+    print("" + str((piano_count * 100) / (len(data) // frequency - 1)) + "")
+    print("" + str((saxo_count * 100) / (len(data) // frequency - 1)) + "")
+    print("" + str((guitare_count * 100) / (len(data) // frequency - 1)) + "")
 elif model_type == 2:
-    print("recognize at " + str((piano_count * 100) / (len(data) // frequency - 1) / 3) + "% a piano")
-    print("recognize at " + str((saxo_count * 100) / (len(data) // frequency - 1) / 3) + "% a saxophone")
-    print("recognize at " + str((guitare_count * 100) / (len(data) // frequency - 1) / 3) + "% a guitar")
+    print("" + str((piano_count * 100) / (len(data) // frequency - 1) / 3) + "")
+    print("" + str((saxo_count * 100) / (len(data) // frequency - 1) / 3) + "")
+    print("" + str((guitare_count * 100) / (len(data) // frequency - 1) / 3) + "")

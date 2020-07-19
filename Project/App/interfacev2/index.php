@@ -114,6 +114,7 @@
                   </thead>
                   <tbody>
                     <tr>
+                        <?php if(!isset($_GET['info'])){ ?>
                       <td style=""><br><i class="fa fa-camera-retro fa-lg" style=""></i></td>
                       <td>Saxophone</td>
                       <td>No</td>
@@ -128,6 +129,22 @@
                       <td>Guitare</td>
                       <td>No</td>
                     </tr>
+                  <?php } else { ?>
+                    <td style=""><br><i class="fa fa-camera-retro fa-lg" style=""></i></td>
+                    <td>Saxophone</td>
+                    <td><?= $_GET['saxo'] ?> %</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Piano</td>
+                        <td><?= $_GET['piano'] ?>  %</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Guitare</td>
+                        <td><?= $_GET['guitare'] ?> % </td>
+                    </tr>
+                    <?php } ?>
                   </tbody>
                 </table>
               </div>

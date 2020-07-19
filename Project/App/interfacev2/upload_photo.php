@@ -80,8 +80,9 @@ $error = null; // Détermine le type d'erreur
     {
         echo 'Il ny a pas de fichier';
     }
-?>
 
+echo "<meta http-equiv='refresh' content='5;index.php?info=true&piano=$output[0]&saxo=$output[1]&guitare=$output[2]'>"
+?>
 <div class="row">
     <img src="img/loading.gif" style="display: block; margin-left: auto; margin-right: auto;">
 </div>
