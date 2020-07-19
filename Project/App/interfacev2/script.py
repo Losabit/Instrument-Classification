@@ -52,9 +52,13 @@ if model_type == 1:
     mlp = MLP(dll_path)
     mlp.load_model(model_path)
 elif model_type == 2:
-    linear = Linear(dll_path)
-    linear.init_linear_model(IMG_HEIGHT * IMG_WIDTH * 3)
-    #linear.
+    rbf_guitare_saxo = RBF(dll_path)
+    rbf_guitare_saxo.load_model(os.path.join(inpath, "guitare_saxo.txt"))
+    rbf_piano_saxo = RBF(dll_path)
+    rbf_piano_saxo.load_model(os.path.join(inpath, "piano_saxo.txt"))
+    rbf_guitare_piano = RBF(dll_path)
+    rbf_guitare_piano.load_model(os.path.join(inpath, "guitare_piano.txt"))
+    
 
 frequency, _, data = readwav(inpath)
 if len(data.shape) != 1:
@@ -88,11 +92,32 @@ for i in range(len(data) // frequency - 1):
             guitare_count += 1
         else:
             ValueError("not implemented")
+    elif model_type == 2:
+        predicted_value = rbf_guitare_saxo.predict_rbf_model(image_predict)    
+        if predicted_value < 0:
+            guitare_count += 1
+        else:
+            saxo_count += 1
+        
+        predicted_value = rbf_piano_saxo.predict_rbf_model(image_predict)    
+        if predicted_value < 0:
+            piano_count += 1
+        else:
+            saxo_count += 1
+
+        predicted_value = rbf_guitare_piano.predict_rbf_model(image_predict)    
+        if predicted_value < 0:
+            guitare_count += 1
+        else:
+            piano_count += 1
 
 shutil.rmtree(outpath)
-'''
-Return :
-'''
-print("" + str(piano_count / (len(data) // frequency - 1)) + "% a piano")
-print("" + str(saxo_count / (len(data) // frequency - 1)) + "% a saxophone")
-print("" + str(guitare_count / (len(data) // frequency - 1)) + "% a guitar")
+
+if model_type == 1:
+    print("recognize at " + str((piano_count * 100) / (len(data) // frequency - 1)) + "% a piano")
+    print("recognize at " + str((saxo_count * 100) / (len(data) // frequency - 1)) + "% a saxophone")
+    print("recognize at " + str((guitare_count * 100) / (len(data) // frequency - 1)) + "% a guitar")
+elif model_type == 2:
+    print("recognize at " + str((piano_count * 100) / (len(data) // frequency - 1) / 3) + "% a piano")
+    print("recognize at " + str((saxo_count * 100) / (len(data) // frequency - 1) / 3) + "% a saxophone")
+    print("recognize at " + str((guitare_count * 100) / (len(data) // frequency - 1) / 3) + "% a guitar")

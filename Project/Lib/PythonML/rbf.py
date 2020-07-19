@@ -52,3 +52,25 @@ class RBF:
         self.model_size = x.shape[0]
         self.x = x
         self.gamma = gamma
+
+    def save_model(self, path):
+        model_list = [str(self.model[i]) for i in range(self.model_size)]
+        model_string = ';'.join(model_list)
+        x_list = [str(value) for value in self.x.flatten()]
+        x_string = ';'.join(x_list)
+        with open(path, 'w') as file:
+            file.write(model_string + '\n')
+            file.write(x_string + '\n')
+            file.write(str(self.gamma))
+
+    def load_model(self, path):
+        with open(path, 'r') as file:
+            lines = file.readlines()
+            model = lines[0].split(';')
+            self.model = np.array([float(model[i]) for i in range(len(model))],  dtype='float64')
+            self.model = self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
+            self.model_size = len(model)  
+
+            x_start = lines[1].split(';')
+            self.x = np.array([int(x_start[i]) for i in range(len(x_start))],  dtype='float64')
+            self.gamma = float(lines[2])
