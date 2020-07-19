@@ -42,12 +42,19 @@ $error = null; // Détermine le type d'erreur
                     <p style="font-weight: bold; text-align: center;">Vous allez être redirigé d'ici un instant..
                         <?php
                         $dirName = "Models/".$_POST['model'];
+                        if($_POST['model'] == "mlp.txt"){
+                            $type = 1;
+                        }
+                        elseif ($_POST['model'] == "svm.txt"){
+                            $type = 2;
+                        }
                         $photoName = "uploads/".$photoName;
                         $pathFile = $photoName;
                         echo  '<br>';
-                        $output = shell_exec("python /var/www/interface/script.py $photoName ");
-                        echo 'ouut : ' .$output;
+                        exec("python3 /var/www/interface/script.py $photoName $type $dirName ",$output,$error_code);
+                        print_r($output);
                         ?>
+
                     </p>
                 <?php } else { ?>
                     <p style="color:red; font-size: 30px; font-weight: bold; text-align: center;">

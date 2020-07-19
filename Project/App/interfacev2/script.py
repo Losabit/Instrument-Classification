@@ -29,8 +29,13 @@ def max_indice(values):
             max_ind = i
             max_value = values[i]
     return max_ind
-
+'''
+ARGUMENT 1 => File path
+ARGUMENT 2 => TYPE MODEL
+ARGUMENT 3 => MODEL PATH
+'''
 inpath = sys.argv[1]
+
 model_type = int(sys.argv[2])
 model_path = sys.argv[3]
 
@@ -49,7 +54,7 @@ if model_type == 1:
 elif model_type == 2:
     linear = Linear(dll_path)
     linear.init_linear_model(IMG_HEIGHT * IMG_WIDTH * 3)
-    linear.
+    #linear.
 
 frequency, _, data = readwav(inpath)
 if len(data.shape) != 1:
@@ -85,8 +90,9 @@ for i in range(len(data) // frequency - 1):
             ValueError("not implemented")
 
 shutil.rmtree(outpath)
-
-
-print("recognize at " + str(piano_count / (len(data) // frequency - 1)) + "% a piano")
-print("recognize at " + str(saxo_count / (len(data) // frequency - 1)) + "% a saxophone")
-print("recognize at " + str(guitare_count / (len(data) // frequency - 1)) + "% a guitar")
+'''
+Return :
+'''
+print("" + str(piano_count / (len(data) // frequency - 1)) + "% a piano")
+print("" + str(saxo_count / (len(data) // frequency - 1)) + "% a saxophone")
+print("" + str(guitare_count / (len(data) // frequency - 1)) + "% a guitar")
