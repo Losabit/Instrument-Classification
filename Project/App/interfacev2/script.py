@@ -11,7 +11,7 @@ sys.path.append('PythonML')
 
 from linear import Linear
 from multicouche import MLP
-from svm import SVM
+from rbf import RBF
 from scipy.fftpack import fft
 from scipy.io import wavfile
 from wavio import readwav
@@ -58,11 +58,12 @@ if model_type == 1:
     mlp.load_model(model_path)
 elif model_type == 2:
     rbf_guitare_saxo = RBF(dll_path)
-    rbf_guitare_saxo.load_model(os.path.join(inpath, "guitare_saxo.txt"))
+    rbf_guitare_saxo.load_model(os.path.join(model_path, "guitare_saxo.txt"))
     rbf_piano_saxo = RBF(dll_path)
-    rbf_piano_saxo.load_model(os.path.join(inpath, "piano_saxo.txt"))
+    rbf_piano_saxo.load_model(os.path.join(model_path, "piano_saxo.txt"))
     rbf_guitare_piano = RBF(dll_path)
-    rbf_guitare_piano.load_model(os.path.join(inpath, "guitare_piano.txt"))
+    rbf_guitare_piano.load_model(os.path.join(model_path, "guitare_piano.txt"))
+    
 
 frequency, _, data = readwav(inpath)
 if len(data.shape) != 1:
