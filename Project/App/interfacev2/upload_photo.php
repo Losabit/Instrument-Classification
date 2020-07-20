@@ -41,6 +41,7 @@ $error = null; // Détermine le type d'erreur
                     <br>
                     <p style="font-weight: bold; text-align: center;">Vous allez être redirigé d'ici un instant..
                         <?php
+                        $type = 1;
                         $dirName = "Models/".$_POST['model'];
                         if($_POST['model'] == "mlp.txt"){
                             $type = 1;
