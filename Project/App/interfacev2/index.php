@@ -152,9 +152,7 @@
           </div>
         </div>
       </div>
-<!--    </div>  <a href="ListModel.php"> <button  style="margin-right: 20%" class="btn btn-sucess" >Voir les modèls </button></a>-->
-
-
+    </div>  <a href="ModelUp.php"> <button  style="margin-right: 20%" class="btn btn-sucess" > Uploads des modèls </button></a>
   </div>
 
   <div class="pt-5">

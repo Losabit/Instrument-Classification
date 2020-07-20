@@ -45,7 +45,7 @@ $error = null; // Détermine le type d'erreur
                         if($_POST['model'] == "mlp.txt"){
                             $type = 1;
                         }
-                        elseif ($_POST['model'] == "svm.txt"){
+                        elseif ($_POST['model'] == "RBF"){
                             $type = 2;
                         }
                         $photoName = "uploads/".$photoName;
