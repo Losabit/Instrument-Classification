@@ -1,3 +1,4 @@
+#coding=utf8
 import os
 import sys
 import csv
@@ -100,21 +101,21 @@ for i in range(len(data) // frequency - 1):
             ValueError("not implemented")
     elif model_type == 2:
         predicted_value = rbf_guitare_saxo.predict_rbf_model(image_predict.flatten())
-        print(predicted_value)
+    
         if predicted_value < 0:
             guitare_count += 1
         else:
             saxo_count += 1
 
         predicted_value = rbf_piano_saxo.predict_rbf_model(image_predict.flatten())
-        print(predicted_value)
+    
         if predicted_value < 0:
             piano_count += 1
         else:
             saxo_count += 1
 
         predicted_value = rbf_guitare_piano.predict_rbf_model(image_predict.flatten())
-        print(predicted_value)
+    
         if predicted_value < 0:
             guitare_count += 1
         else:

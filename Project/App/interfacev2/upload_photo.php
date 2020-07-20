@@ -29,12 +29,9 @@ $error = null; // Détermine le type d'erreur
                         $message = 'Erreur lors du déplacement du fichier en phase 3';
                         break;
                 }
-				
 				if (in_array($extension_upload,$extensions_trans)){
-					exec("lame –decode uploads/$photoName.mp3 uploads/$photoName.wav");
-
-
-
+                    exec("mpg123 -w uploads/$name.wav uploads/$photoName");
+					$photoName = $name.'.wav';
 				}
                 if ($error === null) { ?>
                     <p style="color:green; font-size: 20px; font-weight: bold; text-align: center;">Envoyé avec succès !</p>
@@ -53,7 +50,6 @@ $error = null; // Détermine le type d'erreur
                         $pathFile = $photoName;
                         echo  '<br>';
                         exec("python3 /var/www/interface/script.py $photoName $type $dirName ",$output,$error_code);
-                        print_r($output);
                         ?>
 
                     </p>
