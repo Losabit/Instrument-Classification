@@ -22,7 +22,7 @@ from PythonML.rbf import RBF
 # argv[2]= 1
 # argv[3] = Models/mlp.txt
 # python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav 1 Models/mlp.txt
-# python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav 2 Models/linear
+# python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/Notes/piano.wav 2 Models/rbf_one_vs_one
 
 def max_indice(values):
     max_value = values[0]
@@ -83,7 +83,7 @@ for i in range(len(data) // frequency - 1):
 
     image = tf.keras.preprocessing.image.load_img(outpath_file, grayscale=False, color_mode='rgb',
                                                   target_size=target_size, interpolation='nearest')
-    image_predict = np.array(tf.keras.preprocessing.image.img_to_array(image, data_format=None, dtype=None),
+    image_predict = np.array(tf.keras.preprocessing.image.img_to_array(image, data_format=None, dtype=None) / 255,
                              dtype='float64')
 
     if model_type == 1:
@@ -99,19 +99,22 @@ for i in range(len(data) // frequency - 1):
         else:
             ValueError("not implemented")
     elif model_type == 2:
-        predicted_value = rbf_guitare_saxo.predict_rbf_model(image_predict)
+        predicted_value = rbf_guitare_saxo.predict_rbf_model(image_predict.flatten())
+        print(predicted_value)
         if predicted_value < 0:
             guitare_count += 1
         else:
             saxo_count += 1
 
-        predicted_value = rbf_piano_saxo.predict_rbf_model(image_predict)
+        predicted_value = rbf_piano_saxo.predict_rbf_model(image_predict.flatten())
+        print(predicted_value)
         if predicted_value < 0:
             piano_count += 1
         else:
             saxo_count += 1
 
-        predicted_value = rbf_guitare_piano.predict_rbf_model(image_predict)
+        predicted_value = rbf_guitare_piano.predict_rbf_model(image_predict.flatten())
+        print(predicted_value)
         if predicted_value < 0:
             guitare_count += 1
         else:

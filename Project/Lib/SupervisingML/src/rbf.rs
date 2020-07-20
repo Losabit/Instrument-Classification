@@ -14,17 +14,26 @@ pub extern "C" fn predict_rbf(w_ptr: *const f64, start_x_ptr: *const f64, x_ptr:
         x = from_raw_parts(x_ptr, input_per_sample);
         start_x = from_raw_parts(start_x_ptr, model_size * input_per_sample);
     }
-
+   /*
+    println!("model : {:?}", w);
+    println!("x_start : {:?}", start_x);
+    println!("x : {:?}", x);
+    println!("gamma : {:?}", gamma);
+    println!("model_size : {:?}", model_size);
+    println!("input_per_sample : {:?}", input_per_sample);
+*/
     let mut sum = 0.0;
     for i in 0..model_size{
         let mut vector_x = Vec::new();
         for k in 0..x.len(){
-            vector_x.push(x[k] - start_x[input_per_sample * i + k])
+            vector_x.push(x[k] - start_x[input_per_sample * i + k]);
         }
         let alpha = DMatrix::from_row_slice(x.len(), 1, &vector_x);
         let toexp = -gamma * (alpha.norm() * alpha.norm());
         let result = w[i] * toexp.exp();
+        //println!("toexp : {:?}, toexp.exp() : {:?}", toexp, toexp.exp());
         sum += result;
+        
     }
     return sum;
 }
