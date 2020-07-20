@@ -73,5 +73,5 @@ class RBF:
             self.model_size = len(model)
 
             x_start = lines[1].split(';')
-            self.x = np.array([float(x_start[i]) for i in range(len(x_start))],  dtype='float64')
+            self.x = np.array([float(x_start[i]) for i in range(int(len(x_start)))],  dtype='float64')
             self.gamma = float(lines[2])
