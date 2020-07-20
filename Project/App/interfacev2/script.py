@@ -6,20 +6,23 @@ import matplotlib.pyplot as plt
 import random
 import shutil
 import tensorflow as tf
+
 sys.path.append('PythonML')
 
 from linear import Linear
 from multicouche import MLP
 from svm import SVM
 from scipy.fftpack import fft
-from scipy.io import wavfile 
+from scipy.io import wavfile
 from wavio import readwav
+from PythonML.rbf import RBF
+
 
 # argv[1] = /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav
 # argv[2]= 1
 # argv[3] = Models/mlp.txt
-#python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav 1 Models/mlp.txt
-#python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav 2 Models/linear
+# python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav 1 Models/mlp.txt
+# python //home/losabit/Desktop/PA/Instrument-Classification/Project/App/interfacev2/script.py /home/losabit/Desktop/OriginalData/guitare/Studio/smells-like-teen-spiritnirvana-covered-by-feng-e.wav 2 Models/linear
 
 def max_indice(values):
     max_value = values[0]
@@ -29,6 +32,8 @@ def max_indice(values):
             max_ind = i
             max_value = values[i]
     return max_ind
+
+
 '''
 ARGUMENT 1 => File path
 ARGUMENT 2 => TYPE MODEL
@@ -58,7 +63,6 @@ elif model_type == 2:
     rbf_piano_saxo.load_model(os.path.join(inpath, "piano_saxo.txt"))
     rbf_guitare_piano = RBF(dll_path)
     rbf_guitare_piano.load_model(os.path.join(inpath, "guitare_piano.txt"))
-    
 
 frequency, _, data = readwav(inpath)
 if len(data.shape) != 1:
@@ -70,20 +74,21 @@ saxo_count = 0
 piano_count = 0
 for i in range(len(data) // frequency - 1):
     outpath_file = os.path.join(outpath, 'tmp' + str(i) + '.png')
-    new_data = data[i * frequency:(i+1) * frequency]
+    new_data = data[i * frequency:(i + 1) * frequency]
     plt.specgram(new_data, Fs=frequency)
     plt.axis('off')
-    plt.savefig(outpath_file, bbox_inches='tight',  pad_inches = 0)
+    plt.savefig(outpath_file, bbox_inches='tight', pad_inches=0)
     plt.close()
 
-    image = tf.keras.preprocessing.image.load_img(outpath_file, grayscale=False, color_mode='rgb', 
-    target_size=target_size, interpolation='nearest')
-    image_predict = np.array(tf.keras.preprocessing.image.img_to_array(image, data_format=None, dtype=None), dtype='float64')
-    
+    image = tf.keras.preprocessing.image.load_img(outpath_file, grayscale=False, color_mode='rgb',
+                                                  target_size=target_size, interpolation='nearest')
+    image_predict = np.array(tf.keras.preprocessing.image.img_to_array(image, data_format=None, dtype=None),
+                             dtype='float64')
+
     if model_type == 1:
         predicted_value = mlp.predict_multicouche_model_classification(image_predict)
         predicted_list = [predicted_value[i] for i in range(out_layer_size)]
-        max_ind = max_indice(predicted_list)  
+        max_ind = max_indice(predicted_list)
         if max_ind == 0:
             piano_count += 1
         elif max_ind == 1:
@@ -93,19 +98,19 @@ for i in range(len(data) // frequency - 1):
         else:
             ValueError("not implemented")
     elif model_type == 2:
-        predicted_value = rbf_guitare_saxo.predict_rbf_model(image_predict)    
+        predicted_value = rbf_guitare_saxo.predict_rbf_model(image_predict)
         if predicted_value < 0:
             guitare_count += 1
         else:
             saxo_count += 1
-        
-        predicted_value = rbf_piano_saxo.predict_rbf_model(image_predict)    
+
+        predicted_value = rbf_piano_saxo.predict_rbf_model(image_predict)
         if predicted_value < 0:
             piano_count += 1
         else:
             saxo_count += 1
 
-        predicted_value = rbf_guitare_piano.predict_rbf_model(image_predict)    
+        predicted_value = rbf_guitare_piano.predict_rbf_model(image_predict)
         if predicted_value < 0:
             guitare_count += 1
         else:

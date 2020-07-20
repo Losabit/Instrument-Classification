@@ -2,7 +2,8 @@ import ctypes
 import enum
 import numpy as np
 
-class RBF:      
+
+class RBF:
     def __init__(self, dll_path):
         self.lib = ctypes.CDLL(dll_path)
         self.initialize_rust_functions()
@@ -40,12 +41,12 @@ class RBF:
             self.model_size,
             len(x)
         )
-        
+
     def train_rbf_model(self, x, y, gamma):
         self.model = self.lib.train_rbf(
             x.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
             y.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-            x.shape[0], 
+            x.shape[0],
             x.shape[1],
             gamma
         )
@@ -67,10 +68,10 @@ class RBF:
         with open(path, 'r') as file:
             lines = file.readlines()
             model = lines[0].split(';')
-            self.model = np.array([float(model[i]) for i in range(len(model))],  dtype='float64')
+            self.model = np.array([float(model[i]) for i in range(len(model))], dtype='float64')
             self.model = self.model.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-            self.model_size = len(model)  
+            self.model_size = len(model)
 
             x_start = lines[1].split(';')
-            self.x = np.array([int(x_start[i]) for i in range(len(x_start))],  dtype='float64')
+            self.x = np.array([int(x_start[i]) for i in range(len(x_start))], dtype='float64')
             self.gamma = float(lines[2])
